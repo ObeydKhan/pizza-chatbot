@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import  steps  from '../components/chatData';
+import ChatBot from 'react-simple-chatbot';
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
         >
           Learn React
         </a>
+        <div>
+        <ChatBot steps={steps} />
+        </div>
       </header>
     </div>
   );
