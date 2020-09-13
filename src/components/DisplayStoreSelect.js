@@ -55,7 +55,7 @@ class DisplayStoreSelect extends React.Component {
         return {name: 'Long Street', hours: 'Open 11am-9pm', dist:'3.6'};
         //break;
       case '3':
-        return {name: 'Main Street', hours: 'Open 11am-11pm', dist:'4.1'};
+        return {name: 'Easy Street', hours: 'Open 11am-11pm', dist:'4.1'};
         //break;
       default:
             
