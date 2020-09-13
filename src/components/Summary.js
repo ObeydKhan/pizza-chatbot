@@ -10,20 +10,20 @@ class Summary extends Component {
         crust: '',
         cheese: '',
         sauce: '',
-        meats: '',
-        nonmeats: '',
+        meatsinput: '',
+        nonmeatsinput: '',
     };
   }
 
   componentWillMount() {
     const { steps } = this.props;
-    const { size, crust, cheese, sauce, meats, nonmeats } = steps;
+    const { size, crust, cheese, sauce, meatsinput, nonmeatsinput } = steps;
 
-    this.setState({ size, crust, cheese, sauce, meats, nonmeats });
+    this.setState({ size, crust, cheese, sauce, meatsinput, nonmeatsinput });
   }
 
   render() {
-    const { size, crust, cheese, sauce, meats, nonmeats } = this.state;
+    const { size, crust, cheese, sauce, meatsinput, nonmeatsinput } = this.state;
     return (
       <div style={{ width: '100%' }}>
         <h3>Summary</h3>
@@ -47,11 +47,11 @@ class Summary extends Component {
             </tr>
             <tr>
               <td>Meats</td>
-              <td>{meats.message}</td>
+              <td>{meatsinput.value}</td>
             </tr>
             <tr>
               <td>Non-Meats</td>
-              <td>{nonmeats.message}</td>
+              <td>{nonmeatsinput.value}</td>
             </tr>
           </tbody>
         </table>

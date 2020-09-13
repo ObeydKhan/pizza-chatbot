@@ -6,33 +6,126 @@
   height: 40vmin;
   pointer-events: none;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+* {
+  box-sizing: border-box;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+header {
+  padding: 30px;
+  font-size: 25px;
+  color: black;
+  background-color: lightskyblue;
+
+}
+header img {
+  padding-right: 30px;
+}
+.menuSummary {
+  border-radius: 10px;
+  border: 2px solid #282c34;
+  ;
+}
+.searchStore {
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #282c34;
+  margin: auto;
+  padding: 20px;
+  text-align: right;
+}
+.resultsList {
+  list-style-type: none;
+  padding: 0px;
+  float: left;
+  width: 60%;
+  height: auto;
+
+}
+.bannerHead {
+  float: right;
+}
+.resultElement {
+  border-radius: 15px;
+  border: 2px solid #282c34;
+  padding: 10px;
+  width: 100%;
+  height: 100px;
+  
+  margin-bottom: 10px;
+}
+.storeAddress {
+  margin: auto;
+  width:auto;
+  height:auto;
+  padding-top:10px;
+  padding-bottom: 0px;
+  font-size: 150%;
+}
+.storeDetails {
+  margin: auto;
+  width:auto;
+  height:auto;
+  padding-top: 0px;
+  padding-bottom: 10px;
+  font-size: 75%;
+}
+.selectBtn {
+  font-size: 100%;
+  font-style: bold;
+  float:right;
+  margin-top: 25px;
+  margin-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: none;
+  border-radius: 8px;
 }
 
-.App-link {
-  color: #61dafb;
+.storeSelect {
+  width: auto;
+  height: auto;
+  margin: auto;
+  padding: 20px;
+  text-align: left;
+}
+.searchMenu {
+  padding-left: 20px;
+  text-align: left;
+  float: left;
+}
+.searchLabel {
+  font-size: 150%;
+  text-align: right;
+  float: right;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+.inputString {
+  float:right;
+  margin-bottom: 25px;
+}
+.searchBtn {
+  float:right;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: none;
+  border-radius: 8px;
+}
+.displayArea {
+  width: 75%;
+  float: left;
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 10px;
+}
+.container {
+  width: 25%;
+  float: right;
+  padding: 10px;
+}
+.store {
+  float:left;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+

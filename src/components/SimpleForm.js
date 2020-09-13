@@ -74,36 +74,31 @@ class SimpleForm extends Component {
               },
               {
                 id: 'meats',
-                options: [
-                  { value: 'pepperoni', label: 'Pepperoni', trigger: '6' },
-                  { value: 'beef', label: 'Beef', trigger: '6' },
-                  { value: 'philly-steak', label: 'Philly Steak', trigger: '6' },
-                  { value: 'italian-sausage', label: 'Italian Sausage', trigger: '6' },
-                  { value: 'grilled-chicked', label: 'Grilled Chicken', trigger: '6' },
-                  { value: 'bacon', label: 'Bacon', trigger: '6' },
-                  { value: 'skip', label: 'Skip to Non-Meats', trigger: '7' }
-                ],
+                trigger: 'meatsinput',
+                message: 'Pepperoni, Beef, Philly Steak, Italian Sausage, Grilled Chicken, Bacon',
               },
               {
-                id: '7',
+                id: 'meatsinput',
+                user: true,
+                trigger: 8,
+              },
+              {
+                id: '8',
                 message: 'Choose your Non-Meats:',
                 trigger: 'nonmeats',
               },
               {
                 id: 'nonmeats',
-                options: [
-                  { value: 'tomatoes', label: 'Tomatoes', trigger: '7' },
-                  { value: 'mushrooms', label: 'Mushrooms', trigger: '7' },
-                  { value: 'jalapeno-peppers', label: 'Jalapeño Peppers', trigger: '7' },
-                  { value: 'onions', label: 'Onions', trigger: '7' },
-                  { value: 'olives', label: 'Black Olives', trigger: '7' },
-                  { value: 'pineapple', label: 'Pineapple', trigger: '7' },
-                  { value: 'green-peppers', label: 'Green Peppers', trigger: '7' },
-                  { value: 'done', label: 'Review Order', trigger: '8' }
-                ],
+                trigger: 'nonmeatsinput',
+                message: 'Tomatoes, Mushrooms, Jalapeño Peppers, Onions, Black Olives, Pineapple, Green Peppers',
+              },
+              {
+                id: 'nonmeatsinput',
+                user: true,
+                trigger: '9',
               },
             {
-              id: '8',
+              id: '9',
               message: 'Great! Check out your summary',
               trigger: 'review',
             },
