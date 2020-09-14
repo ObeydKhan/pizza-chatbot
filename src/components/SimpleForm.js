@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
 import ChatBot from 'react-simple-chatbot';
+import { ThemeProvider } from 'styled-components';
 import Summary from './Summary';
 
 class SimpleForm extends Component {
     render() {
       return (
-        <ChatBot
-          steps={[
+          <ThemeProvider theme={{
+              background: '#f5f5f5',
+              fontFamily: 'Montserrat',
+              headerBgColor: '#DD841F',
+              headerFontColor: '#fff',
+              headerFontSize: '15px',
+              botBubbleColor: '#DD841F',
+              botFontColor: '#fff',
+              userBubbleColor: '#fff',
+              userFontColor: '#4a4a4a',
+              marginTop: '60px',
+          }}>
+        <ChatBot headerTitle="Slice Bot"
+
+                 steps={[
             {
               id: '1',
               message: 'Welcome to Slice!',
@@ -14,7 +28,7 @@ class SimpleForm extends Component {
             },
             {
                 id: '2',
-                message: 'What size Pizza would you like to order?',
+                message: 'What size pizza would you like to order?',
                 trigger: 'size',
               },
               {
@@ -28,7 +42,7 @@ class SimpleForm extends Component {
               },
               {
                 id: '3',
-                message: 'Select your Crust Style:',
+                message: 'Select your crust Style:',
                 trigger: 'crust',
               },
               {
@@ -55,7 +69,7 @@ class SimpleForm extends Component {
             },
             {
               id: '5',
-              message: 'Choose a Sauce:',
+              message: 'Choose a sauce:',
               trigger: 'sauce',
             },
             {
@@ -69,7 +83,7 @@ class SimpleForm extends Component {
             },
             {
                 id: '6',
-                message: 'Choose your Meats:',
+                message: 'Choose your meats:',
                 trigger: 'meats',
               },
               {
@@ -84,7 +98,7 @@ class SimpleForm extends Component {
               },
               {
                 id: '8',
-                message: 'Choose your Non-Meats:',
+                message: 'Choose your toppings:',
                 trigger: 'nonmeats',
               },
               {
@@ -110,7 +124,7 @@ class SimpleForm extends Component {
             },
             {
               id: 'update',
-              message: 'Would you like to update some field?',
+              message: 'Would you like to make any changes to your order?',
               trigger: 'update-question',
             },
             {
@@ -122,7 +136,7 @@ class SimpleForm extends Component {
             },
             {
               id: 'update-yes',
-              message: 'Would you like to update your order?',
+              message: 'What would you like to change?',
               trigger: 'update-fields',
             },
             {
@@ -133,7 +147,7 @@ class SimpleForm extends Component {
                 { value: 'cheese', label: 'Cheese', trigger: 'update-cheese' },
                 { value: 'sauce', label: 'Sauce', trigger: 'update-sauce' },
                 { value: 'meats', label: 'Meats', trigger: 'update-meats' },
-                { value: 'nonmeats', label: 'Non-Meats', trigger: 'update-nonmeats' },
+                { value: 'nonmeats', label: 'Toppings', trigger: 'update-nonmeats' },
               ],
             },
             {
@@ -173,6 +187,7 @@ class SimpleForm extends Component {
             },
           ]}
         />
+          </ThemeProvider>
       );
     }
   }

@@ -3,7 +3,7 @@ import '../css/App.css';
 import {DisplayStoreSelect, StoreDetails} from './DisplayStoreSelect';
 import ShowSearchMenu from './ShowSearchMenu';
 import DisplayMainArea from './DisplayMainArea';
-import logo from './pizzaLogo100.png';
+import logo from '../resources/SliceLogo.png';
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +29,16 @@ class App extends React.Component {
       showMainPage: false,
     });    
   }
+  updateLocation() {
+    this.setState({
+      userLocation: '',
+      selectedStore: 0,
+      isStoreSelected: false,
+      showStoreSearch: true,
+      showStoreSelect: false,
+      showMainPage: false,
+    });
+  }
   handleStoreSelect(i) {
     this.setState({
       selectedStore: i,
@@ -51,6 +61,8 @@ class App extends React.Component {
       banner = (<div className="bannerHead">
         <div className="bannerName">{storeInfo.name}</div>
         <div className="bannerHours">{storeInfo.hours}</div>
+        <div className="bannerChange" onClick={() => this.updateLocation()}>change</div>
+
       </div>);
     }
     return (
@@ -58,7 +70,7 @@ class App extends React.Component {
       <div className="mainPageArea">
       <header>
         <img src={logo} alt="Logo"></img>
-        Slice: The best pizza that never was!
+        <h1>Slice</h1>
         {banner}
       </header>
       <ShowSearchMenu show={showSearch} refIn={this.input} onClick={this.handleStoreSearch} />

@@ -9,7 +9,7 @@ class DisplayStoreSelect extends React.Component {
         <>
         <div className="storeSelect">
           <h2>Results</h2>
-          <h4>Showing results near {this.props.userLocation}</h4>
+          <p>Showing results near: {this.props.userLocation}</p>
           <ul className="resultsList">
             <StoreResultsList onClick={(i) => this.props.onClick(i)} />
           </ul>

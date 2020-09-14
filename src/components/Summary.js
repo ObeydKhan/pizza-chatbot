@@ -50,7 +50,7 @@ class Summary extends Component {
               <td>{meatsinput.value}</td>
             </tr>
             <tr>
-              <td>Non-Meats</td>
+              <td>Toppings</td>
               <td>{nonmeatsinput.value}</td>
             </tr>
           </tbody>

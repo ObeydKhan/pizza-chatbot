@@ -8,7 +8,7 @@ class ShowSearchMenu extends React.Component {
       return (
         <>
         <div className="searchMenu">
-          <div className="searchLabel">Find a store near you:</div>
+          <div className="searchLabel">Find a store near you</div>
           <form >
             <input className="inputString" type="text" ref={this.props.refIn} />          
           </form>
