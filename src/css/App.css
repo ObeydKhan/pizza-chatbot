@@ -96,7 +96,7 @@ header h1 {
   margin-right: 15px;
   border: none;
   border-radius: 8px;
-  border-radius: 8px;
+  border-radius: 2px;
   background-color: #F5BA5E;
   color: white;
   padding: 8px 20px 8px 20px;
@@ -122,6 +122,7 @@ header h1 {
   text-align: center;
   font-family: 'Bebas Neue', cursive;
   letter-spacing: 3px;
+  color: #605954;
 }
 .inputString {
   margin-bottom: 25px;
