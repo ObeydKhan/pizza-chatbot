@@ -41,10 +41,28 @@ header h1 {
   padding-top: 10px;
 }
 .menuSummary {
-  border-radius: 10px;
-  border: 2px solid #282c34;
-  ;
+
 }
+
+.menuSummary h2 {
+  font-size: 40px;
+  font-family: 'Bebas Neue', cursive;
+  color: #605954;
+  margin: 30px 0;
+}
+
+.menuSummary h3 {
+  font-size: 30px;
+  font-family: 'Bebas Neue', cursive;
+  color: #605954;
+}
+
+.menuSummary p {
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  color: #605954;
+}
+
 .searchStore {
   width: auto;
   height: auto;
@@ -109,12 +127,19 @@ header h1 {
   padding: 20px;
   text-align: left;
 }
+
+.storeSelect h2 {
+  font-size: 40px;
+  font-family: 'Bebas Neue', cursive;
+  color:#605954;
+}
+
+
 .searchMenu {
   padding-left: 20px;
   text-align:center;
-
-
 }
+
 .searchLabel {
   font-size: 40px;
   padding-top: 30px;
@@ -154,10 +179,25 @@ header h1 {
   padding-left: 30px;
   padding-top: 10px;
 }
-.container {
+
+.leftPanel {
+  float: left;
+  width: 40%;
+}
+
+.rightPanel {
+  float: left;
+  margin-left: 100px;
+  width: 40%;
+}
+
+.chatBot {
   width: 25%;
   float: right;
   padding: 10px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 .store {
   float:left;
