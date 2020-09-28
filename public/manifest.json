@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Welcome to Slice",
+  "name": "Welcome to Slice: the pizza chatbot",
   "icons": [
     {
       "src": "favicon.ico",

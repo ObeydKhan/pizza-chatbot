@@ -1,6 +1,6 @@
 import React from 'react';
 import SimpleForm from './SimpleForm';
-import '../css/ShowSearchMenu.css';
+import '../css/DisplayMainArea.css';
 
 class DisplayMainArea extends React.Component {
     render() {
