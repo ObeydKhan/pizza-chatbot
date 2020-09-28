@@ -25,32 +25,32 @@ class Summary extends Component {
   render() {
     const { size, crust, cheese, sauce, meatsinput, nonmeatsinput } = this.state;
     return (
-      <div style={{ width: '100%' }}>
+      <div className="summary" style={{ width: '100%' }}>
         <h3>Summary</h3>
         <table>
           <tbody>
             <tr>
-              <td>Size</td>
+              <td className="align-text-top">Size</td>
               <td>{size.message}</td>
             </tr>
             <tr>
-              <td>Crust</td>
+              <td className="align-text-top">Crust</td>
               <td>{crust.message}</td>
             </tr>
             <tr>
-              <td>Cheese</td>
+              <td className="align-text-top">Cheese</td>
               <td>{cheese.message}</td>
             </tr>
             <tr>
-              <td>Sauce</td>
+              <td className="align-text-top">Sauce</td>
               <td>{sauce.message}</td>
             </tr>
             <tr>
-              <td>Meats</td>
+              <td className="align-text-top">Meats</td>
               <td>{meatsinput.value}</td>
             </tr>
             <tr>
-              <td>Toppings</td>
+              <td className="align-text-top">Toppings</td>
               <td>{nonmeatsinput.value}</td>
             </tr>
           </tbody>

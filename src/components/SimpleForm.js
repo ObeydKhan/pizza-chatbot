@@ -33,11 +33,13 @@ class SimpleForm extends Component {
               },
               {
                 id: 'size',
+                placeholder: 'Choose an option',
                 options: [
                   { value: 'small', label: 'Small 10"', trigger: '3' },
                   { value: 'medium', label: 'Medium 12"', trigger: '3' },
                   { value: 'large', label: 'Large 14"', trigger: '3' },
                   { value: 'x-large', label: 'X-Large 16"', trigger: '3' },
+                  { value: '', label: 'Previous Step', trigger: '1' },
                 ],
               },
               {
@@ -47,10 +49,12 @@ class SimpleForm extends Component {
               },
               {
                 id: 'crust',
+                placeholder: 'Choose an option',
                 options: [
                   { value: 'original', label: 'Original', trigger: '4' },
                   { value: 'thin-crust', label: 'Thin Crust', trigger: '4' },
                   { value: 'gluten-free', label: 'Gluten Free', trigger: '4' },
+                  { value: '', label: 'Previous Step', trigger: '2' },
                 ],
               },
               {
@@ -60,11 +64,13 @@ class SimpleForm extends Component {
               },
             {
               id: 'cheese',
+              placeholder: 'Choose an option',
               options: [
                 { value: 'none', label: 'None', trigger: '5' },
                 { value: 'light', label: 'Light', trigger: '5' },
                 { value: 'normal', label: 'Normal', trigger: '5' },
-                { value: 'double', label: 'Double', trigger: '5' }
+                { value: 'double', label: 'Double', trigger: '5' },
+                { value: '', label: 'Previous Step', trigger: '3' },
               ],
             },
             {
@@ -74,11 +80,14 @@ class SimpleForm extends Component {
             },
             {
               id: 'sauce',
+              placeholder: 'Choose an option',
               options: [
                 { value: 'tomato', label: 'Tomato', trigger: '6' },
                 { value: 'marinara', label: 'Marinara', trigger: '6' },
                 { value: 'honey-bbq', label: 'Honey BBQ', trigger: '6' },
-                { value: 'alfredo', label: 'Alfredo', trigger: '6' }
+                { value: 'alfredo', label: 'Alfredo', trigger: '6' },
+                { value: '', label: 'Previous Step', trigger: '4' },
+
               ],
             },
             {
@@ -93,6 +102,7 @@ class SimpleForm extends Component {
               },
               {
                 id: 'meatsinput',
+                placeholder: 'Type your meats...',
                 user: true,
                 trigger: 8,
               },
@@ -108,6 +118,7 @@ class SimpleForm extends Component {
               },
               {
                 id: 'nonmeatsinput',
+                placeholder: 'Type your toppings...',
                 user: true,
                 trigger: '9',
               },
