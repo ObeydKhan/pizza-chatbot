@@ -1,10 +1,11 @@
 import React from 'react';
 import SimpleForm from './SimpleForm';
+import '../css/ShowSearchMenu.css';
 
 class DisplayMainArea extends React.Component {
     render() {
-    const hidePage= !this.props.hidden;
-    if (hidePage) {
+    const showPage= this.props.data.showPage;
+    if (showPage!=='Main') {
       return null;
     } else {
     return (

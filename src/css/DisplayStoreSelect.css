@@ -1,0 +1,85 @@
+.storeSelect {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px;
+}
+.storeSelectBanner {
+  padding: 10px;
+  padding-top: 20px;
+  text-align: left;
+  width: 60%;
+  font-family: 'Bebas Neue', cursive;
+  color: #605954;
+}
+.storeSelect h2 {
+  font-size: 50px;
+  letter-spacing: 3px;
+}
+.resultsCapt{
+  font-size: 20px;
+  letter-spacing: 1px;
+  float: left;
+}
+
+.resultsChange{
+  font-size: 15px;
+  text-decoration: underline;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  text-align: right;
+}
+.store {
+  float:left;
+}
+
+.resultsList {
+  list-style-type: none;
+  padding: 0px;
+  float: left;
+  width: 60%;
+  height: auto;
+  font-family: 'Bebas Neue', cursive;
+  color: #605954;
+  font-size: 20px;
+  letter-spacing: 1px;
+
+}
+.resultElement {
+  border-top: 1px solid #605954;
+  padding: 10px;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+.storeAddress {
+  margin: auto;
+  width:auto;
+  height:auto;
+  padding-top:10px;
+  padding-bottom: 0px;
+  font-size: 150%;
+}
+.storeDetails {
+  margin: auto;
+  width:auto;
+  height:auto;
+  padding-top: 0px;
+  padding-bottom: 10px;
+  font-size: 75%;
+}
+.selectBtn {
+  font-size: 100%;
+  font-style: bold;
+  float:right;
+  margin-top: 25px;
+  margin-right: 15px;
+  border: none;
+  border-radius: 8px;
+  border-radius: 2px;
+  background-color: #F5BA5E;
+  color: white;
+  padding: 8px 20px 8px 20px;
+}
+
+
