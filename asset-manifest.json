@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/pizza-chatbot/static/css/main.b01802fa.chunk.css",
+    "main.js": "/pizza-chatbot/static/js/main.076490a7.chunk.js",
+    "main.js.map": "/pizza-chatbot/static/js/main.076490a7.chunk.js.map",
+    "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.b41a950a.js",
+    "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.b41a950a.js.map",
+    "static/css/2.8aa5a7f8.chunk.css": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css",
+    "static/js/2.cb7f9969.chunk.js": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js",
+    "static/js/2.cb7f9969.chunk.js.map": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js.map",
+    "index.html": "/pizza-chatbot/index.html",
+    "precache-manifest.6ade22399719bf0669370347dd7b79d5.js": "/pizza-chatbot/precache-manifest.6ade22399719bf0669370347dd7b79d5.js",
+    "service-worker.js": "/pizza-chatbot/service-worker.js",
+    "static/css/2.8aa5a7f8.chunk.css.map": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css.map",
+    "static/css/main.b01802fa.chunk.css.map": "/pizza-chatbot/static/css/main.b01802fa.chunk.css.map",
+    "static/js/2.cb7f9969.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b41a950a.js",
+    "static/css/2.8aa5a7f8.chunk.css",
+    "static/js/2.cb7f9969.chunk.js",
+    "static/css/main.b01802fa.chunk.css",
+    "static/js/main.076490a7.chunk.js"
+  ]
+}
