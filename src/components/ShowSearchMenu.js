@@ -39,6 +39,7 @@ function ShowSearchMenu(props) {
     );
   } 
 }
+
 const UserSearchDialog = React.forwardRef((props, ref) => {
   const geoString = '';
   const hasErr = props.hasErr;
@@ -46,12 +47,13 @@ const UserSearchDialog = React.forwardRef((props, ref) => {
     <>
     <div className="userSearchArea">
     <div className="userSearchLabel">Enter a Zip Code</div>
-    <form className="searchForm">
-      <input className="userInputString" type="text" ref={ref} />
+    <form className="searchForm" onKeyDown={(event) => {if(event.key === 'Enter') {props.onClick(geoString); event.preventDefault();}}}>
+      <input className="userInputString" type="text" ref={ref}/>
       {hasErr}
-      <button className="userSearchBtn" type="submit" onClick={() => props.onClick(geoString)}>Submit</button>
     </form>
-    
+      <button className="userSearchBtn" type="button" onClick={() => props.onClick(geoString)}>Submit</button>
+
+
     </div>
     </>
   );

@@ -64,7 +64,7 @@ class App extends React.Component {
         console.log('Invalid user input');
         this.setState({
           hasError: true,
-          errorMsg: "You must enter a US Zip Code or use the Geo Location function"
+          errorMsg: "Invalid Zip Code."
         });
       } else {
         this.setState({
