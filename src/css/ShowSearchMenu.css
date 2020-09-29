@@ -173,10 +173,9 @@
 /*Previous location area */
 .prevLocBox{
   display: inline-block;
-  border: 1px solid black;
   margin-left: auto;
   margin-right: auto; 
-  background-color: #E5E4E2;
+  background-color: #f2f2f2;
 }
 .prevLocBanner{
   display: inline-block;
