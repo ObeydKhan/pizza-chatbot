@@ -1,25 +1,29 @@
 {
   "files": {
-    "main.css": "/pizza-chatbot/static/css/main.695f3b02.chunk.css",
-    "main.js": "/pizza-chatbot/static/js/main.076490a7.chunk.js",
-    "main.js.map": "/pizza-chatbot/static/js/main.076490a7.chunk.js.map",
+    "main.css": "/pizza-chatbot/static/css/main.fa280c41.chunk.css",
+    "main.js": "/pizza-chatbot/static/js/main.8806cf74.chunk.js",
+    "main.js.map": "/pizza-chatbot/static/js/main.8806cf74.chunk.js.map",
     "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.b41a950a.js",
     "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.b41a950a.js.map",
     "static/css/2.8aa5a7f8.chunk.css": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css",
-    "static/js/2.cb7f9969.chunk.js": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js",
-    "static/js/2.cb7f9969.chunk.js.map": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js.map",
+    "static/js/2.496ff370.chunk.js": "/pizza-chatbot/static/js/2.496ff370.chunk.js",
+    "static/js/2.496ff370.chunk.js.map": "/pizza-chatbot/static/js/2.496ff370.chunk.js.map",
     "index.html": "/pizza-chatbot/index.html",
-    "precache-manifest.d293e1e9c327a2cd8de36b96e4ec3318.js": "/pizza-chatbot/precache-manifest.d293e1e9c327a2cd8de36b96e4ec3318.js",
+    "precache-manifest.5ac89865f112ea3493383ad72b843a2c.js": "/pizza-chatbot/precache-manifest.5ac89865f112ea3493383ad72b843a2c.js",
     "service-worker.js": "/pizza-chatbot/service-worker.js",
     "static/css/2.8aa5a7f8.chunk.css.map": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css.map",
-    "static/css/main.695f3b02.chunk.css.map": "/pizza-chatbot/static/css/main.695f3b02.chunk.css.map",
-    "static/js/2.cb7f9969.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.cb7f9969.chunk.js.LICENSE.txt"
+    "static/css/main.fa280c41.chunk.css.map": "/pizza-chatbot/static/css/main.fa280c41.chunk.css.map",
+    "static/js/2.496ff370.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.496ff370.chunk.js.LICENSE.txt",
+    "static/media/dairyfree.png": "/pizza-chatbot/static/media/dairyfree.c5dd3b54.png",
+    "static/media/glutenfree.png": "/pizza-chatbot/static/media/glutenfree.f3d285db.png",
+    "static/media/vegan.png": "/pizza-chatbot/static/media/vegan.244c061c.png",
+    "static/media/vegetarian.png": "/pizza-chatbot/static/media/vegetarian.10cc66ab.png"
   },
   "entrypoints": [
     "static/js/runtime-main.b41a950a.js",
     "static/css/2.8aa5a7f8.chunk.css",
-    "static/js/2.cb7f9969.chunk.js",
-    "static/css/main.695f3b02.chunk.css",
-    "static/js/main.076490a7.chunk.js"
+    "static/js/2.496ff370.chunk.js",
+    "static/css/main.fa280c41.chunk.css",
+    "static/js/main.8806cf74.chunk.js"
   ]
 }
