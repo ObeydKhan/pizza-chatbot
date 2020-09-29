@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/pizza-chatbot/static/css/main.fa280c41.chunk.css",
-    "main.js": "/pizza-chatbot/static/js/main.8806cf74.chunk.js",
-    "main.js.map": "/pizza-chatbot/static/js/main.8806cf74.chunk.js.map",
+    "main.css": "/pizza-chatbot/static/css/main.ea45c4ce.chunk.css",
+    "main.js": "/pizza-chatbot/static/js/main.3a70cc8f.chunk.js",
+    "main.js.map": "/pizza-chatbot/static/js/main.3a70cc8f.chunk.js.map",
     "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.b41a950a.js",
     "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.b41a950a.js.map",
     "static/css/2.8aa5a7f8.chunk.css": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css",
     "static/js/2.496ff370.chunk.js": "/pizza-chatbot/static/js/2.496ff370.chunk.js",
     "static/js/2.496ff370.chunk.js.map": "/pizza-chatbot/static/js/2.496ff370.chunk.js.map",
     "index.html": "/pizza-chatbot/index.html",
-    "precache-manifest.5ac89865f112ea3493383ad72b843a2c.js": "/pizza-chatbot/precache-manifest.5ac89865f112ea3493383ad72b843a2c.js",
+    "precache-manifest.76292353a23ae6b276ed42bd427eff21.js": "/pizza-chatbot/precache-manifest.76292353a23ae6b276ed42bd427eff21.js",
     "service-worker.js": "/pizza-chatbot/service-worker.js",
     "static/css/2.8aa5a7f8.chunk.css.map": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css.map",
-    "static/css/main.fa280c41.chunk.css.map": "/pizza-chatbot/static/css/main.fa280c41.chunk.css.map",
+    "static/css/main.ea45c4ce.chunk.css.map": "/pizza-chatbot/static/css/main.ea45c4ce.chunk.css.map",
     "static/js/2.496ff370.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.496ff370.chunk.js.LICENSE.txt",
     "static/media/dairyfree.png": "/pizza-chatbot/static/media/dairyfree.c5dd3b54.png",
     "static/media/glutenfree.png": "/pizza-chatbot/static/media/glutenfree.f3d285db.png",
@@ -23,7 +23,7 @@
     "static/js/runtime-main.b41a950a.js",
     "static/css/2.8aa5a7f8.chunk.css",
     "static/js/2.496ff370.chunk.js",
-    "static/css/main.fa280c41.chunk.css",
-    "static/js/main.8806cf74.chunk.js"
+    "static/css/main.ea45c4ce.chunk.css",
+    "static/js/main.3a70cc8f.chunk.js"
   ]
 }
