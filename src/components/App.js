@@ -113,7 +113,7 @@ class App extends React.Component {
       <>
       <div className="mainPageArea">
       <header>
-        <img src={logo} alt="Logo"></img>
+        <img src={logo} alt="Logo" onClick={() => this.updateLocation()}></img>
         <h1>Slice</h1>
         {banner}
       </header>      

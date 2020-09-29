@@ -41,7 +41,6 @@
 .searchBox {
   display: inline-block;
   width: 45%;
-  border: 1px solid black;
   margin-left: auto;
   margin-right: auto;   
 }
@@ -61,12 +60,13 @@
 
 }
 .searchOptions {
-  display: inline-block;
-  background-color: #E5E4E2;
-  widows: 100%;
+  display: table-cell;
+  background-color: #f2f2f2;
+  /*widows: 100%;*/
   color: black;
-  vertical-align: bottom;
+  vertical-align: middle;
   margin-left: 0px;
+  text-align:center;
 }
 
 
@@ -74,26 +74,29 @@
 .geoSearchArea {
   display: inline-block;
   width: 50%;
-  
-  vertical-align: center;
+  vertical-align: top ;
+  margin-top: 50px;
+  padding: 0px 10px;
+
 }
 .geoSearchIcon {
   display: flex;
   float: left;
   margin: auto;  
   margin-left: 10px;
+
 }
 .geoSearchBtn {
   display: flex;
   padding: 8px 20px 8px 20px;
   margin: 8px;
   border: none;
-  border-radius: 8px;
-  background-color: #F5BA5E;    
+  border-radius: 2px;
+  background-color: #F5BA5E;
   vertical-align: center;
 }
 .geoSearchBtnCapt {
-  color: white;
+  color: #605954;
   float: right;
   width: 70%;
   text-align: center;
@@ -127,7 +130,7 @@
   color: #605954;
 }
 .searchForm{
-  display: flex;
+  display: block;
   align-content: center;
   justify-content: center;
   margin: auto;
@@ -142,13 +145,20 @@
 .userInputString {   
   width: 75%;
   background: white;  
-  border: 1px solid black;
+  border: 1px solid #605954;
+  display: block;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 25px;
+  padding: 8px 20px 8px 20px;
+  height: 40px;
 }
 .userInputString:focus {
   outline: 0;
 }
 .userSearchBtn {
-  display: flex;
+  display: block;
   align-content: center;
   justify-content: center;
   margin: auto;

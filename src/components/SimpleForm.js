@@ -39,7 +39,7 @@ class SimpleForm extends Component {
                   { value: 'medium', label: 'Medium 12"', trigger: '3' },
                   { value: 'large', label: 'Large 14"', trigger: '3' },
                   { value: 'x-large', label: 'X-Large 16"', trigger: '3' },
-                  { value: '', label: 'Previous Step', trigger: '1' },
+                  { value: '', label: 'Start Over', trigger: '1' },
                 ],
               },
               {
@@ -54,7 +54,7 @@ class SimpleForm extends Component {
                   { value: 'original', label: 'Original', trigger: '4' },
                   { value: 'thin-crust', label: 'Thin Crust', trigger: '4' },
                   { value: 'gluten-free', label: 'Gluten Free', trigger: '4' },
-                  { value: '', label: 'Previous Step', trigger: '2' },
+                  { value: '', label: 'Go Back', trigger: '2' },
                 ],
               },
               {
@@ -70,7 +70,7 @@ class SimpleForm extends Component {
                 { value: 'light', label: 'Light', trigger: '5' },
                 { value: 'normal', label: 'Normal', trigger: '5' },
                 { value: 'double', label: 'Double', trigger: '5' },
-                { value: '', label: 'Previous Step', trigger: '3' },
+                  { value: '', label: 'Go Back', trigger: '2' },
               ],
             },
             {
@@ -86,7 +86,7 @@ class SimpleForm extends Component {
                 { value: 'marinara', label: 'Marinara', trigger: '6' },
                 { value: 'honey-bbq', label: 'Honey BBQ', trigger: '6' },
                 { value: 'alfredo', label: 'Alfredo', trigger: '6' },
-                { value: '', label: 'Previous Step', trigger: '4' },
+                  { value: '', label: 'Go Back', trigger: '2' },
 
               ],
             },

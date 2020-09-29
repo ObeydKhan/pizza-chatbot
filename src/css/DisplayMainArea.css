@@ -9,6 +9,7 @@
   font-size: 30px;
   font-family: 'Bebas Neue', cursive;
   color: #605954;
+  padding-top: 10px;
 }
 
 .menuSummary p {
@@ -42,4 +43,20 @@
   position: fixed;
   bottom: 0;
   right: 0;
+}
+
+
+.menuItem {
+  display: block;
+}
+
+.menuItem p {
+  display: inline-block;
+  font-size: 16px;
+}
+
+.allergyInfo {
+  width: 40px;
+  padding-left: 10px;
+  display: inline-block;
 }

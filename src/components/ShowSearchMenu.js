@@ -49,9 +49,9 @@ const UserSearchDialog = React.forwardRef((props, ref) => {
     <form className="searchForm">
       <input className="userInputString" type="text" ref={ref} />
       {hasErr}
+      <button className="userSearchBtn" type="submit" onClick={() => props.onClick(geoString)}>Submit</button>
     </form>
     
-    <button className="userSearchBtn" onClick={() => props.onClick(geoString)}>Submit</button>
     </div>
     </>
   );
