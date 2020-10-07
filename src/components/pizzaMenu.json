@@ -50,7 +50,7 @@
     {"value": "gp", "type": "Green Peppers"}],
 
   "qty": [
-    {"value": "rg", "type": "", "short":"Reg"},
+    {"value": "rg", "type": "Regular", "short":"Reg"},
     {"value": "lt", "type": "Lite", "short":"Lite"},
     {"value": "ex", "type": "Extra", "short":"Xtra"},
     {"value": "db", "type": "Double", "short":"Dbl"},

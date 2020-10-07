@@ -63,28 +63,28 @@ class OrderStep extends React.Component {
     console.log('Entering step switch'); 
     switch(stepType){
       case 'crusts':
-        newPizza.Crust = GetItemInfo(value);
+        newPizza.Crust = newSel;
         lbl.crusts = newPizza.Crust;
         break;
       case 'sizes':
-        newPizza.Size = GetItemInfo(value);
+        newPizza.Size = newSel;
         lbl.sizes = newPizza.Size;
         break;
       case 'sauces':
-        newPizza.Sauce = GetItemInfo(value);
+        newPizza.Sauce = newSel;
         lbl.sauces = newPizza.Sauce;
         break;
       case 'cheeses':
-        newPizza.Cheese = GetItemInfo(value);
+        newPizza.Cheese = newSel;
         lbl.cheeses = newPizza.Cheese;
         break;
       case 'meats':
-        newPizza.Topping = GetItemInfo(value);
-        lbl.meats = newPizza.MeatTopping;
+        newPizza.Topping = newSel;
+        lbl.meats = newPizza.MeatToppings;
         break;
       case 'nonmeats':
-        newPizza.Topping = GetItemInfo(value);
-        lbl.nonmeats = newPizza.NonMeatTopping;
+        newPizza.Topping = newSel;
+        lbl.nonmeats = newPizza.NonMeatToppings;
         break;
       default:
     }
@@ -94,7 +94,7 @@ class OrderStep extends React.Component {
       pizza: newPizza,
       label: lbl,
     });
-    if(newSel.type==='None'||newSel.step==='crusts'||newSel.step==='sizes'){
+    if(newSel.type==='None'||newSel.step==='crusts'||newSel.step==='sizes'||newSel.step==='sauces'){
       console.log('Triggering next from click handler');
       this.triggerNext();
     }
@@ -124,11 +124,11 @@ class OrderStep extends React.Component {
     });
   }
   render(){
-    const {stepType, itemOptions, optionQty, isNotTopStep, isSizeStep, isTopStep, currentSel } = this.state;    
+    const {stepType, itemOptions, optionQty, isNotTopStep, isSizeStep, isTopStep } = this.state;    
     return (
       <div className='orderStep'>
         {isNotTopStep && 
-          <NotToppingStep step={stepType} items={itemOptions} qty={optionQty}  curSel={currentSel} 
+          <NotToppingStep step={stepType} items={itemOptions} qty={optionQty}   
         onClick={(value)=>this.handleClick(value)} onTrigger={()=>this.triggerNext()}/>}
         {isSizeStep && 
           <SizeCrustStep stepType={stepType} itemOptions={itemOptions} onClick={(value)=>this.handleClick(value)}/>        
@@ -163,7 +163,10 @@ function SizeCrustStep(props){
 }
 function HalfBtn(){
   const [half, setHalf] = useState(0);
-  let btn;
+  let btn = {
+    b: null,
+    v: null,
+  };
   if(half===0){
     btn.b = <button className="wpBtn" onClick={()=>setHalf(half+1)}>wp</button>
     btn.v = 'wp';
@@ -185,11 +188,15 @@ function HalfBtn(){
 function InnerQtyList(props){
   const q = props.qty;
   //const sel = props.sel;
+  let h=null;
+  if(props.hKey){
+    h = props.hKey;
+  }
   const oLiKey = props.oLiKey;
   const qList = q.map((qty) => {
     const qName = qty.type;
     const short = qty.short;    
-    const code = oLiKey+':'+qName;    
+    const code = oLiKey+':'+qName +(h?':'+h:'');    
     /*const i = sel.findIndex(item => item.type === sel.type && item.step === sel.step);
     console.log('Currently selected index = ' + i);
     let btnCapt = "menuListOptsBtn";
@@ -208,8 +215,7 @@ function InnerQtyList(props){
 function NotToppingStep(props){
   const items = props.items;
   const step = props.step; 
-  const qty = props.qty;
-  const sel = props.curSel;  
+  const qty = props.qty;   
   const nxt = NextStep(step);
   const itemList = items.map((i) => {
     const itemName = i.type;
@@ -228,7 +234,7 @@ function NotToppingStep(props){
     }               
     return (      
       <li key={oLiKey}  className="menuOptionsEle"> <div className="menuOptionName">{itemName}</div>
-        <ul className="menuListOpts"><InnerQtyList sel={sel} oLiKey={oLiKey} qty={qty} onClick={(value)=>props.onClick(value)}/></ul>
+        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} qty={qty} onClick={(value)=>props.onClick(value)}/></ul>
       </li> 
     );
   });
@@ -242,7 +248,7 @@ function NotToppingStep(props){
   
 }
 function ToppingStep(props){
-  const {stepType, itemOptions, optionQty } = this.props;
+  const {stepType, itemOptions, optionQty } = props;
   const nxt = NextStep(stepType);
   const itemList = itemOptions.map((i) => {
     const itemName = i.type;
@@ -256,7 +262,7 @@ function ToppingStep(props){
         <ul className="menuHalfOpts">
           <li key={bKey} className="halfList">{btn}</li>
         </ul>
-        <ul className="menuListOpts"><InnerQtyList oLiKey={bKey} qty={optionQty} onClick={(value)=>props.onClick(value)}/></ul>
+        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} hKey={v} qty={optionQty} onClick={(value)=>props.onClick(value)}/></ul>
       </li> 
     );
   });
@@ -269,11 +275,13 @@ function ToppingStep(props){
   )
 }
 function GetItemInfo(value){
-  console.log('Entered item info');
+  if(value.length===0){
+    return null;
+  }
   let x = value.indexOf(':');
   let s = [];
   let i = 0;
-  let rem = value;
+  let rem = value+':';
   while (x>0){
     s[i] = rem.substring(0,x);
     rem = rem.substring(x+1);
@@ -281,17 +289,17 @@ function GetItemInfo(value){
     i++;    
   }
   let ret = {
-    step: s[0],
-    type: s[1],
-    qty: s[2],
+    step: (i>=1?s[0]:''),
+    type: (i>=2?s[1]:''),
+    qty: (i>=3?s[2]:''),
     on: '',
     onMsg: '',
   };
-  if(s.length===4){
+  if(i===4){
     ret.on = s[3];
     const z = Menu.half.findIndex(h => h.value === s[3]);
     if(z!==-1){
-      ret.onMsg = Menu.half[z];
+      ret.onMsg = Menu.half[z].msg;
     } else {
       ret.qty = 'None';
       ret.on = '';
