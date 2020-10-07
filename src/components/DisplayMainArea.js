@@ -1,15 +1,21 @@
 import React from 'react';
 import SimpleForm from './SimpleForm';
 import '../css/DisplayMainArea.css';
-import df from "../resources/dairyfree.png";
-import gf from "../resources/glutenfree.png";
-import veggie from "../resources/vegetarian.png";
-import vegan from "../resources/vegan.png";
-
+import df from "../resources/dairyfree.svg";
+import gf from "../resources/glutenfree.svg";
+import veggie from "../resources/vegetarian.svg";
+import vegan from "../resources/vegan.svg";
+import PizzaOrder from './PizzaOrder'
 
 
 class DisplayMainArea extends React.Component {
-    render() {
+  constructor(props){
+    super(props);
+    this.state = {
+      order: new PizzaOrder(),
+    };
+  }  
+  render() {
     const showPage= this.props.data.showPage;
     if (showPage!=='Main') {
       return null;
@@ -142,7 +148,7 @@ class DisplayMainArea extends React.Component {
         </div>
       </div>
       <div className="chatBot">
-          <SimpleForm />
+          <SimpleForm order={this.state.order}/>
       </div>
       </>
     );

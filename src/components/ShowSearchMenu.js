@@ -4,8 +4,9 @@ import {StoreDetails} from './DisplayStoreSelect';
 import '../css/ShowSearchMenu.css';
 
 function ShowSearchMenu(props) { 
-  const {geoLococation, geoCity, geoState, previousStore, hasError, errorMsg} = props.data;
-  const geoString = geoCity && geoState ? geoCity + ', ' + geoState : "";
+  const {userLoc, previousStore, hasError, errorMsg} = props.data;
+  const geoLococation = userLoc.geoLoc;
+  const geoString = userLoc.geoString ? userLoc.geoString : "";
   const showPage= props.data.showPage;
   if (showPage!=='Search') {
     return null;

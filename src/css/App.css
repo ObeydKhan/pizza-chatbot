@@ -74,7 +74,13 @@ padding-bottom: 25px;
   font-weight: 600;
   padding-right: 5px;
 }
-
+.rsc .rsc-container {
+  width: 500px;
+  height: 650px;
+}
+.rsc .rsc-content {
+  height: 538px;
+}
 .rsc-container ul li:last-child button{
   background-color: salmon;
 }
