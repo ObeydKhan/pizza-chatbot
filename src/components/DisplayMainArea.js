@@ -50,7 +50,7 @@ class DisplayMainArea extends React.Component {
     } else if (this.state.showSum) {
       return <OrderComplete order={this.state.order} onEdit={(val)=>{return (this.editOrder(val))}} onCancel={()=>{this.cancelOrder()}}/>
     } else if(this.state.showEdit){
-      return <EditForm order={this.state.order} onEnd={(v) => {this.orderEnd(v)}}/>
+      return <EditForm order={this.state.order} end={(val)=>this.orderEnd(val)}/>
     } else {
     return (
       <>

@@ -74,6 +74,7 @@ class EditForm extends Component {
               {value: 'addP', label:'Add a Pizza', trigger:'addNewPizza'},
               {value: 'remP', label:'Remove a Pizza', trigger:'remPizza'},
               {value: 'canOrd', label:'Cancel Order', trigger:'canorder'},
+              {value: 'endEdit', label:'Finished Editting', trigger:'end-message'},
             ],
             placeholder: 'Select an option...',
           },
