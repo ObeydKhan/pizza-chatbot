@@ -8,7 +8,7 @@ class Pizza {
   specialInstructions='';          
   
   constructor(value){
-    this.id = value;
+    this.id = value;    
   }
   set Size(value){
     this.size = value.type;
@@ -58,10 +58,10 @@ class Pizza {
       topping.step === t && topping.type===n);
     const newTopping = {step: t, type: n, qty: q, on:o, onMsg:oMsg, };
     if(i===-1){
-      if(o!=='N'){       
+      if(o!=='N'&& q!=='None'){       
         this.toppings = this.toppings.concat(newTopping);
       }
-    } else {
+    } else if(q!=='None'){
       if(o==='N'){
         this.toppings.splice(i,1);
       } else {
@@ -121,11 +121,17 @@ class Pizza {
     let str = '';
     let i;
     for(i=0; i<meats.length; i++){
-      str = str + (i===meats.length-1? (i===0?meats[i]:'and '+ meats[i]): meats[i] + ', ');
+      if(meats[i]!==''){
+        str = str + (i===meats.length-1? (i===0?meats[i]:'and '+ meats[i]): meats[i] + ', ');
+      }
+    }
+    if(str===''){
+      str= 'No meats';
     }    
     return str;
   }
   get NonMeatToppings(){
+    let m = 0;
     const nonmeats = this.toppings.map(topping => {
       if(topping.step === 'nonmeats') {
         let obj = (
@@ -134,18 +140,38 @@ class Pizza {
         );       
         return obj;        
       } else {
+        m++;
         return '';
       }
     });
+
     let str='';
     let i;
-    for(i=0; i<nonmeats.length; i++){
-      str = str + (i===nonmeats.length-1? (i===0?nonmeats[i]:'and '+ nonmeats[i]): nonmeats[i] + ', ');
+    for(i=m; i<nonmeats.length; i++){
+      if(nonmeats[i]!==''){
+        str = str + (i===nonmeats.length-1? (i===m?nonmeats[i]:'and '+ nonmeats[i]): nonmeats[i] + ', ');
+      }      
+    }
+    if(str===''){
+      str= 'No non-meats';
     }    
     return str;  
   }
   get SpecialInstructions(){
+    if(this.specialInstructions===''){
+      return 'No special instructions';
+    }
     return this.specialInstructions;
+  }
+  get PizzaStringArray(){
+    const title = 'Pizza #'+ this.PizzaID + ' is a:';
+    const pizzaType = this.Size + ' ' + this.Crust;
+    const pizzaSauce = this.Sauce;
+    const cheese = this.Cheese;
+    const meats = this.MeatToppings;
+    const nonmeats = this.NonMeatToppings;
+    const inst = this.SpecialInstructions;
+    return ([title,pizzaType,pizzaSauce,cheese,meats,nonmeats,inst,]);
   }
 }
 

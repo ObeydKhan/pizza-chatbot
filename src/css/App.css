@@ -66,13 +66,8 @@ max-width: 94%;
 margin-bottom: 20px;
 }
 
-.summary td {
-padding-bottom: 25px;
-}
-
-.summary .align-text-top {
-  font-weight: 600;
-  padding-right: 5px;
+.summary tr {
+padding-bottom: 10px;
 }
 .rsc .rsc-container {
   width: 500px;

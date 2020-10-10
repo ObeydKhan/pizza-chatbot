@@ -3,117 +3,129 @@ import Pizza from './Pizza';
 import PropTypes from 'prop-types';
 
 class PizzaOrder {
-  #orderName= '';
-  #pickUpID= '';
-  #receiptNum= '';
-  #shortID='';  
-  #pizzas= [];
-  #orderDate = new Date();
-  constructor() {    
-    const mon = this.#orderDate.getMonth()+1;
-    const day = this.#orderDate.getDate()+1;
-    let m = mon+ '';
-    let d = day+'';
-    if (mon<10){
-      m = '0'+mon;
-    } 
-    if (day<10){
-      d = '0'+day;
-    }
-    this.#shortID='-'+m+d;
-    this.#receiptNum = Random(8) +this.#shortID;
+
+  constructor() {
+    this.orderDate= new Date();    
+    const mon = this.orderDate.getMonth()+1;
+    const day = this.orderDate.getDate()+1;
+    const m = mon<10?'0'+mon: mon+ '';
+    const d = day<10?'0'+day: day+ '';
+    this.shortID='-'+m+d;
+    this.receiptNum = Random(8)+this.shortID;
+    this.orderName= '';
+    this.pickUpID= '';
+    this.pizzas= [];
+    this.pizzaCnt = 0;
+    this.isEdit = false;
+    this.editID = 0;      
   }
   set Name(value){    
-    this.#orderName= value;
+    this.orderName= value;
     const x =value.indexOf(' ');    
     if(x!==-1){
       const str = value.substring(x+1);
-      this.#pickUpID= str + this.#shortID;
+      this.pickUpID= str + this.shortID;
     } else {
-      this.#pickUpID= value + this.#shortID;
+      this.pickUpID= value + this.shortID;
     }
+  }  
+  get Name(){
+    return this.orderName;  
   }
   get PizzaCnt(){
-    return this.#pizzas.length;
-  }
-  get Name(){
-    return this.#orderName;
+    return this.pizzaCnt;
   }  
   get ReceiptNum(){
-    return this.#receiptNum;
+    return this.receiptNum;
   }
   get PickUpID(){
-    return this.#pickUpID;
+    return this.pickUpID;
   }
   get NextPizzaID(){
-    return this.#pizzas.length+1;
+    return this.pizzaCnt+1;
   }
   get CurrentPizza(){
-    if(this.PizzaCnt!==0){
-      return this.#pizzas[this.PizzaCnt];
+    if(this.PizzaCnt===0){
+      return null;
+    } 
+    return this.pizzas[this.pizzaCnt-1];
+  }
+  get OrderDate(){
+    return this.orderDate;
+  }
+  get Pizzas(){    
+    return this.pizzas;
+  }
+  set EditID(v){
+    this.editID = v;
+  }
+  get EditID(){
+    return this.editID;
+  }
+  set IsOrderEdit(val){
+    this.isEdit = val;
+  }
+  get IsOrderEdit(){
+    return this.isEdit;
+  }
+  addNewPizza(id){        
+    const oSize = this.pizzas.length;
+    const cnt = this.pizzaCnt;    
+    if(oSize!==cnt){
+      new Error("Pizza Array Size Error");
+    } else if(id!==(cnt+1)){
+      new Error("New Pizza ID Error");
     } else {
-      const p = new Pizza(1);
-      this.#pizzas= new Array(p);
+      const p = new Pizza(id);
+      this.pizzas = this.pizzas.concat(p);
+      this.pizzaCnt++;
       return p;
     }
   }
-  addPizza(pizza){
-    const newID = pizza.PizzaID;
-    const i = this.#pizzas.findIndex(p => p.PizzaID === newID);
-    if(i===-1){
-      this.#pizzas.concat(pizza);
-    } else {
-      const p = new Pizza(this.NextPizzaID);
-      p.Size = pizza.Size;
-      p.Crust = pizza.Crust;
-      p.Sauce = pizza.Sauce;
-      p.Cheese = pizza.Cheese;
-      p.MeatToppings = pizza.MeatToppings;
-      p.NonMeatToppings = pizza.NonMeatToppings;
-      p.SpecialInstructions = pizza.SpecialInstructions;
-      this.#pizzas.concat(p);
+  selectPizza(id){
+    const i = this.pizzas.findIndex(p => p.PizzaID === id);
+    if(i!==-1){
+      return this.pizzas[i]
+    }
+    else {
+      return null;
     }
   }
   editPizza(pizza){
     const newID = pizza.PizzaID;
-    const i = this.#pizzas.findIndex(p => p.PizzaID === newID);
+    const i = this.pizzas.findIndex(p => p.PizzaID === newID);
     if(i!==-1){
-      const p = new Pizza(this.NextPizzaID);
-      p.Size = pizza.Size;
-      p.Crust = pizza.Crust;
-      p.Sauce = pizza.Sauce;
-      p.Cheese = pizza.Cheese;
-      p.MeatToppings = pizza.MeatToppings;
-      p.NonMeatToppings = pizza.NonMeatToppings;
-      p.SpecialInstructions = pizza.SpecialInstructions;
-      this.#pizzas.splice(i,1,p);
+      const p = pizza;      
+      this.pizzas.splice(i,1,p);
     }
   }
   removePizza(id){    
-    const i = this.#pizzas.findIndex(p => p.PizzaID === id);
+    const i = this.pizzas.findIndex(p => p.PizzaID === id);
     if(i!==-1){
-      this.#pizzas.splice(i,1);
+      this.pizzas.splice(i,1);
+      this.pizzaCnt--;
     }
   }
   getPizza(id){
-    const pizza = this.state.pizzas.filter(p => p.PizzaID === id)
+    const pizza = this.pizzas.filter(p => p.PizzaID === id)[0];
     if(pizza===null){
       return null;
     }
-    const title = 'Pizza #'+ pizza.PizzaID + ' is:';
+    const title = 'Pizza #'+ pizza.PizzaID + ' is a:';
     const pizzaType = pizza.Size + ' ' + pizza.Crust;
     const pizzaSauce = pizza.Sauce;
     const cheese = pizza.Cheese;
     const meats = pizza.MeatToppings;
     const nonmeats = pizza.NonMeatToppings;
-    
+    const inst = pizza.SpecialInstructions;
     return ({
-      "Title": title,
-      "Type": pizzaType,
-      "Sauce": pizzaSauce,
-      "Cheeses": cheese,
-      "Meats": meats,
-      "Non-Meats":nonmeats,
+      title: title,
+      type: pizzaType,
+      sauce: pizzaSauce,
+      cheeses: cheese,
+      meats: meats,
+      nonMeats:nonmeats,
+      inst:inst,
     });
   }  
 }

@@ -6,8 +6,11 @@ import '../css/OrderStyle.css';
 class OrderStep extends React.Component {
   constructor(props) {
     super(props);
-    const curStep = this.props.step.id;
-    const pizza = this.props.step.metadata;
+    const stepOvr = this.props.stepOvr;
+    const order = this.props.step.metadata;
+    const curStep = (stepOvr? this.props.stepID:this.props.step.id);    
+    const pID = (stepOvr? order.EditID:(order.NextPizzaID-1));    
+    const pizza = (stepOvr? order.selectPizza(pID): order.CurrentPizza);
     const sizeStep= curStep==='crusts'||curStep==='sizes'? true:false;
     const topStep = curStep==='meats'||curStep==='nonmeats'? true:false;
     const notTopStep = curStep==='cheeses'||curStep==='sauces'? true:false;
@@ -15,6 +18,7 @@ class OrderStep extends React.Component {
     const opts = Menu[curStep];
     const qty = Menu.qty;
     this.state ={
+      stepOvr:stepOvr,
       stepType: curStep,
       itemOptions: opts,
       optionQty: qty,      
@@ -38,7 +42,6 @@ class OrderStep extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   } 
   handleClick(value){
-    console.log('Entered handle click')
     const {stepType, /*currentSel, multiSel,*/ pizza, label } = this.state;
     let updateSel;
     let newPizza = pizza;
@@ -60,7 +63,6 @@ class OrderStep extends React.Component {
         updateSel =currentSel.splice(i,1,newSel);
       }
     }*/
-    console.log('Entering step switch'); 
     switch(stepType){
       case 'crusts':
         newPizza.Crust = newSel;
@@ -88,25 +90,20 @@ class OrderStep extends React.Component {
         break;
       default:
     }
-    console.log('Updating State');
     this.setState({
       currentSel: updateSel,
       pizza: newPizza,
       label: lbl,
     });
     if(newSel.type==='None'||newSel.step==='crusts'||newSel.step==='sizes'||newSel.step==='sauces'){
-      console.log('Triggering next from click handler');
       this.triggerNext();
     }
-    console.log('Exiting click handler');
   }
-  triggerNext(){
-    console.log('Entering trigger');
+  triggerNext(v){
     const type = this.state.stepType;
     const label = new Array(this.state.label[type]);
     const msg = label[0];
     if(msg===''){
-      console.log('Overriding empty trigger');
       const r = type + ':None:None';
       this.handleClick(r);
       return null;
@@ -118,24 +115,23 @@ class OrderStep extends React.Component {
     };
     const p = this.state.pizza;
     this.props.step.metadata=p;
-    console.log('Updating trigger state');
     this.setState({trigger: true}, () => {
       this.props.triggerNextStep(data);
     });
   }
   render(){
-    const {stepType, itemOptions, optionQty, isNotTopStep, isSizeStep, isTopStep } = this.state;    
+    const {stepType, itemOptions, optionQty, isNotTopStep, isSizeStep, isTopStep,stepOvr } = this.state;    
     return (
       <div className='orderStep'>
         {isNotTopStep && 
-          <NotToppingStep step={stepType} items={itemOptions} qty={optionQty}   
-        onClick={(value)=>this.handleClick(value)} onTrigger={()=>this.triggerNext()}/>}
+          <NotToppingStep stepType={stepType} itemOptions={itemOptions} optionQty={optionQty} stepOvr={stepOvr}    
+        onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>}
         {isSizeStep && 
-          <SizeCrustStep stepType={stepType} itemOptions={itemOptions} onClick={(value)=>this.handleClick(value)}/>        
+          <SizeCrustStep stepType={stepType} stepOvr={stepOvr} itemOptions={itemOptions} onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>        
         }
         {isTopStep && 
-          <ToppingStep stepType={stepType} itemOptions={itemOptions} optionQty={optionQty}  
-        onClick={(value)=>this.handleClick(value)} onTrigger={()=>this.triggerNext()}/>
+          <ToppingStep stepType={stepType} itemOptions={itemOptions} optionQty={optionQty} stepOvr={stepOvr}  
+        onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>
         }
       </div>
     );
@@ -143,9 +139,10 @@ class OrderStep extends React.Component {
 }
 function SizeCrustStep(props){
   const step = props.stepType;
-  
+  const stepOvr = props.stepOvr;
+
     const list = props.itemOptions;
-    const c = list.map((i) => {
+    let c = list.map((i) => {
       const cName = i.type;
       const code = step+':'+cName+':No';
       return (
@@ -155,6 +152,9 @@ function SizeCrustStep(props){
         </li>
       )
     })
+    if(stepOvr){
+      c = c.concat(<button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>Finished edits</button>)
+    }
     return (
       <div className="menuList">
         <ul className="menuOptions">{c}</ul>
@@ -213,16 +213,14 @@ function InnerQtyList(props){
   return qList; 
 }
 function NotToppingStep(props){
-  const items = props.items;
-  const step = props.step; 
-  const qty = props.qty;   
-  const nxt = NextStep(step);
-  const itemList = items.map((i) => {
+  const {stepType, itemOptions, optionQty, stepOvr } = props;
+  const nxt = NextStep({value: stepType, stepOvr:stepOvr});
+  const itemList = itemOptions.map((i) => {
     const itemName = i.type;
-    const oLiKey = step+':'+itemName;
+    const oLiKey = stepType+':'+itemName;
     if(itemName==='None'){      
       const nncode = oLiKey+':None';
-      const none = 'No ' + step;     
+      const none = 'No ' + stepType;     
       return (        
         <li key={oLiKey} className="menuOptionsEle">
           <ul className="menuListOpts">  
@@ -234,7 +232,7 @@ function NotToppingStep(props){
     }               
     return (      
       <li key={oLiKey}  className="menuOptionsEle"> <div className="menuOptionName">{itemName}</div>
-        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} qty={qty} onClick={(value)=>props.onClick(value)}/></ul>
+        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} qty={optionQty} onClick={(value)=>props.onClick(value)}/></ul>
       </li> 
     );
   });
@@ -242,14 +240,14 @@ function NotToppingStep(props){
   return (
     <div className="menuList">
       <ul className="menuOptions">{itemList}</ul>
-      <button className="nextStep" onClick={()=> props.onTrigger()}>{nxt}</button>
+      <button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>{nxt}</button>
     </div>
   )
   
 }
 function ToppingStep(props){
-  const {stepType, itemOptions, optionQty } = props;
-  const nxt = NextStep(stepType);
+  const {stepType, itemOptions, optionQty, stepOvr } = props;
+  const nxt = NextStep({value: stepType, stepOvr:stepOvr});
   const itemList = itemOptions.map((i) => {
     const itemName = i.type;
     const oLiKey = stepType+':'+itemName;
@@ -270,7 +268,7 @@ function ToppingStep(props){
   return (
     <div className="menuList">
       <ul className="menuOptions">{itemList}</ul>
-      <button className="nextStep" onClick={()=> props.onTrigger()}>{nxt}</button>
+      <button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>{nxt}</button>
     </div>
   )
 }
@@ -308,8 +306,12 @@ function GetItemInfo(value){
   }
   return ret;
 }
-function NextStep(value){
-  const curStep = value;
+function NextStep(props){
+  const curStep = props.value;
+  const stepOvr = props.stepOvr;
+  if(stepOvr){
+    return 'Finished edits';
+  }
   switch(curStep){
     case 'crusts':
       return '';

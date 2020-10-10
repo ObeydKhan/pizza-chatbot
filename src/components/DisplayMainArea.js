@@ -6,19 +6,51 @@ import gf from "../resources/glutenfree.svg";
 import veggie from "../resources/vegetarian.svg";
 import vegan from "../resources/vegan.svg";
 import PizzaOrder from './PizzaOrder'
-
+import OrderComplete from './OrderComplete';
+import EditForm from './EditForm';
 
 class DisplayMainArea extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       order: new PizzaOrder(),
+      showSum: false,
+      showEdit: false,
     };
+    this.orderEnd = this.orderEnd.bind(this);    
+    this.editOrder = this.editOrder.bind(this);
+    this.cancelOrder = this.cancelOrder.bind(this);
+  }
+  editOrder(val){
+    const o = val;
+    this.setState({
+      order: o,
+      showSum: false,
+      showEdit: true,
+    });
+  }
+  cancelOrder(){
+    this.setState({
+      order: new PizzaOrder(),
+      showSum: false,
+    })
+  }
+  orderEnd(val){
+    const o = val;
+    const t = true;
+    this.setState({
+      order: o,
+      showSum: t,
+    })
   }  
   render() {
     const showPage= this.props.data.showPage;
     if (showPage!=='Main') {
       return null;
+    } else if (this.state.showSum) {
+      return <OrderComplete order={this.state.order} onEdit={(val)=>{return (this.editOrder(val))}} onCancel={()=>{this.cancelOrder()}}/>
+    } else if(this.state.showEdit){
+      return <EditForm order={this.state.order} onEnd={(v) => {this.orderEnd(v)}}/>
     } else {
     return (
       <>
@@ -148,7 +180,7 @@ class DisplayMainArea extends React.Component {
         </div>
       </div>
       <div className="chatBot">
-          <SimpleForm order={this.state.order}/>
+          <SimpleForm order={this.state.order} end={(val)=>this.orderEnd(val)}/>
       </div>
       </>
     );

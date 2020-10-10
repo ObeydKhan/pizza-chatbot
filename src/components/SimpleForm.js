@@ -3,35 +3,24 @@ import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import OrderStep from './OrderStep';
 import Summary from './Summary';
-import Pizza from './Pizza';
+import AddPizza from './AddPizza'; 
 
 class SimpleForm extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      order: this.props.order,
-      pizzaCnt: 0,
-      curPizza: '',
-    };
     this.handleEnd = this.handleEnd.bind(this);
   }
   handleEnd(){
     //load order summary page
+    const order = this.props.order;
+    this.props.end(order)
   }
   componentDidMount(){
-    const order = this.state.order;
-    const p = order.CurrentPizza;
-    const cnt = order.PizzaCnt;
-    console.log('Current Pizza:\n'+ JSON.stringify(p));
-    console.log('Pizza count = ' + cnt);
-    this.setState({
-      curPizza: p,
-      pizzaCnt: cnt,
-    });
+    
   }
   render() {
-    const pizza = new Pizza(1);      
-    console.log('Form constructor');
+    const order = this.props.order;
+    let cnt = 0;      
     return (
       <ThemeProvider theme={{
               background: '#f5f5f5',
@@ -62,26 +51,27 @@ class SimpleForm extends Component {
             id: 'ordername',
             user:true,
             placeholder: 'Please enter a name...',
-            trigger: '3'   
+            trigger: 'addNewPizza',   
           },
           {
-            id: '3',
-            message: 'Select a crust style:',
-            trigger: 'crusts',            
-          },
+            id: 'addNewPizza',
+            component: <AddPizza order={order}/>,       
+            asMessage: true,
+            trigger: 'crusts',           
+          },          
           {
             id: 'crusts',
             placeholder: 'Choose an option',
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
-            metadata: pizza,
+            metadata: order,
             trigger: '4',
           },
           {
             id: '4',
             message:'Please choose a pizza size:',
-            trigger: 'sizes'
+            trigger: 'sizes',
           },
           {
             id: 'sizes',
@@ -89,8 +79,8 @@ class SimpleForm extends Component {
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
-            metadata: pizza,
-            trigger: '5'
+            metadata: order,
+            trigger: '5',
           },
           {
             id: '5',
@@ -103,7 +93,7 @@ class SimpleForm extends Component {
             component: <OrderStep/>,
             waitAction: true,
             replace: true,
-            metadata: pizza,
+            metadata: order,
             trigger: '6',
           },
           {
@@ -117,7 +107,7 @@ class SimpleForm extends Component {
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
-            metadata: pizza,               
+            metadata: order,               
             trigger: '7',                        
           },         
           {
@@ -131,7 +121,7 @@ class SimpleForm extends Component {
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
-            metadata: pizza,               
+            metadata: order,               
             trigger: '8',
           },
           {
@@ -145,29 +135,61 @@ class SimpleForm extends Component {
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
-            metadata: pizza,               
+            metadata: order,               
             trigger: '9'
           },
           {
             id: '9',
+            message: 'Any Special instructions?',
+            trigger: 'spcQues',            
+          },
+          {
+            id: 'spcQues',
+            options: [
+              {value: 'yesSpc', label: 'Yes', trigger: 'yesSpc'},
+              {value: 'noSpc', label: 'No', trigger: '10'},
+            ],
+            placeholder: 'Choose an option',
+          },
+          {
+            id: 'yesSpc',
+            message: 'Please enter your special instructions below',
+            trigger: 'userInst',
+          },
+          {
+            id: 'userInst',
+            user: true,
+            placeholder: 'Enter instructions here...',
+            trigger: '10',
+          },
+          {
+            id: '10',
             message: 'Please review your pizza:',
             trigger: 'pizzareview',            
           },
           {
             id: 'pizzareview',
-            component: <Summary />,
-            asMessage: true,            
-            metadata: pizza,
-            trigger: '10'
+            component: <Summary order={order} cnt={cnt}/>,
+            asMessage: true,                       
+            metadata: cnt,
+            trigger: '11'
           },
           {
-            id: '10',
-            message: 'Good Bye',
-            trigger: 'end-message',            
+            id: '11',
+            options: [
+              {value: 'editP', label: 'Edit this pizza', trigger: 'editPizza'},
+              {value: 'addP', label: 'Add another pizza', trigger: 'addNewPizza'},
+              {value: 'compOr', label: 'Complete Order', trigger: 'end-message'},
+            ],            
+          },
+          {
+            id: 'editPizza',
+            message: 'Please review your pizza:',
+            trigger: 'end-message',
           },            
           {
             id: 'end-message',
-            message: 'Thank you for choosing Slice! Your order will be ready in 5-10 minutes!',
+            message: 'Thank you for choosing Slice!',
             end: true,
           },
           ]}

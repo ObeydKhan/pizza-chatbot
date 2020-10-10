@@ -27,8 +27,7 @@ class App extends React.Component {
    
   handleStoreSearch(geoReturn) {
     const userEntered = this.input.current.value; 
-    const geoRetLength = geoReturn.length;    
-    
+    const geoRetLength = geoReturn.length;  
     const userLoc = this.state.userLoc;
     if(userEntered==='' && geoReturn==='') {
       console.log('Empty values');
@@ -37,7 +36,6 @@ class App extends React.Component {
         errorMsg: "You must enter a US Zip Code"
       });
     } else if(geoRetLength>4) {
-      console.log('Using Geo Info');
       this.setState({
         searchedBy: 'Geo Locate',
         searchedLocation: geoReturn,
@@ -49,8 +47,6 @@ class App extends React.Component {
       userLoc.userEntry = userEntered;
       const locString = userLoc.userString;
       if(userLoc.userEntry){
-        console.log('User Location String = ' + locString);
-        console.log('Geo String Length = ' + geoRetLength);
         this.setState({
           searchedBy: 'User Entry',
           searchedLocation: locString,
