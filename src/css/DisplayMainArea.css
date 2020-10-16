@@ -36,25 +36,19 @@
   width: 40%;
 }
 .chatBot {
-  width: 25%;
-  float: right;
-  
+  float: right;  
   padding: 10px;
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 10px;
+  right: 10px;
 }
-
-
 .menuItem {
   display: block;
 }
-
 .menuItem p {
   display: inline-block;
   font-size: 16px;
 }
-
 .allergyInfo {
   width: 40px;
   padding-left: 10px;

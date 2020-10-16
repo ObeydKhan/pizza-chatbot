@@ -1,12 +1,28 @@
 import React, { Component } from 'react';
-import ChatBot from 'react-simple-chatbot';
+import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
+import OrderStep from './OrderStep';
 import Summary from './Summary';
+import AddPizza from './AddPizza'; 
 
 class SimpleForm extends Component {
-    render() {
-      return (
-          <ThemeProvider theme={{
+  constructor(props){
+    super(props);
+    this.handleEnd = this.handleEnd.bind(this);
+  }
+  handleEnd(){
+    //load order summary page
+    const order = this.props.order;
+    this.props.end(order)
+  }
+  componentDidMount(){
+    
+  }
+  render() {
+    const order = this.props.order;
+    let cnt = 0;      
+    return (
+      <ThemeProvider theme={{
               background: '#f5f5f5',
               fontFamily: 'Montserrat',
               headerBgColor: '#DD841F',
@@ -18,184 +34,164 @@ class SimpleForm extends Component {
               userFontColor: '#4a4a4a',
               marginTop: '60px',
           }}>
-        <ChatBot headerTitle="Slice Bot"
-
-                 steps={[
-            {
-              id: '1',
-              message: 'Welcome to Slice!',
-              trigger: '2',
-            },
-            {
-                id: '2',
-                message: 'What size pizza would you like to order?',
-                trigger: 'size',
-              },
-              {
-                id: 'size',
-                placeholder: 'Choose an option',
-                options: [
-                  { value: 'small', label: 'Small 10"', trigger: '3' },
-                  { value: 'medium', label: 'Medium 12"', trigger: '3' },
-                  { value: 'large', label: 'Large 14"', trigger: '3' },
-                  { value: 'x-large', label: 'X-Large 16"', trigger: '3' },
-                  { value: '', label: 'Start Over', trigger: '1' },
-                ],
-              },
-              {
-                id: '3',
-                message: 'Select your crust Style:',
-                trigger: 'crust',
-              },
-              {
-                id: 'crust',
-                placeholder: 'Choose an option',
-                options: [
-                  { value: 'original', label: 'Original', trigger: '4' },
-                  { value: 'thin-crust', label: 'Thin Crust', trigger: '4' },
-                  { value: 'gluten-free', label: 'Gluten Free', trigger: '4' },
-                  { value: '', label: 'Go Back', trigger: '2' },
-                ],
-              },
-              {
-                id: '4',
-                message: 'Cheese?',
-                trigger: 'cheese',
-              },
-            {
-              id: 'cheese',
-              placeholder: 'Choose an option',
-              options: [
-                { value: 'none', label: 'None', trigger: '5' },
-                { value: 'light', label: 'Light', trigger: '5' },
-                { value: 'normal', label: 'Normal', trigger: '5' },
-                { value: 'double', label: 'Double', trigger: '5' },
-                  { value: '', label: 'Go Back', trigger: '2' },
-              ],
-            },
-            {
-              id: '5',
-              message: 'Choose a sauce:',
-              trigger: 'sauce',
-            },
-            {
-              id: 'sauce',
-              placeholder: 'Choose an option',
-              options: [
-                { value: 'tomato', label: 'Tomato', trigger: '6' },
-                { value: 'marinara', label: 'Marinara', trigger: '6' },
-                { value: 'honey-bbq', label: 'Honey BBQ', trigger: '6' },
-                { value: 'alfredo', label: 'Alfredo', trigger: '6' },
-                  { value: '', label: 'Go Back', trigger: '2' },
-
-              ],
-            },
-            {
-                id: '6',
-                message: 'Choose your meats:',
-                trigger: 'meats',
-              },
-              {
-                id: 'meats',
-                trigger: 'meatsinput',
-                message: 'Pepperoni, Beef, Philly Steak, Italian Sausage, Grilled Chicken, Bacon',
-              },
-              {
-                id: 'meatsinput',
-                placeholder: 'Type your meats...',
-                user: true,
-                trigger: 8,
-              },
-              {
-                id: '8',
-                message: 'Choose your toppings:',
-                trigger: 'nonmeats',
-              },
-              {
-                id: 'nonmeats',
-                trigger: 'nonmeatsinput',
-                message: 'Tomatoes, Mushrooms, Jalapeño Peppers, Onions, Black Olives, Pineapple, Green Peppers',
-              },
-              {
-                id: 'nonmeatsinput',
-                placeholder: 'Type your toppings...',
-                user: true,
-                trigger: '9',
-              },
-            {
-              id: '9',
-              message: 'Great! Check out your summary',
-              trigger: 'review',
-            },
-            {
-              id: 'review',
-              component: <Summary />,
-              asMessage: true,
-              trigger: 'update',
-            },
-            {
-              id: 'update',
-              message: 'Would you like to make any changes to your order?',
-              trigger: 'update-question',
-            },
-            {
-              id: 'update-question',
-              options: [
-                { value: 'yes', label: 'Yes', trigger: 'update-yes' },
-                { value: 'no', label: 'No', trigger: 'end-message' },
-              ],
-            },
-            {
-              id: 'update-yes',
-              message: 'What would you like to change?',
-              trigger: 'update-fields',
-            },
-            {
-              id: 'update-fields',
-              options: [
-                { value: 'size', label: 'Size', trigger: 'update-size' },
-                { value: 'crust', label: 'Crust', trigger: 'update-crust' },
-                { value: 'cheese', label: 'Cheese', trigger: 'update-cheese' },
-                { value: 'sauce', label: 'Sauce', trigger: 'update-sauce' },
-                { value: 'meats', label: 'Meats', trigger: 'update-meats' },
-                { value: 'nonmeats', label: 'Toppings', trigger: 'update-nonmeats' },
-              ],
-            },
-            {
-              id: 'update-size',
-              update: 'size',
-              trigger: 'review',
-            },
-            {
-              id: 'update-crust',
-              update: 'crust',
-              trigger: 'review',
-            },
-            {
-              id: 'update-cheese',
-              update: 'cheese',
-              trigger: 'review',
-            },
-            {
-                id: 'update-sauce',
-                update: 'sauce',
-                trigger: 'review',
-            },
-            {
-                id: 'update-meats',
-                update: 'meats',
-                trigger: 'review',
-            },
-            {
-                id: 'update-nonmeats',
-                update: 'nonmeats',
-                trigger: 'review',
-            },
-            {
-              id: 'end-message',
-              message: 'Thank you for choosing Slice! Your order will be ready in 5-10 minutes!',
-              end: true,
-            },
+      <ChatBot headerTitle="Slice Bot"
+        handleEnd = {this.handleEnd}
+        steps={[
+          {
+            id: '1',
+            message: 'Welcome to Slice!',
+            trigger: '2',            
+          },
+          {
+            id: '2',
+            message: 'Please enter a name for the order',
+            trigger: 'ordername',            
+          },
+          {
+            id: 'ordername',
+            user:true,
+            placeholder: 'Please enter a name...',
+            trigger: 'addNewPizza',   
+          },
+          {
+            id: 'addNewPizza',
+            component: <AddPizza order={order}/>,       
+            asMessage: true,
+            trigger: 'crusts',           
+          },          
+          {
+            id: 'crusts',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,              
+            waitAction: true, 
+            replace: true,
+            metadata: order,
+            trigger: '4',
+          },
+          {
+            id: '4',
+            message:'Please choose a pizza size:',
+            trigger: 'sizes',
+          },
+          {
+            id: 'sizes',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,              
+            waitAction: true, 
+            replace: true,
+            metadata: order,
+            trigger: '5',
+          },
+          {
+            id: '5',
+            message: 'Please choose a sauce:',
+            trigger: 'sauces',            
+          },
+          {
+            id: 'sauces',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,
+            waitAction: true,
+            replace: true,
+            metadata: order,
+            trigger: '6',
+          },
+          {
+            id: '6',
+            message: 'Please choose your cheeses:',
+            trigger: 'cheeses',
+          },          
+          {
+            id: 'cheeses',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,              
+            waitAction: true, 
+            replace: true,
+            metadata: order,               
+            trigger: '7',                        
+          },         
+          {
+            id: '7',
+            message: 'Please choose your meat toppings:',
+            trigger: 'meats',            
+          },
+          {
+            id: 'meats',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,              
+            waitAction: true, 
+            replace: true,
+            metadata: order,               
+            trigger: '8',
+          },
+          {
+            id: '8',
+            message: 'Please choose your non-meat toppings:',
+            trigger: 'nonmeats',            
+          },
+          {
+            id: 'nonmeats',
+            placeholder: 'Choose an option',
+            component: <OrderStep/>,              
+            waitAction: true, 
+            replace: true,
+            metadata: order,               
+            trigger: '9'
+          },
+          {
+            id: '9',
+            message: 'Any Special instructions?',
+            trigger: 'spcQues',            
+          },
+          {
+            id: 'spcQues',
+            options: [
+              {value: 'yesSpc', label: 'Yes', trigger: 'yesSpc'},
+              {value: 'noSpc', label: 'No', trigger: '10'},
+            ],
+            placeholder: 'Choose an option',
+          },
+          {
+            id: 'yesSpc',
+            message: 'Please enter your special instructions below',
+            trigger: 'userInst',
+          },
+          {
+            id: 'userInst',
+            user: true,
+            placeholder: 'Enter instructions here...',
+            trigger: '10',
+          },
+          {
+            id: '10',
+            message: 'Please review your pizza:',
+            trigger: 'pizzareview',            
+          },
+          {
+            id: 'pizzareview',
+            component: <Summary order={order} cnt={cnt}/>,
+            asMessage: true,                       
+            metadata: cnt,
+            trigger: '11'
+          },
+          {
+            id: '11',
+            options: [
+              {value: 'editP', label: 'Edit this pizza', trigger: 'editPizza'},
+              {value: 'addP', label: 'Add another pizza', trigger: 'addNewPizza'},
+              {value: 'compOr', label: 'Complete Order', trigger: 'end-message'},
+            ],            
+          },
+          {
+            id: 'editPizza',
+            message: 'Please review your pizza:',
+            trigger: 'end-message',
+          },            
+          {
+            id: 'end-message',
+            message: 'Thank you for choosing Slice!',
+            end: true,
+          },
           ]}
         />
           </ThemeProvider>

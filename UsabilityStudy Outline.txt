@@ -1,0 +1,22 @@
+Usability study:
+-Note: User allowed location but the geolocation menu did not appear.
+  Possible timeout issue with geolocation function/async
+
+->Enter location
+  Location menu was poorly sized on the users screen.
+
+->Select appropriate store
+  no Issues.
+
+->Order desired pizza
+  Having the menu on the side seems to distract the user
+  User frequently hovers over menu on left side as if attempting to get additional information.
+  Entering toppings is task
+  No easy way to exit menu/change location in chatbot after ordering pizza
+  When ordering a pizza without meats/toppings an option for none does not appear
+  No option to go back when entering meats/toppings.
+
+->Change your location
+  User got stuck on change store. No apparent direction to make this change.
+
+User questions: None

@@ -1,0 +1,63 @@
+{
+  "crusts": [
+    {"value": "og",
+      "type": "Original Crust",
+      "sizes": ["sm","md","lg","xl"]},
+    {"value": "tn",
+      "type": "Thin Crust",
+      "sizes": ["md","lg"]},
+    {"value": "dd",
+      "type": "Deep Dish",
+      "sizes": ["sm","md","lg","xl"]},
+    {"value": "gf",
+      "type": "Gluten Free",
+      "sizes": ["sm","md"]}],
+
+  "sizes": [
+    {"value": "sm", "type": "Small (10\")"},
+    {"value": "md", "type": "Medium (12\")"},
+    {"value": "lg", "type": "Large (14\")"},
+    {"value": "xl", "type": "X-Large (18\")"}],
+  
+  "sauces": [
+    {"value": "tm", "type": "Tomato"},
+    {"value": "ma", "type": "Marinara"},
+    {"value": "hb", "type": "Honey BBQ"},
+    {"value": "al", "type": "Alfredo"},
+    {"value": "nn", "type": "None"}],  
+
+  "cheeses": [
+    {"value": "mz", "type": "Mozzerella"},
+    {"value": "bf", "type": "Buffalo"},
+    {"value": "gt", "type": "Goat"},
+    {"value": "nn", "type": "None"}],
+
+  "meats": [
+    {"value": "pe", "type": "Pepperoni"},
+    {"value": "be", "type": "Beef"},
+    {"value": "ps", "type": "Philly Steak"},
+    {"value": "is", "type": "Italian Sausage"},
+    {"value": "gc", "type": "Grilled Chicken"},
+    {"value": "ba", "type": "Bacon"}],
+
+  "nonmeats": [
+    {"value": "tm", "type": "Tomatoes"},
+    {"value": "ma", "type": "Mushrooms"},
+    {"value": "hb", "type": "Jalapeño Peppers"},
+    {"value": "al", "type": "Onions"},
+    {"value": "nn", "type": "Black Olives"},
+    {"value": "al", "type": "Pineapple"},
+    {"value": "gp", "type": "Green Peppers"}],
+
+  "qty": [
+    {"value": "rg", "type": "Regular", "short":"Reg"},
+    {"value": "lt", "type": "Lite", "short":"Lite"},
+    {"value": "ex", "type": "Extra", "short":"Xtra"},
+    {"value": "db", "type": "Double", "short":"Dbl"},
+    {"value": "tp", "type": "Triple", "short":"Trpl"}],
+  
+  "half": [
+    {"value": "wp", "type": "Whole", "short": "", "msg": ""},
+    {"value": "LH", "type": "Left", "short": "L", "msg": "on the left half"},
+    {"value": "RH", "type": "Right", "short": "R", "msg": "on the right half"}]
+}

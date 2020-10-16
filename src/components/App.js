@@ -4,54 +4,38 @@ import {DisplayStoreSelect, StoreDetails} from './DisplayStoreSelect';
 import ShowSearchMenu from './ShowSearchMenu';
 import DisplayMainArea from './DisplayMainArea';
 import logo from '../resources/SliceLogo.png';
-import ResolveLocation from './GeoLoc'
+/*import ResolveLocation from './GeoLoc';*/
+
 class App extends React.Component {
   constructor(props) {
     super(props);    
     this.state = {
       searchedBy: '',
-      searchedLocation: '',
-      geoLococation: 'NoGeo',
-      geoCity: '',
-      geoState: '',      
+      searchedLocation: '',          
       selectedStore: '0',
       previousStore: '0',
       showPage: 'Search', 
-      geoIsChecked: false,
       hasError: false,
       errorMsg: '',
+      userLoc: this.props.userLocObj,
     };
     this.handleStoreSearch = this.handleStoreSearch.bind(this);
     this.handleStoreSelect = this.handleStoreSelect.bind(this);   
     this.updateLocation = this.updateLocation.bind(this);
     this.input = React.createRef();        
   }
-  componentDidMount(){
-    const geoIsChecked = this.state.geoIsChecked;    
-    if(!geoIsChecked) {
-      const results = ResolveLocation();      
-      results.then(data => {
-        this.setState({
-          geoLococation: data.zipCode,
-          geoIsChecked: data.isChecked,      
-          geoCity: data.city,
-          geoState: data.state,
-        });
-      });   
-    }           
-  }  
+   
   handleStoreSearch(geoReturn) {
-    const userEntLoc = this.input.current.value; 
-    const geoRetLength = geoReturn.length;
-    const userEntLength = userEntLoc.length;
-    if(userEntLoc==='' && geoReturn==='') {
+    const userEntered = this.input.current.value; 
+    const geoRetLength = geoReturn.length;  
+    const userLoc = this.state.userLoc;
+    if(userEntered==='' && geoReturn==='') {
       console.log('Empty values');
       this.setState({
         hasError: true,
         errorMsg: "You must enter a US Zip Code"
       });
-    } else if(geoRetLength>0) {
-      console.log('Using Geo Info');
+    } else if(geoRetLength>4) {
       this.setState({
         searchedBy: 'Geo Locate',
         searchedLocation: geoReturn,
@@ -60,21 +44,22 @@ class App extends React.Component {
         errorMsg: '',
       });
     } else {         
-      if(isNaN(userEntLoc) || userEntLength !== 5) {
-        console.log('Invalid user input');
-        this.setState({
-          hasError: true,
-          errorMsg: "Invalid Zip Code."
-        });
-      } else {
+      userLoc.userEntry = userEntered;
+      const locString = userLoc.userString;
+      if(userLoc.userEntry){
         this.setState({
           searchedBy: 'User Entry',
-          searchedLocation: userEntLoc,
+          searchedLocation: locString,
           showPage: 'Select',
           hasError: false,
           errorMsg: '',
-        }); 
-      } 
+        });
+      } else {
+        this.setState({
+          hasError: true,
+          errorMsg: "You must enter a US Zip Code"
+        });
+      }
     }           
   }
   updateLocation() {
