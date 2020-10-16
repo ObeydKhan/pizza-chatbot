@@ -77,7 +77,7 @@ class UserLocation {
     return 'Invalid ZipCode';        
   }  
   initLoc() {
-    /*Factory method commented out for testing
+    /*Factory method commented out for testing*/
     return (this.handleGeoLocation()
       .then(data => {
         console.log('Setting geo zip property: ' + data)
@@ -91,8 +91,8 @@ class UserLocation {
         }
         return this;
       })
-    )*/
-      //geo location hard coded for testing
+    )
+      /*geo location hard coded for testing
       const data = '22060';    
       const l = lookup(data);
       const c = l.city;
@@ -101,7 +101,7 @@ class UserLocation {
       this.#geoZip = data;
       this.#geoIsResolved = true;
     
-    return this;
+    return this;*/
        
   }  
   resolveGeoLoc(){

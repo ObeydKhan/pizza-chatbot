@@ -9,17 +9,16 @@ import 'popper.js/dist/umd/popper.js';
 import 'bootstrap/dist/js/bootstrap.js';
 import UserLocation from './components/ZipLookUp'
 
-
-/*LocationFactory().then(obj => {
-  console.log('Inside factory object');*/
-  const obj = LocationFactory();
+LocationFactory().then(obj => {
+ 
+  //npmconst obj = LocationFactory();
   ReactDOM.render(
   <React.StrictMode>
     <App userLocObj={obj}/>
   </React.StrictMode>,
   document.getElementById('root')
   );
-/*})*/
+})
 function LocationFactory(loc){
   let x = new UserLocation();
   return x.initLoc();
