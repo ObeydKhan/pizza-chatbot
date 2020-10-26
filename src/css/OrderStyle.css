@@ -7,6 +7,58 @@
   padding: 0px;
   padding-bottom: 16px;
 }
+.rsc .rsc-cs .orderStep{
+  text-align: left;
+}
+.rsc .rsc-cs .menuEleList{   
+  list-style-type: none;
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
+.rsc .rsc-cs .btn-item{
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsc .rsc-cs .menuBtn{
+
+}
+.rsc .rsc-cs .btnNavigationArray{
+
+}
+.rsc .rsc-cs .btnCtrlList{
+
+}
+.rsc .rsc-cs .btn-ctrl{
+
+}
+.rsc .rsc-cs .btn-warn{
+
+}
+.rsc .rsc-cs .btn-select{
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: purple;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 .rsc .rsc-cs .menuList {
   text-align: left;
 }
@@ -54,7 +106,7 @@
   background-color: #a85d06;
   opacity: 0.1;
 }
-.rsc .rsc-cs .menuListOptsEle:hover{
+.rsc .rsc-cs:hover{
   opacity: 0.7;
 }
 .rsc .rsc-cs .menuListOptsEle:hover:focus, :active{

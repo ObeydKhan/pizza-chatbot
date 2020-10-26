@@ -1,343 +1,135 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import Menu from './pizzaMenu.json';
+import React, {useState} from 'react';
 import '../css/OrderStyle.css';
 
+
 class OrderStep extends React.Component {
-  constructor(props) {
+  constructor(props){
     super(props);
-    const stepOvr = this.props.stepOvr;
-    const order = this.props.step.metadata;
-    const curStep = (stepOvr? this.props.stepID:this.props.step.id);    
-    const pID = (stepOvr? order.EditID:(order.NextPizzaID-1));    
-    const pizza = (stepOvr? order.selectPizza(pID): order.CurrentPizza);
-    const sizeStep= curStep==='crusts'||curStep==='sizes'? true:false;
-    const topStep = curStep==='meats'||curStep==='nonmeats'? true:false;
-    const notTopStep = curStep==='cheeses'||curStep==='sauces'? true:false;
-    const multiSel = curStep==='cheeses'||'meats'||curStep==='nonmeats'? true:false;
-    const opts = Menu[curStep];
-    const qty = Menu.qty;
-    this.state ={
-      stepOvr:stepOvr,
-      stepType: curStep,
-      itemOptions: opts,
-      optionQty: qty,      
-      isSizeStep: sizeStep,
-      isTopStep: topStep,
-      isNotTopStep: notTopStep,
-      multiSel:multiSel,
-      currentSel: [],
-      pizza: pizza,
-      trigger: false,
-      label: {
-        crusts: '',
-        sizes: '',
-        sauces: '',
-        cheeses: '',
-        meats: '',
-        nonmeats: '',
-      },
-    };   
+    this.state={
+      selected:[null],
+    }
     this.triggerNext = this.triggerNext.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  } 
-  handleClick(value){
-    const {stepType, /*currentSel, multiSel,*/ pizza, label } = this.state;
-    let updateSel;
-    let newPizza = pizza;
-    let lbl = label; 
-    const newSel = GetItemInfo(value);
-    /*
-    const i = currentSel.findIndex(item => item.type === newSel.type && item.step === newSel.step);
-    if((i===-1 && multiSel) || currentSel.length===0) {
-      //add selection
-      updateSel = currentSel.concat(newSel);
-    } else if(i===-1 && !multiSel) {
-      //change selection
-      updateSel = newSel;
-    } else {
-      //change/delete selection
-      if(newSel===currentSel[i]) {
-        updateSel =currentSel.splice(i,1);
-      } else {
-        updateSel =currentSel.splice(i,1,newSel);
-      }
-    }*/
-    switch(stepType){
-      case 'crusts':
-        newPizza.Crust = newSel;
-        lbl.crusts = newPizza.Crust;
-        break;
-      case 'sizes':
-        newPizza.Size = newSel;
-        lbl.sizes = newPizza.Size;
-        break;
-      case 'sauces':
-        newPizza.Sauce = newSel;
-        lbl.sauces = newPizza.Sauce;
-        break;
-      case 'cheeses':
-        newPizza.Cheese = newSel;
-        lbl.cheeses = newPizza.Cheese;
-        break;
-      case 'meats':
-        newPizza.Topping = newSel;
-        lbl.meats = newPizza.MeatToppings;
-        break;
-      case 'nonmeats':
-        newPizza.Topping = newSel;
-        lbl.nonmeats = newPizza.NonMeatToppings;
-        break;
-      default:
-    }
-    this.setState({
-      currentSel: updateSel,
-      pizza: newPizza,
-      label: lbl,
-    });
-    if(newSel.type==='None'||newSel.step==='crusts'||newSel.step==='sizes'||newSel.step==='sauces'){
-      this.triggerNext();
-    }
+    this.onSelect = this.onSelect.bind(this);    
   }
-  triggerNext(v){
-    const type = this.state.stepType;
-    const label = new Array(this.state.label[type]);
-    const msg = label[0];
-    if(msg===''){
-      const r = type + ':None:None';
-      this.handleClick(r);
-      return null;
-    }
-    const data = {
-      value: label,
-      type: type,
-      msg: msg,
-    };
-    const p = this.state.pizza;
-    this.props.step.metadata=p;
-    this.setState({trigger: true}, () => {
-      this.props.triggerNextStep(data);
-    });
+  triggerNext(val){
+    const key = val.key;
+    const target = val.target;
+    const ref = val.refType;
+    const ordercontrol = this.props.step.metadata;
+    ordercontrol.ProcessAction(val);
+  }
+  onSelect(val){
+    const i = this.state.selected.findIndex(p=>p===val.key);
+    
+    const v = i===-1?this.state.selected.concat(val.key):this.state.selected.splice(i,1);
+    this.setState({selected:v});    
   }
   render(){
-    const {stepType, itemOptions, optionQty, isNotTopStep, isSizeStep, isTopStep,stepOvr } = this.state;    
-    return (
-      <div className='orderStep'>
-        {isNotTopStep && 
-          <NotToppingStep stepType={stepType} itemOptions={itemOptions} optionQty={optionQty} stepOvr={stepOvr}    
-        onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>}
-        {isSizeStep && 
-          <SizeCrustStep stepType={stepType} stepOvr={stepOvr} itemOptions={itemOptions} onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>        
-        }
-        {isTopStep && 
-          <ToppingStep stepType={stepType} itemOptions={itemOptions} optionQty={optionQty} stepOvr={stepOvr}  
-        onClick={(value)=>this.handleClick(value)} onTrigger={(v)=>this.triggerNext(v)}/>
-        }
-      </div>
-    );
-  }
+    const ordercontrol = this.props.step.metadata;
+    if(!ordercontrol.isStarted){
+      const name = this.props.steps.ordername.value;
+      ordercontrol.isStarted = name;
+    }
+    const updatedStep = ordercontrol.ProcessStep();
+    const currentStep = updatedStep.CurrentStep;
+    const stepCtrls = updatedStep.StepControls;
+    
+    return <BuildStep stepOptions={currentStep} selected={this.state.selected} stepCtrls={stepCtrls} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
+  }  
 }
-function SizeCrustStep(props){
-  const step = props.stepType;
-  const stepOvr = props.stepOvr;
-
-    const list = props.itemOptions;
-    let c = list.map((i) => {
-      const cName = i.type;
-      const code = step+':'+cName+':No';
+function BuildStep(props){
+  const {stepOptions, stepCtrls} = props;
+  const hasElements = stepOptions.hasElements;
+  const elementArray = hasElements?
+    <ElementArray elements={stepOptions.elements} hasRows={stepOptions.hasRows} 
+    hasMult={stepOptions.hasMulti} selected={props.selected} onSelect={props.onSelect}/>
+    :null;
+  const controlArray = <ControlArray stepCtrls={stepCtrls} onTrigger={props.onTrigger}/>
+  return (
+    <div className="orderStep">
+      {elementArray}
+      {controlArray}
+    </div>
+  )  
+}
+function ElementArray(props){
+  const elements = props.elements;
+  const hasRows = props.hasRows;
+  const hasMulti = props.hasMulti;  
+  const click = props.onSelect;
+  const sel = props.selected;
+  return (
+    <ul className="menuEleList">
+    {hasRows?    
+    elements.map((e)=>{
+      const rowName = e.name;
+      const rowClass = e.rClass;
+      const rowBtns = e.btns.map((b)=>{
+        const key = b.listKey;
+        const i = sel.findIndex(p=>p===key)
+        const capt =b.btnCapt;        
+        const val = {key:key, multi:hasMulti};
+        const eleClass =  i===-1?b.btnClass:'btn-select';
+                
+        return (
+          <li key={key} className={eleClass}>
+            <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
+          </li>
+        )
+      });
       return (
-        <li key={code} className="menuListOptsEle">
-          <button className="menuListOptsBtn" onClick={()=> {
-            return props.onClick(code);}}>{cName}</button>        
+        <div className={rowClass}>
+          <div className="rowTitle">{rowName}</div>
+          <div className="rowBtns">            
+            {rowBtns}
+          </div>
+        </div>
+      )
+    }):elements.map((e)=>{ 
+      const capt = e.btnCapt;
+      const key = e.listKey;
+      const val = {key:key, multi:hasMulti};
+      const i = sel.findIndex(p=>p===key)
+      const eleClass = i===-1?e.btnClass:'btn-select';
+            
+      return (
+        <li key={key} className={eleClass}>
+          <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
         </li>
       )
     })
-    if(stepOvr){
-      c = c.concat(<button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>Finished edits</button>)
+    }
+    </ul>    
+  )
+}
+function ControlArray(props){
+  const stepControls = props.stepCtrls.map((s)=>{
+    if(s===null) return null;
+    const capt = s.btnCapt;
+    const btnClass = s.btnClss;
+    const key = s.listKey;
+    const target = s.trigger;
+    const spc = s.spc;
+    const refType = s.refType;
+    const ret = {
+      key: key,
+      target: target,
+      spc: spc,
+      refType: refType,
     }
     return (
-      <div className="menuList">
-        <ul className="menuOptions">{c}</ul>
-      </div>
-    )
-}
-function HalfBtn(){
-  const [half, setHalf] = useState(0);
-  let btn = {
-    b: null,
-    v: null,
-  };
-  if(half===0){
-    btn.b = <button className="wpBtn" onClick={()=>setHalf(half+1)}>wp</button>
-    btn.v = 'wp';
-  } else if(half===1){
-    btn.b = <button className="lhBtn" onClick={()=>setHalf(half+1)}>L</button>
-    btn.v = 'LH';
-  } else if(half===2){
-    btn.b = <button className="rhBtn" onClick={()=>setHalf(half+1)}>R</button>
-    btn.v = 'RH';
-  } else if(half===3){
-    btn.b = <button className="nBtn" onClick={()=>setHalf(0)}>N</button>
-    btn.v = 'N';
-  } else{
-    setHalf(0);
-    btn = null;
-  }
-  return btn;
-}
-function InnerQtyList(props){
-  const q = props.qty;
-  //const sel = props.sel;
-  let h=null;
-  if(props.hKey){
-    h = props.hKey;
-  }
-  const oLiKey = props.oLiKey;
-  const qList = q.map((qty) => {
-    const qName = qty.type;
-    const short = qty.short;    
-    const code = oLiKey+':'+qName +(h?':'+h:'');    
-    /*const i = sel.findIndex(item => item.type === sel.type && item.step === sel.step);
-    console.log('Currently selected index = ' + i);
-    let btnCapt = "menuListOptsBtn";
-    if(i!==-1){
-      btnCapt = "selMenuListOptsBtn";
-    }*/
-    return (
-      <li key={code} className="menuListOptsEle">
-        <button className="menuListOptsBtn" onClick={()=> {
-          return props.onClick(code);}}>{short}</button>        
+      <li key={key} className={btnClass}>
+        <button className="ctrlBtn" onClick={()=> {return props.onTrigger(ret)}}>{capt}</button>
       </li>
     )
   })
-  return qList; 
-}
-function NotToppingStep(props){
-  const {stepType, itemOptions, optionQty, stepOvr } = props;
-  const nxt = NextStep({value: stepType, stepOvr:stepOvr});
-  const itemList = itemOptions.map((i) => {
-    const itemName = i.type;
-    const oLiKey = stepType+':'+itemName;
-    if(itemName==='None'){      
-      const nncode = oLiKey+':None';
-      const none = 'No ' + stepType;     
-      return (        
-        <li key={oLiKey} className="menuOptionsEle">
-          <ul className="menuListOpts">  
-          <li key={nncode} className="menuListOptsEleNone">
-          <button className="menuListOptsBtnNone" onClick={()=> {
-            return props.onClick(nncode);}}>{none}</button>        
-        </li></ul></li>        
-      );
-    }               
-    return (      
-      <li key={oLiKey}  className="menuOptionsEle"> <div className="menuOptionName">{itemName}</div>
-        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} qty={optionQty} onClick={(value)=>props.onClick(value)}/></ul>
-      </li> 
-    );
-  });
-
-  return (
-    <div className="menuList">
-      <ul className="menuOptions">{itemList}</ul>
-      <button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>{nxt}</button>
-    </div>
-  )
-  
-}
-function ToppingStep(props){
-  const {stepType, itemOptions, optionQty, stepOvr } = props;
-  const nxt = NextStep({value: stepType, stepOvr:stepOvr});
-  const itemList = itemOptions.map((i) => {
-    const itemName = i.type;
-    const oLiKey = stepType+':'+itemName;
-    const b = HalfBtn();
-    const btn = b.b;
-    const v = b.v;
-    const bKey = oLiKey+ ':'+v;                   
-    return (      
-      <li key={oLiKey}  className="menuOptionsEle"> <div className="menuOptionName">{itemName}</div>
-        <ul className="menuHalfOpts">
-          <li key={bKey} className="halfList">{btn}</li>
-        </ul>
-        <ul className="menuListOpts"><InnerQtyList oLiKey={oLiKey} hKey={v} qty={optionQty} onClick={(value)=>props.onClick(value)}/></ul>
-      </li> 
-    );
-  });
-
-  return (
-    <div className="menuList">
-      <ul className="menuOptions">{itemList}</ul>
-      <button className="nextStep" onClick={()=> props.onTrigger(stepOvr)}>{nxt}</button>
+  return(
+    <div className="btnNavigationArray">
+      <ul className="btnCtrlList">
+        {stepControls}
+      </ul>
     </div>
   )
 }
-function GetItemInfo(value){
-  if(value.length===0){
-    return null;
-  }
-  let x = value.indexOf(':');
-  let s = [];
-  let i = 0;
-  let rem = value+':';
-  while (x>0){
-    s[i] = rem.substring(0,x);
-    rem = rem.substring(x+1);
-    x = rem.indexOf(':');
-    i++;    
-  }
-  let ret = {
-    step: (i>=1?s[0]:''),
-    type: (i>=2?s[1]:''),
-    qty: (i>=3?s[2]:''),
-    on: '',
-    onMsg: '',
-  };
-  if(i===4){
-    ret.on = s[3];
-    const z = Menu.half.findIndex(h => h.value === s[3]);
-    if(z!==-1){
-      ret.onMsg = Menu.half[z].msg;
-    } else {
-      ret.qty = 'None';
-      ret.on = '';
-      ret.onMsg = '';
-    }
-  }
-  return ret;
-}
-function NextStep(props){
-  const curStep = props.value;
-  const stepOvr = props.stepOvr;
-  if(stepOvr){
-    return 'Finished edits';
-  }
-  switch(curStep){
-    case 'crusts':
-      return '';
-    case 'sizes':
-      return '';
-    case 'sauces':
-      return 'Go to Cheeses';
-    case 'cheeses':
-      return 'Go to meats';
-    case 'meats':
-      return 'Go to non-meats';
-    case 'nonmeats':
-      return 'Go to summary';
-    default:
-      return '';
-  }
-}
-OrderStep.propTypes = {
-  steps: PropTypes.object,
-  step: PropTypes.object,
-  triggerNextStep: PropTypes.func,
-  pizza: PropTypes.object,  
-};
-OrderStep.defaultProps = {
-  steps: undefined,
-  triggerNextStep: undefined,    
-};
 
 export default OrderStep;
