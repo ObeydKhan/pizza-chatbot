@@ -58,7 +58,7 @@ class OrderControl {
     const halfMsg = hasHalf?' ' +this.pizzaMenu.GetOptMsg('half',half):'';
     const itemName = this.pizzaMenu.GetItemName(itemType,itemID);
     const itemMsg = `${qtyMsg}${itemName}${halfMsg}`;
-    const retVal = {id:itemID, name:itemName, qty:qty, qtyMsg:qtyMsg, half:half, halfMsg:halfMsg, itemMsg:itemMsg}
+    const retVal = {id:itemID, name:itemName, qty:qty, qtyMsg:qtyMsg, half:half, halfMsg:halfMsg, itemMsg:itemMsg}    
     const curSelectItems = [].concat(this.pizzaOrder.ReturnPizzaItems(itemType));
     if(curSelectItems.length===0){
       //add item      
@@ -71,13 +71,15 @@ class OrderControl {
       if(i===-1){
         //item not found
         if(hasMulti){
-          const add = {type:itemType, values:retVal};          
-          this.pizzaOrder.SavePizzaItems(curSelectItems.concat(add));
+          const add = curSelectItems.concat(retVal); 
+          const ret = {type:itemType, values:add}          
+          this.pizzaOrder.SavePizzaItems(curSelectItems.concat(ret));
         } else {
           //item not in collection - replace existing item
-          const add = {type:itemType, values:retVal};
-          curSelectItems.splice(0,1,add);
-          this.pizzaOrder.SavePizzaItems(curSelectItems);
+          
+          curSelectItems.splice(0,1,[retVal]);
+          const add = {type:itemType, values:curSelectItems};
+          this.pizzaOrder.SavePizzaItems(add);
         }
       } else {
         if(curSelectItems[i].itemMsg===itemMsg){
@@ -97,25 +99,39 @@ class OrderControl {
             retVal.halfMsg = curSelectItems[i].halfMsg;
           }
           retVal.itemMsg = `${retVal.qtyMsg}${itemName}${retVal.halfMsg}`;
-          const add = {type:itemType, values:retVal};
-          curSelectItems.splice(i,1,add);
-          this.pizzaOrder.SavePizzaItems(curSelectItems);
+          curSelectItems.splice(i,1,[retVal]);
+          const add = {type:itemType, values:curSelectItems};
+          
+          this.pizzaOrder.SavePizzaItems(add);
         }
       }
     } 
-    const updatedItems = [this.pizzaOrder.ReturnPizzaItems(itemType)];
+    const updatedItems = this.pizzaOrder.ReturnPizzaItems(itemType);
     if(updatedItems.length===0) return []
+    let spec = []
+    if(!Array.isArray(updatedItems)){      
+      const init = `${itemType}-${updatedItems.id}`;
+      spec = spec.concat(init);
+      const q =updatedItems.qty!=='0'?[`${init}-qty-${updatedItems.qty}`]:[];
+      const h =updatedItems.half!=='0'?[`${init}-half-${updatedItems.half}`]:[];
+      spec = spec.concat(q);
+      spec = spec.concat(h);
+      return spec;
+    }
     
     const ret = updatedItems.map((i)=> {
       const init = `${itemType}-${i.id}`;
       
       const q =i.qty!=='0'?[`${init}-qty-${i.qty}`]:[];
       const h =i.half!=='0'?[`${init}-half-${i.half}`]:[];
-      return [init,q,h];
+      spec = spec.concat(q);
+      spec = spec.concat(h);
+      return init;
 
     })
     //return = list key=>[${itemType}-${itemID}-${opt}-${o.id},${step}-${i.id}]
-    return ret.flat();
+    
+    return ret.concat(spec);
   }
 
   RestartOrder(){       

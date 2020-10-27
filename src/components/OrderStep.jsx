@@ -207,12 +207,12 @@ function ElementArray(props){
         )
       });
       return (
-        <div className={rowClass} key={rowKey}>
+        <ul className="menuEleRows" key={rowKey}>
           <div className="rowTitle">{rowName}</div>
           <div className="rowBtns">            
             {rowBtns}
           </div>
-        </div>
+        </ul>
       )
     }):elements.map((e)=>{ 
       const capt = e.btnCapt;
