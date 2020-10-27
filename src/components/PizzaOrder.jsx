@@ -20,8 +20,7 @@ class PizzaOrder {
     return this.lastID+1;
   }
   
-  get NewPizza(){
-    
+  get NewPizza(){    
     return new Pizza(this.lastID+1);
   }
   get PizzaList(){    
@@ -55,6 +54,17 @@ class PizzaOrder {
     }
     return 0;
   }
+  setPizzaItems(val){
+    const itemType = val.type;
+    const itemSelc = val.selected;
+    
+    if(itemSelc.length===0){
+      return `No ${itemType} added`
+
+    } else {
+      return `Added some stuff`;
+    }
+  }
   getPizzaItems(type){
     const items = this.currentPizza.GetPizzaItem(type);
     if(items===`No ${type}`){
@@ -73,6 +83,9 @@ class PizzaOrder {
   AddPizzaToOrder(){
     this.UpdatePizzas = this.currentPizza;
   }
+  ReturnPizzaItems(items){
+    return this.currentPizza.GetPizzaItem(items);
+  }
   SavePizzaItems(items){
     this.currentPizza.PizzaItems = items;
   }
@@ -90,6 +103,9 @@ class PizzaOrder {
       this.pizzas.splice(i,1);
       this.pizzaCnt = this.pizzas.length();
     }
+  }
+  get CurrentPizzaString(){
+   return this.currentPizza.PizzaString;
   }
   GetPizzaString(id){
     const i = this.pizzas.findIndex(p => p.PizzaID === id);

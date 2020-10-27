@@ -2,7 +2,7 @@
 class Pizza {
   constructor(id){
     this.id = id;
-    this.pizzaItems = null;    
+    this.pizzaItems = {};    
     this.specialInstructions='';
   }
   set PizzaItems(props) {
@@ -19,14 +19,14 @@ class Pizza {
     }    
   }
   HasItemType(type){
+    if(this.pizzaItems===null) return false;
     return this.pizzaItems.hasOwnProperty(type);     
   }
   GetPizzaItem(type){
     if(this.HasItemType(type)){
       return this.pizzaItems[type];
-    } else {
-      const m = `No ${type}`;
-      return m;
+    } else {     
+      return [];
     }
   }  
   get Pizza(){

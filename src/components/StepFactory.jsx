@@ -31,7 +31,7 @@ function getCtrls(owner, next, prev, isRetRevO){
   } else if(owner.type==='review'){
     if(owner.name==='pizza'){
       ctrlArry = ctrlArry.concat([['next', 'Edit this Pizza', owner, {name:'pizza', type:'edit'}, 'goto']]);
-      ctrlArry = ctrlArry.concat([['next', 'Add another Pizza', owner, {name:'crusts', type:'menu'}, 'goto']]);
+      ctrlArry = ctrlArry.concat([['next', 'Add another Pizza', owner, {name:'crusts', type:'new'}, 'goto']]);
       ctrlArry = ctrlArry.concat([['next', 'Review Order', owner, {name:'order', type:'review'}, 'goto']]);
     } else {
       const a = next.map((i)=>{
@@ -141,10 +141,10 @@ function buildConfirmationCtrl(type, label, owner, tarType, tarName){
     btnClass: `btn-${ctrlType}`,
     btnCapt: label,
     listKey: key,
-    ownerType: tarType,
-    ownerName: tarName,
-    targetType: type,
-    targetName: owner,
+    ownerType: type,
+    ownerName: owner,
+    targetType: tarType,
+    targetName: tarName,
     action: ctrlType,
     hasSpecial: true,    
     trigger: 'special',  

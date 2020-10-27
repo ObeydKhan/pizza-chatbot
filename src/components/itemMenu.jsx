@@ -17,6 +17,21 @@ class itemMenu{
   get MenuSteps(){
     return this.menuSteps;
   }
+  GetItemName(type,id){
+    const items = this.menu.menuSteps[type];
+    const val = items.values.find((i)=>i.id===id)
+    return val.name;
+  }
+  GetItemID(type,name){
+    const items = this.menu.menuSteps[type];
+    const val = items.values.find((i)=>i.name===name)
+    return val.id;
+  }
+  GetOptMsg(type, id){
+    const items = this.menu.options[type];
+    const val = items.find((i)=>i.id===id)
+    return val.name;
+  }
   getMenuStep(step){    
     const hasQty = this.getHasQty(step);
     const hasHalf = this.getHasHalf(step);
@@ -94,7 +109,11 @@ class itemMenu{
         btnClass:'btn-item',
         btnCapt:i.name,
         listKey:`${step}-${i.id}`,
-        btnMsg:i.name,        
+        btnMsg:i.name,
+        itemInfo: {
+          item:step,
+          itemID:i.id,          
+        },        
       };
       return btn;
     })
@@ -103,11 +122,17 @@ class itemMenu{
   buildOptBtns(step, opt, itemID){ 
     const optList = this.getOptsList(opt);    
     const btnArry = optList.map((o)=> {
+      const itemInfo= {
+        item:step,
+        itemID:itemID,
+        [opt]:o.id,
+      };
       const btn = {
         btnClass:`btn-${opt}-${o.class}`,
         btnCapt: o.short,
         listKey:`${step}-${itemID}-${opt}-${o.id}`,
-        btnMsg:o.name
+        btnMsg:o.name,
+        itemInfo: itemInfo,
       };
       return btn;
     })
