@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import OrderStep from './OrderStep';
-import Summary from './Summary';
-import AddPizza from './AddPizza'; 
+
 
 class SimpleForm extends Component {
   constructor(props){
@@ -15,12 +14,8 @@ class SimpleForm extends Component {
     const order = this.props.order;
     this.props.end(order)
   }
-  componentDidMount(){
-    
-  }
   render() {
-    const order = this.props.order;
-    let cnt = 0;      
+    const order = this.props.order;          
     return (
       <ThemeProvider theme={{
               background: '#f5f5f5',
@@ -51,146 +46,52 @@ class SimpleForm extends Component {
             id: 'ordername',
             user:true,
             placeholder: 'Please enter a name...',
-            trigger: 'addNewPizza',   
+            trigger: 'pizzabuilder',   
           },
           {
-            id: 'addNewPizza',
-            component: <AddPizza order={order}/>,       
-            asMessage: true,
-            trigger: 'crusts',           
-          },          
-          {
-            id: 'crusts',
+            id: 'pizzabuilder',
             placeholder: 'Choose an option',
             component: <OrderStep/>,              
             waitAction: true, 
             replace: true,
             metadata: order,
-            trigger: '4',
+            trigger: 'pizzabuilder',           
           },
           {
-            id: '4',
-            message:'Please choose a pizza size:',
-            trigger: 'sizes',
+            id:'specialinstmsg',
+            message:'Would you like to add any special instructions?',
+            trigger: 'specialinstques',
           },
           {
-            id: 'sizes',
-            placeholder: 'Choose an option',
-            component: <OrderStep/>,              
-            waitAction: true, 
-            replace: true,
-            metadata: order,
-            trigger: '5',
-          },
-          {
-            id: '5',
-            message: 'Please choose a sauce:',
-            trigger: 'sauces',            
-          },
-          {
-            id: 'sauces',
-            placeholder: 'Choose an option',
-            component: <OrderStep/>,
-            waitAction: true,
-            replace: true,
-            metadata: order,
-            trigger: '6',
-          },
-          {
-            id: '6',
-            message: 'Please choose your cheeses:',
-            trigger: 'cheeses',
-          },          
-          {
-            id: 'cheeses',
-            placeholder: 'Choose an option',
-            component: <OrderStep/>,              
-            waitAction: true, 
-            replace: true,
-            metadata: order,               
-            trigger: '7',                        
-          },         
-          {
-            id: '7',
-            message: 'Please choose your meat toppings:',
-            trigger: 'meats',            
-          },
-          {
-            id: 'meats',
-            placeholder: 'Choose an option',
-            component: <OrderStep/>,              
-            waitAction: true, 
-            replace: true,
-            metadata: order,               
-            trigger: '8',
-          },
-          {
-            id: '8',
-            message: 'Please choose your non-meat toppings:',
-            trigger: 'nonmeats',            
-          },
-          {
-            id: 'nonmeats',
-            placeholder: 'Choose an option',
-            component: <OrderStep/>,              
-            waitAction: true, 
-            replace: true,
-            metadata: order,               
-            trigger: '9'
-          },
-          {
-            id: '9',
-            message: 'Any Special instructions?',
-            trigger: 'spcQues',            
-          },
-          {
-            id: 'spcQues',
+            id:'specialinstques',
             options: [
-              {value: 'yesSpc', label: 'Yes', trigger: 'yesSpc'},
-              {value: 'noSpc', label: 'No', trigger: '10'},
-            ],
-            placeholder: 'Choose an option',
+              {value: 'yes', label:'Yes', trigger:'specialinstentry'},
+              {value: 'no', label:'No, Lets review this pizza', trigger:'pizzabuilder'},
+              ],
           },
           {
-            id: 'yesSpc',
-            message: 'Please enter your special instructions below',
-            trigger: 'userInst',
+            id:'specialinstentry',
+            user:true,
+            trigger: 'pizzabuilder',
           },
           {
-            id: 'userInst',
-            user: true,
-            placeholder: 'Enter instructions here...',
-            trigger: '10',
+            id: 'endmsg1',         
+            message: 'Thank you for using Slice!',
+            trigger: 'endmsg2',            
           },
           {
-            id: '10',
-            message: 'Please review your pizza:',
-            trigger: 'pizzareview',            
+            id: 'endmsg2',         
+            message: 'Your order is confirmed. Please click OK to continue.',
+            trigger: 'endmsg3',            
           },
           {
-            id: 'pizzareview',
-            component: <Summary order={order} cnt={cnt}/>,
-            asMessage: true,                       
-            metadata: cnt,
-            trigger: '11'
+            id: 'endmsg3',         
+            options: [{value: 'endbot', label:'OK', trigger:'endbot'}],                        
           },
           {
-            id: '11',
-            options: [
-              {value: 'editP', label: 'Edit this pizza', trigger: 'editPizza'},
-              {value: 'addP', label: 'Add another pizza', trigger: 'addNewPizza'},
-              {value: 'compOr', label: 'Complete Order', trigger: 'end-message'},
-            ],            
-          },
-          {
-            id: 'editPizza',
-            message: 'Please review your pizza:',
-            trigger: 'end-message',
-          },            
-          {
-            id: 'end-message',
-            message: 'Thank you for choosing Slice!',
-            end: true,
+            id: 'endbot',         
+            message: 'Good bye',
+            end: true,            
           },
           ]}
         />

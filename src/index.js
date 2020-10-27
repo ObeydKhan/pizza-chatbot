@@ -7,20 +7,19 @@ import * as serviceWorker from './serviceWorker';
 import 'jquery/dist/jquery.js';
 import 'popper.js/dist/umd/popper.js';
 import 'bootstrap/dist/js/bootstrap.js';
-import UserLocation from './components/ZipLookUp'
+import Location from './components/Location'
 
-LocationFactory().then(obj => {
- 
-  //npmconst obj = LocationFactory();
+LocationFactory().then(obj => {  
+ /* const obj = LocationFactory();*/
   ReactDOM.render(
   <React.StrictMode>
-    <App userLocObj={obj}/>
+    <App locObj={obj}/>
   </React.StrictMode>,
   document.getElementById('root')
   );
 })
-function LocationFactory(loc){
-  let x = new UserLocation();
+function LocationFactory(){
+  let x = new Location();
   return x.initLoc();
 }
 

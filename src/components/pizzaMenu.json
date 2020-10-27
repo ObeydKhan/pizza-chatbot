@@ -1,63 +1,110 @@
 {
-  "crusts": [
-    {"value": "og",
-      "type": "Original Crust",
-      "sizes": ["sm","md","lg","xl"]},
-    {"value": "tn",
-      "type": "Thin Crust",
-      "sizes": ["md","lg"]},
-    {"value": "dd",
-      "type": "Deep Dish",
-      "sizes": ["sm","md","lg","xl"]},
-    {"value": "gf",
-      "type": "Gluten Free",
-      "sizes": ["sm","md"]}],
-
-  "sizes": [
-    {"value": "sm", "type": "Small (10\")"},
-    {"value": "md", "type": "Medium (12\")"},
-    {"value": "lg", "type": "Large (14\")"},
-    {"value": "xl", "type": "X-Large (18\")"}],
-  
-  "sauces": [
-    {"value": "tm", "type": "Tomato"},
-    {"value": "ma", "type": "Marinara"},
-    {"value": "hb", "type": "Honey BBQ"},
-    {"value": "al", "type": "Alfredo"},
-    {"value": "nn", "type": "None"}],  
-
-  "cheeses": [
-    {"value": "mz", "type": "Mozzerella"},
-    {"value": "bf", "type": "Buffalo"},
-    {"value": "gt", "type": "Goat"},
-    {"value": "nn", "type": "None"}],
-
-  "meats": [
-    {"value": "pe", "type": "Pepperoni"},
-    {"value": "be", "type": "Beef"},
-    {"value": "ps", "type": "Philly Steak"},
-    {"value": "is", "type": "Italian Sausage"},
-    {"value": "gc", "type": "Grilled Chicken"},
-    {"value": "ba", "type": "Bacon"}],
-
-  "nonmeats": [
-    {"value": "tm", "type": "Tomatoes"},
-    {"value": "ma", "type": "Mushrooms"},
-    {"value": "hb", "type": "Jalapeño Peppers"},
-    {"value": "al", "type": "Onions"},
-    {"value": "nn", "type": "Black Olives"},
-    {"value": "al", "type": "Pineapple"},
-    {"value": "gp", "type": "Green Peppers"}],
-
-  "qty": [
-    {"value": "rg", "type": "Regular", "short":"Reg"},
-    {"value": "lt", "type": "Lite", "short":"Lite"},
-    {"value": "ex", "type": "Extra", "short":"Xtra"},
-    {"value": "db", "type": "Double", "short":"Dbl"},
-    {"value": "tp", "type": "Triple", "short":"Trpl"}],
-  
-  "half": [
-    {"value": "wp", "type": "Whole", "short": "", "msg": ""},
-    {"value": "LH", "type": "Left", "short": "L", "msg": "on the left half"},
-    {"value": "RH", "type": "Right", "short": "R", "msg": "on the right half"}]
+  "menuSteps": {
+    "crusts": {
+      "sizes":true,
+      "qty":false,
+      "half":false,
+      "multiple":false,
+      "values": [
+        { "id": "1", 
+          "name": "Original Crust",
+          "short":"org",
+          "sizes": ["1","2","3","4"]},
+        { "id": "2",
+          "name": "Thin Crust",
+          "short":"thn",
+          "sizes": ["2","3"]},
+        { "id": "3",        
+          "name": "Deep Dish",
+          "short":"dpd",
+          "sizes": ["1","2","3","4"]},
+        { "id": "4",        
+          "name": "Gluten Free",
+          "short":"glf",
+          "sizes": ["1","2"]
+        }
+      ]
+    },
+    "sizes": {
+      "sizes":false,
+      "qty":false,
+      "half":false,
+      "multiple":false,
+      "values": [
+        {"id": "0", "short":"nnn", "name": "NoCrust"},
+        {"id": "1", "short":"sml", "name": "Small (10\")"},
+        {"id": "2", "short":"mdm", "name": "Medium (12\")"},
+        {"id": "3", "short":"lrg", "name": "Large (14\")"},
+        {"id": "4", "short":"xlg", "name": "X-Large (18\")"}    
+      ]
+    },        
+    "sauces": {
+      "sizes":false,
+      "qty":true,
+      "half":false,
+      "multiple":false,
+      "values": [
+        {"id": "1", "short":"tom", "name": "Tomato"},
+        {"id": "2", "short":"mar", "name": "Marinara"},
+        {"id": "3", "short":"hbq", "name": "Honey BBQ"},
+        {"id": "4", "short":"alf", "name": "Alfredo"}      
+    ]},  
+    "cheeses": {
+      "sizes":false,
+      "qty":true,
+      "half":false,
+      "multiple":true,
+      "values": [
+        {"id": "1", "short":"moz", "name": "Mozzerella"},
+        {"id": "2", "short":"buf", "name": "Buffalo"},
+        {"id": "3", "short":"got", "name": "Goat"}]
+    },
+    "meats": {
+      "sizes":false,
+      "qty":true,
+      "half":true,
+      "multiple":true,
+      "values": [
+        {"id": "1", "short":"pep","name": "Pepperoni"},
+        {"id": "2", "short":"bef","name": "Beef"},
+        {"id": "3", "short":"phs","name": "Philly Steak"},
+        {"id": "4", "short":"its","name": "Italian Sausage"},
+        {"id": "5", "short":"gck","name": "Grilled Chicken"},
+        {"id": "6", "short":"bac","name": "Bacon"}]
+    },
+    "nonmeats": {
+      "sizes":false,
+      "qty":true,
+      "half":true,
+      "multiple":true,
+      "values": [
+        {"id": "1", "short":"tmt","name": "Tomatoes"},
+        {"id": "2", "short":"mus","name": "Mushrooms"},
+        {"id": "3", "short":"jpr","name": "Jalapeño Peppers"},
+        {"id": "4", "short":"ons","name": "Onions"},
+        {"id": "5", "short":"blv","name": "Black Olives"},
+        {"id": "6", "short":"pap","name": "Pineapple"},
+        {"id": "7", "short":"gpr","name": "Green Peppers"}]
+    }
+  },
+  "options": {  
+    "sizes": [
+      {"id": "1", "short":"sml", "name": "Small (10\")"},
+      {"id": "2", "short":"mdm", "name": "Medium (12\")"},
+      {"id": "3", "short":"lrg", "name": "Large (14\")"},
+      {"id": "4", "short":"xlg", "name": "X-Large (18\")"}
+    ],  
+    "qty": [
+      {"id": "0", "name": "None", "short":"", "class":"hide"},
+      {"id": "1", "name": "Regular", "short":"Reg", "class":"btn"},
+      {"id": "2", "name": "Lite", "short":"Lite", "class":"btn"},
+      {"id": "3", "name": "Extra", "short":"Xtra", "class":"btn"},
+      {"id": "4", "name": "Double", "short":"Dbl", "class":"btn"},
+      {"id": "5", "name": "Triple", "short":"Trpl", "class":"btn"}],    
+    "half": [
+      {"id": "1", "name": "On the Left Half", "short": "L", "class":"LH"},
+      {"id": "2", "name": "On the Whole Pizza", "short": "", "class":"WP"},
+      {"id": "3", "name": "On the Right Half", "short": "R", "class":"RH"}
+    ]
+  }
 }

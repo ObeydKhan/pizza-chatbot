@@ -1,113 +1,91 @@
 import React from 'react';
 import '../css/App.css';
-import {DisplayStoreSelect, StoreDetails} from './DisplayStoreSelect';
-import ShowSearchMenu from './ShowSearchMenu';
 import DisplayMainArea from './DisplayMainArea';
 import logo from '../resources/SliceLogo.png';
-/*import ResolveLocation from './GeoLoc';*/
+import Order from './OrderControl';
+
+import StoreLoc from './StoreLoc';
 
 class App extends React.Component {
   constructor(props) {
     super(props);    
     this.state = {
-      searchedBy: '',
-      searchedLocation: '',          
-      selectedStore: '0',
-      previousStore: '0',
-      showPage: 'Search', 
-      hasError: false,
-      errorMsg: '',
-      userLoc: this.props.userLocObj,
+      showPage: 'Location',       
+      locObj: this.props.locObj,      
+      order: new Order(),
     };
-    this.handleStoreSearch = this.handleStoreSearch.bind(this);
-    this.handleStoreSelect = this.handleStoreSelect.bind(this);   
-    this.updateLocation = this.updateLocation.bind(this);
+    this.updateLoc = this.updateLoc.bind(this);
+    this.setStore = this.setStore.bind(this);
     this.input = React.createRef();        
   }
-   
-  handleStoreSearch(geoReturn) {
-    const userEntered = this.input.current.value; 
-    const geoRetLength = geoReturn.length;  
-    const userLoc = this.state.userLoc;
-    if(userEntered==='' && geoReturn==='') {
-      console.log('Empty values');
-      this.setState({
-        hasError: true,
-        errorMsg: "You must enter a US Zip Code"
-      });
-    } else if(geoRetLength>4) {
-      this.setState({
-        searchedBy: 'Geo Locate',
-        searchedLocation: geoReturn,
-        showPage: 'Select',
-        hasError: false,
-        errorMsg: '',
-      });
-    } else {         
-      userLoc.userEntry = userEntered;
-      const locString = userLoc.userString;
-      if(userLoc.userEntry){
-        this.setState({
-          searchedBy: 'User Entry',
-          searchedLocation: locString,
-          showPage: 'Select',
-          hasError: false,
-          errorMsg: '',
-        });
-      } else {
-        this.setState({
-          hasError: true,
-          errorMsg: "You must enter a US Zip Code"
-        });
-      }
-    }           
-  }
-  updateLocation() {
-    const prevStore = this.state.selectedStore;
+  setStore(locObj){
+    const page = 'Main';    
+    const order = this.state.order.RestartOrder();
     this.setState({
-      searchedBy: '',      
-      selectedStore: '0',
-      previousStore: prevStore,
-      showPage: 'Search',
-      hasError: false,
-      errorMsg: '',
+      showPage: page,
+      locObj: locObj,
+      order: order,     
+    });    
+  }
+  updateLoc(props){
+    const locObj = props.locObj;
+    const page = props.page;    
+    this.setState({
+      locObj:locObj,
+      showPage: page,             
     });
   }
-  handleStoreSelect(i) {
-    const prevStore = this.state.selectedStore;
+  resetOrder(){
+    const locObj = this.state.locObj;
+    const page = 'Location';
+    const order = this.state.order.RestartOrder();
     this.setState({
-      selectedStore: i,
-      previousStore: prevStore,
-      showPage: 'Main',
+      locObj:locObj,
+      showPage: page,
+      order: order,      
+    })
+  }
+  cancelOrder(){
+    const order = this.state.order.RestartOrder();
+    this.setState({
+      order: order,      
     });
   }
-  render(){
-    const {selectedStore} = this.state;          
-    let banner = null;       
-    if (selectedStore!=='0'){
-      const storeInfo = StoreDetails(selectedStore);      
-      banner = (
-        <div className="bannerHead">
-          <div className="bannerName">{storeInfo.name}</div>
-          <div className="bannerHours">{storeInfo.hours}</div>
-          <div className="bannerChange" onClick={() => this.updateLocation()}>Change Location</div>
-        </div>
-      );
-    }
+  get StoreBanner(){
+    const {locObj} = this.state;
+    const selectedStore = locObj.curStoreID;
+    if(selectedStore==='0'){ return null;}          
+    const storeInfo = locObj.curStoreInfo;
+    const banner = (
+      <div className="bannerHead">
+        <div className="bannerName">{storeInfo.name}</div>
+        <div className="bannerHours">{storeInfo.hours}</div>
+        <div className="bannerChange" onClick={() => this.updateLoc('Search')}>Change Location</div>
+      </div>
+    );
+    return banner;
+  }
+  completeOrder(){
+
+  }
+  render(){                 
+    const banner = this.StoreBanner;
     return (
       <>
       <div className="mainPageArea">
       <header>
-        <img src={logo} alt="Logo" onClick={() => this.updateLocation()}></img>
+        <img src={logo} alt="Logo" onClick={() => this.resetOrder()}></img>
         <h1>Slice</h1>
         {banner}
       </header>      
-      <ShowSearchMenu data={this.state} refIn={this.input} confirmLocation={this.handleStoreSelect} onClick={this.handleStoreSearch}/>
-      <DisplayStoreSelect data={this.state} updateLocation={this.updateLocation} onClick={this.handleStoreSelect}/>
-      <DisplayMainArea data={this.state} />
+      <StoreLoc appState={this.state} 
+        set={this.setStore} update={this.updateLoc}/>      
+      <DisplayMainArea appState={this.state} 
+        reset={this.resetOrder} cancel={this.cancelOrder} complete={this.completeOrder}/>
       </div>
       </>     
     );
   }
 }
+
 export default App;

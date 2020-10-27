@@ -286,24 +286,57 @@ class ChatBot extends Component {
         const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);      
         const val = currentStep.value;
         const msg = data.msg;
+        const stepMsg = data.stepMsg;
+
         delete currentStep.component;  
-             
-        currentStep = Object.assign({}, currentStep, val, defaultUserSettings, {
-          user: true,
-          message: msg,
-          trigger
-        }); 
-        
-        renderedSteps.pop();
-        previousSteps.pop();
-        renderedSteps.push(currentStep);
-        previousSteps.push(currentStep);
-        
-        this.setState({
-          currentStep,
-          renderedSteps,
-          previousSteps
-        });
+        if(data.preserveMsg){
+          const defaultBotSettings = { delay: 0, avatar: this.props.botAvatar, botName: this.props.botName };
+         
+          const thisStepMsg = {id:currentStep.id, key: currentStep.key, msg: stepMsg, trigger: ''};
+          const nextS = Object.assign({}, thisStepMsg, 0, defaultBotSettings, {
+            user: false,
+            message: stepMsg,
+            rendered:true,
+            
+          }); 
+          delete currentStep.component;
+          delete currentStep.trigger;
+
+          currentStep = Object.assign({}, currentStep, val, defaultUserSettings, {
+            user: true,
+            message: msg,
+            trigger: trigger,            
+          });
+          renderedSteps.pop();
+          previousSteps.pop();
+          renderedSteps.push(nextS);
+          previousSteps.push(nextS);
+          renderedSteps.push(currentStep);
+          previousSteps.push(currentStep);
+          this.setState({
+            currentStep,
+            renderedSteps,
+            previousSteps
+          });
+        } else {
+          delete currentStep.component;    
+          currentStep = Object.assign({}, currentStep, val, defaultUserSettings, {
+            user: true,
+            message: msg,
+            trigger
+          }); 
+          
+          renderedSteps.pop();
+          previousSteps.pop();
+          renderedSteps.push(currentStep);
+          previousSteps.push(currentStep);
+          
+          this.setState({
+            currentStep,
+            renderedSteps,
+            previousSteps
+          });
+        }
       } else if (currentStep.trigger) {      
       
        const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);  

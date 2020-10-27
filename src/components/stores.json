@@ -1,0 +1,25 @@
+{
+  "stores": [
+    {
+      "id": "1",
+      "name": "Main Street",
+      "hours": "Open 8am to 8pm",
+      "time": "15 to 20 minutes",
+      "dist": "1.2"
+    },
+    {
+      "id": "2",
+      "name": "Long Street",
+      "hours": "Open 11am to 9pm",
+      "time": "20 to 40 minutes",
+      "dist": "3.6"
+    },
+    {
+      "id": "3",
+      "name": "Easy Street",
+      "hours": "Open 11am to 11pm",
+      "time": "35 to 55 minutes",
+      "dist": "4.1"
+    }
+  ]
+}
