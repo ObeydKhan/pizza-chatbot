@@ -20,7 +20,10 @@ class OrderControl {
     this.currentPizzaID = 0;
     this.ProcessAction = this.ProcessAction.bind(this);
     this.menuStep = this.pizzaMenu.MenuSteps;
-    this.stepMsg = '';    
+    this.stepMsg = '';
+    this.specialSet = false;
+    this.currentBotKey = '';
+    this.botKeys = [];    
   }
   get isStarted(){
     return this.start;
@@ -29,6 +32,15 @@ class OrderControl {
     this.pizzaOrder.Name = name;
     this.addnewpizza();
     this.start = true;
+  }
+  set botKey(val){
+    if (this.currentBotKey!==val){
+      this.currentBotKey = val;
+      this.botKeys = this.botKeys.concat(val);
+    }
+  }
+  get botKey(){
+    return this.currentBotKey;
   }
   HasSelected(){
     const name = this.currentStep.name;
@@ -54,6 +66,7 @@ class OrderControl {
       this.stepMsg = elements.msg;
     } else {
       //do something else to get the message
+      this.stepMsg = `Step ${curStepName} with type ${curStepType}`;
     }
     const stepInfo = {
       stepName: curStepName,
@@ -65,6 +78,19 @@ class OrderControl {
   }
   StepInfo(){        
     return this.stepInfo;
+  }
+  get handleSpecial(){
+    return this.specialSet;
+  }
+  set handleSpecial(val){
+    this.specialSet=val;
+  }
+
+  set specialInstructions(instr){
+    this.pizzaOrder.currentPizza.SpecialInstructions = instr;
+    if(instr!==''){
+      this.specialSet = false;
+    }        
   }
   ProcessAction(val){
     /* ownerType, ownerName, targetType, targetName, hasSpecial, trigger*/
@@ -78,20 +104,48 @@ class OrderControl {
 
     } else {
       if(action.actionType==='next'){
-        this.GoToNextStep(action.targetType, action.targetName);
+        this.GoToNextStep(action.targetType, action.targetName, selections);
+      } else if(action.actionType==='prev'){
+        this.GoToPrevStep(action.targetType, action.targetName);
       }
     }
   }
   ProcessSpecial(val){
 
   }
-  GoToNextStep(type, name){
+  GoToNextStep(type, name, selections){
+    
+    if(type==='menu'){
+      this.changeMenuStep(name);
+    } else if(type==='special'){
+      this.stepInfo = this.setSpecialStep();
+    }
+  }
+  GoToPrevStep(type, name){
     if(type==='menu'){
       this.changeMenuStep(name);
     }
   }
-  GoToPrevStep(type, name){
-
+  setSpecialStep(){
+    const curStep = {
+      type: 'special',
+      name: 'specialinstmsg',            
+    }
+    const prevStep = {
+      type: 'menu',
+      name: this.menuStep[this.menuStep.length-1], 
+    }    
+    const nextStep = {
+      type:'review',
+      name:'pizza',
+    }    
+    const stepInfo = {
+      currentStep: curStep,
+      prevStep: prevStep,
+      nextStep: nextStep,
+      isRetRevO: false,
+    }
+    return stepInfo;
   }
   changeMenuStep(step){
     const i = this.menuStep.findIndex((s)=>s===step);
@@ -103,7 +157,7 @@ class OrderControl {
     }
     const prevStep = {
       type: 'menu',
-      name: this.menuStep[i], 
+      name: this.menuStep[i-1], 
     }
     if(i===0){
       prevStep.type='chatbot';
@@ -112,6 +166,10 @@ class OrderControl {
     const nextStep = {
       type:'menu',
       name:this.menuStep[i+1],
+    }
+    if (i===this.menuStep.length-1){
+      nextStep.type='special'
+      nextStep.name='instruction'
     }
     const stepInfo = {
       currentStep: curStep,
@@ -124,6 +182,7 @@ class OrderControl {
   }
   addnewpizza(){     
     this.changeMenuStep('crusts')
+    this.specialSet = false;
     this.currentPizzaID = this.pizzaOrder.MakeNewPizza();
   }
   

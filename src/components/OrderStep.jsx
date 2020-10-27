@@ -7,10 +7,27 @@ class OrderStep extends React.Component {
     super(props);
     this.state={
       selected:[],
+      curKey: '',
       trigger: false,
     }
+    
     this.triggerNext = this.triggerNext.bind(this);
     this.onSelect = this.onSelect.bind(this);    
+  }
+  componentDidMount(){
+    
+      
+    
+  }
+  checkSpecialInstr(){
+    const chk = this.props.steps.hasOwnProperty('specialinstmsg');
+    const strchk = this.props.steps.hasOwnProperty('specialinstentry');
+    if (strchk){
+      return this.props.steps.specialinstentry.value;
+    } else if (chk){
+      return 'noentry'
+    }
+    return '';
   }
   triggerNext(val){
    /* ownerType, ownerName, targetType, targetName, hasSpecial, trigger*/
@@ -22,12 +39,26 @@ class OrderStep extends React.Component {
     //trigger next step in chatbot
     const type = `${val.trigger}:${val.actionType}(${val.ownerType}:${val.ownerName}=>${val.targetType}:${val.targetName})`
     const msg = selectedObjs.length===0?'No Message':JSON.stringify(selectedObjs);
+    const key = this.props.step.key;
+    this.props.step.metadata.botKey = key;
+    if(key!==this.state.curKey){
+      this.setState({curKey:key});
+      this.props.step.id = key;
+      const newsteps = this.props.steps.pizzabuilder;
+      newsteps.id = key;
+      delete this.props.steps.pizzabuilder;
+      this.props.steps[key]=newsteps;
+    }
     const data = {
       value:selectedObjs,
       type:type,
       msg:msg,
     }
-    this.setState({trigger: true}, () => {
+    if(val.targetType==='special'&&val.actionType==='next'){
+      ordercontrol.handleSpecial =true;
+      this.props.step.trigger = val.targetName;
+    }
+    this.setState({selected:[],trigger: true, curKey:''}, () => {
       this.props.triggerNextStep(data);
     });
   }
@@ -47,7 +78,13 @@ class OrderStep extends React.Component {
     if(!ordercontrol.isStarted){
       const name = this.props.steps.ordername.value;
       ordercontrol.isStarted = name;
+    } else if(ordercontrol.handleSpecial){
+      const inst = this.checkSpecialInstr();
+
+      ordercontrol.specialInstructions = inst;
     }
+    
+
     const currentStep = ordercontrol.CurrentStep();
     const stepInfo = ordercontrol.StepInfo();    
     const stepCtrls = StepFactory(stepInfo);

@@ -14,7 +14,7 @@ function getCtrls(owner, next, prev, isRetRevO){
   const cancel = [['warn', 'Cancel order', owner, owner, 'cancel']];
   let ctrlArry =[];
   if(owner.type==='menu'){
-    const a = next.type==='menu'?next:{type:'special', name:'instructions'}
+    const a = next.type==='menu'?next:{type:'special', name:'specialinstmsg'}
     ctrlArry = ctrlArry.concat([['next', next.type==='menu'?`Next Step -> ${next.name}`:'Next Step -> Special Instructions', owner, a, 'goto']]);
     ctrlArry = ctrlArry.concat([['prev', prev.type==='menu'?`Prev Step -> ${prev.name}`:'Start Over', owner, prev, 'goto']]);
   } else if(owner.type==='edit'){
