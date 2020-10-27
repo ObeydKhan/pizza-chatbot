@@ -115,27 +115,32 @@ class itemMenu{
   }
   getItemsList(step){
     const obj = this.menu.menuSteps[step];
-    return obj.values;
+    const ret = obj.values;
+    return ret;
   }  
   getHasSizes(step){
     const obj = this.menu.menuSteps[step];
-    return obj.sizes;
+    const ret = obj.sizes;
+    return ret;
   }
   getHasQty(step){
     const obj = this.menu.menuSteps[step];
-    return obj.qty;
+    const ret = obj.qty;
+    return ret;
   }
   getHasHalf(step){
     const obj = this.menu.menuSteps[step];
-    return obj.half;
+    const ret = obj.half;
+    return ret;
   }
   getHasMultiple(step){
     const obj = this.menu.menuSteps[step];
-    return obj.multiple;
+    const ret = obj.multiple;
+    return ret;
   }
   getOptsList(opt){
-    const obj = this.menu.options[opt];
-    return obj.values;
+    const obj = this.menu.options[opt];    
+    return obj;
   }
 }
 

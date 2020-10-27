@@ -1,150 +1,153 @@
-function StepFactory(stepInfo, functions) {
-  const type = stepInfo.type;
-  const name = stepInfo.name;  
-  switch(type){
-    case 'menu':    
-      const step = {
-        prev: stepInfo.prev,
-        next:stepInfo.next,
-      };
-      return getMenuCtrls(type,step,name);
-    case 'review':
-      return getReviewCtrls(type);
-    case 'edit':
-      const choices = stepInfo.choices;
-      const secondOrder = stepInfo.secondOrder;
-      return getEditCtrls(type, name, choices,secondOrder);
-    default:
-      return null;
-  }
-
+function StepFactory(stepInfo) {
+  const owner = stepInfo.currentStep;
+  const next = stepInfo.nextStep;
+  const prev = stepInfo.prevStep;
+  const isRetRevO = stepInfo.isRetRevO;
+  return getCtrls(owner, next,prev,isRetRevO);
 }
-function getReviewCtrls(refType, refBy){
-  const edit = refBy==='reviewpizza'?
-    {id:'review',name:'editpizza', cap:'Change this Pizza',reftype:`${refType}`,tar:'editpizza',type:'ctrl'}:
-    {id:'review',name:'editorder', cap:'Edit this order',spc:false, reftype: `${refType}`, tar:'editorder',type:'ctrl'};
-  const newp = {id:'review',name:'newpizza', cap:'Add annother pizza',spc:true, reftype: `${refType}`, tar:'addnewpizza',type:'ctrl'};
-  const remp = refType==='reviewpizza'?
-    {id:'review',name:'removepizza', cap:'Remove this Pizza',spc:true, reftype: `${refType}`, tar:'removepizza',type:'warn'}:
-    {id:'review',name:'', cap:'', tar:'',type:''};  
-  const revo = refType==='reviewpizza'?
-    {id:'review',name:'revieworder', cap:'Continue to final review',spc:false, reftype: `${refType}`, tar:'revieworder',type:'ctrl'}:
-    {id:'review',name:'', cap:'', tar:'',type:'ctrl'};
-  const comp = refType==='reviewpizza'?
-    {id:'review',name:'', cap:'', tar:'',type:''}:
-    {id:'review',name:'completeorder', cap:'Complete this order',spc:true, reftype: `${refType}`, tar:'completeorder',type:'ctrl'};
-  remp.ctrlclass = 'single'; 
-  edit.ctrlclass = 'single'; 
-  newp.ctrlclass = 'single'; 
-  revo.ctrlclass = 'single'; 
-  comp.ctrlclass = 'single'; 
-  const ctrlMap = [comp,edit,newp,remp,revo,cano];
-  const ctrlBtns = btnFactory(refType,ctrlMap)
-  return ctrlBtns;
-}
-function getEditCtrls(refType,refBy,choiceList,isSecondOrder){  
-  const editList = {
-    id: 'edit',
-    name: refType,
-    type: 'ctrl',
-    spc:false,
-    refType: refType,
-    items: choiceList.map((a)=>{
-      const tar = a;
-      const cap = refType==='editorder'?`Edit Pizza ${a}`:`Change ${a}`;
-      const item = {
-        tar: tar,
-        cap: cap,
-      };
-      return item;
-    })
-  };
-  const remp =refType==='editorder'?
-    {id:'edit',name:'', cap:'', tar:'',type:''}:
-    {id:'edit',name:'removepizza', cap:'Remove this Pizza',spc:true,reftype: `${refType}`, tar:isSecondOrder?'removebyorder':'removebypizza',type:'warn'};
-  const undo =refType==='editorder'?
-    {id:'edit',name:'undo-order', cap:'Go Back',spc:false, reftype: `${refType}`, tar:'revieworder',type:'ctrl'}:
-    {id:'edit',name:'undo-pizza', cap:'Go Back',spc:false, reftype: `${refType}`, tar:isSecondOrder?'revieworder':'reviewpizza',type:'ctrl'};
-  const chng =refType==='editorder'?
-    {id:'edit',name:'changename', cap:'Change the Name for this order',spc:true, reftype: `${refType}`, tar:'changename',type:'ctrl'}:
-    {id:'edit',name:'', cap:'', tar:'',type:'ctrl'};
-  editList.ctrlclass = 'multi';
-  remp.ctrlclass = 'single'; 
-  undo.ctrlclass = 'single';
-  chng.ctrlclass = 'single'; 
-  const ctrlMap = [editList,remp,undo,chng,cano];
-  const ctrlBtns = btnFactory(refType,ctrlMap)
-  return ctrlBtns;
-}
-function getMenuCtrls(refType, refBy, name){   
-  const next = refType==='menu'?
-    refBy.next!=='specialinstmsg'?
-      {id:'menu',name:refBy.next, cap:`Continue to ${refBy.next}`,spc:false,reftype:`${refType}`, tar:`${refBy.next}`,type:'ctrl'}:
-      {id:'menu',name:'special', cap:'Continue to special instructions',spc:true, reftype: `${refType}`, tar:'specialinstmsg',type:'msg'}:
-    {id:'edit',name:'save',cap:'Save Changes', reftype: `${refType}`,spc:false, tar:'editpizza',type:'ctrl'};
-  const prev = refType==='menu'?
-    refBy.prev!=='BOM'?  
-      {id:'menu',name:refBy.prev, cap:`Continue to ${refBy.prev}`,spc:false, reftype: `${refType}`, tar:`${refBy.prev}`,type:'ctrl'}:
-      {id:'menu',name:'',cap:'', tar:'',type:'ctrl'}:
-    {id:'next',name:'drop',cap:'Drop Changes',spc:false, reftype: `${refType}`, tar:'editpizza',type:'ctrl'};
-  const restart = refType==='menu'?
-    {id:'menu',name:'restart', cap:'Restart Pizza',spc:true, reftype: `${refType}`, tar:'resetpizza',type:'ctrl'}:
-    {id:'edit',name:'restart', cap:'', tar:''};
-  const canp = refType==='menu'?
-    {id:'menu',name:'canp', cap:'Discard Pizza',spc:true,  reftype: `${refType}`,tar:'cancelpizza',type:'warn'}:
-    {id:'edit',name:'', cap:'', tar:''};
-  next.ctrlclass = 'single';
-  prev.ctrlclass = 'single'; 
-  restart.ctrlclass = 'single';
-  canp.ctrlclass = 'single'; 
-  const ctrlMap = [next,prev,restart,canp,cano];   
-  const ctrlBtns = btnFactory(name,ctrlMap)
-  return ctrlBtns;
-}
-function btnFactory(step, ctrlMap){    
-  const ctrlBtns = ctrlMap.map((a)=>{
-    const btntype = a.type;
-    const ctrlclass = a.ctrlclass;         
-    switch (ctrlclass){
-      case 'single':       
-        const target = a.tar;
-        if(target==='') return null;
-        const id= `${a.id}-${step}-${a.name}`;
-        const spc = a.spc;
-        const caption = a.cap;
-        const refType = a.reftype      
-        return makeButton(id,btntype,target,caption,refType,spc);
-      case 'multi':
-        return a.items.map((i)=>{
-          const target = i.tar;
-          if(target==='') return null;
-          const id= `${a.id}-${step}-${a.name}-${target}`;          
-          const caption = i.cap;
-          const spc = i.spc;
-          const refType = i.reftype;        
-          return makeButton(id,btntype,target,caption,refType, spc);
-          })
-      default:
-      //error
-      return null;
+function getCtrls(owner, next, prev, isRetRevO){
+  const hasRemoveSpecial = (owner.type==='menu'||((owner.type==='edit'||owner.type==='review')&&owner.name==='pizza'))?true:false;  
+  const isFinalReview = (owner.type==='review'&&owner.name==='order')?true:false;  
+  const revS = [['warn', owner.type==='menu'?'Discard pizza':'Remove this pizza', owner,owner,'remove']];
+  const comp = [['next', 'Complete Order', owner, owner, 'complete']];
+  const chng = [['next', "Change Name", owner, owner, 'change']];
+  const cancel = [['warn', 'Cancel order', owner, owner, 'cancel']];
+  let ctrlArry =[];
+  if(owner.type==='menu'){
+    const a = next.type==='menu'?next:{type:'special', name:'instructions'}
+    ctrlArry = ctrlArry.concat([['next', next.type==='menu'?`Next Step -> ${next.name}`:'Next Step -> Special Instructions', owner, a, 'goto']]);
+    ctrlArry = ctrlArry.concat([['prev', prev.type==='menu'?`Prev Step -> ${prev.name}`:'Start Over', owner, prev, 'goto']]);
+  } else if(owner.type==='edit'){
+    if(owner.name==='pizza'){      
+      const a = next.map((i)=>{
+        return [['next', `Edit ${i.name}`, owner, i, 'goto']]
+      })
+      ctrlArry = ctrlArry.concat(a);
+      ctrlArry = ctrlArry.concat([['prev', 'Finished with edits', owner, isRetRevO?{name:'order',type:'review'}:{name:'pizza',type:'review'}, 'goto']]);
+    } else {
+      ctrlArry = ctrlArry.concat([['next', 'Save Changes', owner, {name:'pizza', type:'edit'}, 'goto']]);
+      ctrlArry = ctrlArry.concat([['prev', 'Discard Changes', owner, {name:'pizza', type:'edit'}, 'goto']]);
     }
+  } else if(owner.type==='review'){
+    if(owner.name==='pizza'){
+      ctrlArry = ctrlArry.concat([['next', 'Edit this Pizza', owner, {name:'pizza', type:'edit'}, 'goto']]);
+      ctrlArry = ctrlArry.concat([['next', 'Add another Pizza', owner, {name:'crusts', type:'menu'}, 'goto']]);
+      ctrlArry = ctrlArry.concat([['next', 'Review Order', owner, {name:'order', type:'review'}, 'goto']]);
+    } else {
+      const a = next.map((i)=>{
+        return ['next', `Edit Pizza ${i.name}`, owner, i, 'goto']
+      })
+      ctrlArry = ctrlArry.concat(a);
+      ctrlArry = ctrlArry.concat([['next', 'Add another Pizza', owner, {name:'crusts', type:'menu'}, 'goto']]);
+    }  
+  }
+  ctrlArry =hasRemoveSpecial?ctrlArry.concat(revS):ctrlArry;
+  ctrlArry =isFinalReview?ctrlArry.concat(comp,chng):ctrlArry;
+  ctrlArry = ctrlArry.concat(cancel);
+  return (
+    ctrlArry.map((i)=>{
+      return buildCtrlObj(i[0],i[1],i[2],i[3],i[4]);
+    })
+  )
+}
+function buildCtrlObj(ctrlType, btnCapt, owner, target, tarFunc){
+const key = `${owner.type}:${owner.name}-${tarFunc}(${target.type}:${target.name})`;
+const specStep = tarFunc==='goto'?false:buildSpecialStep(tarFunc, owner);
+  return ({
+    btnClass: `btn-${ctrlType}`,
+    btnCapt: btnCapt,
+    listKey: key,
+    ownerType: owner.type,
+    ownerName: owner.name,
+    targetType: target.type,
+    targetName: target.name,
+    action:ctrlType,
+    hasSpecial: specStep,    
+    trigger: tarFunc,  
+  }) 
+}
+function buildSpecialStep(type, prev){
+  const vals = (t,p)=> {
+    switch(t){
+      case 'remove':
+        return removeCtrl(t,p);
+      case 'cancel':
+        return cancelCtrl(t,p);
+      case 'complete':
+        return compCtrl(t,p);
+      case 'change':
+        return 
+      default:changeCtrl(t,p)
+        return ''
+    }
+  }
+  const ctrlVals = vals(type,prev);
+  return({
+    stepMsg:ctrlVals.msg,
+    msgClass:`msg-${type}`,
+    stepCtrls:ctrlVals.ctrls,
   })
-  return ctrlBtns;    
 }
-function makeButton(id, btntype, target, caption, refType, spc){
-  //id = this buttons id
-  //target = what happens after button is clicked
-  //caption = button caption
-  const ret = {
-    btnClss: `btn-${btntype}`,
-    btnCapt: caption,
-    listKey: `${id}`,
-    spc:spc,
-    refType: refType,
-    trigger: target  
-  };
-  return ret;
+const cancelCtrl = (t,p)=>{
+  const msg ='Do you really want to cancel this order?';
+  let ctrls = [];
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, go to main page',t,'cancel','mainpage'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, go to the store selection page',t,'cancel','storeselect'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, restart this order',t,'cancel','restart'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
+  return ({
+    msg:msg,
+    ctrls:ctrls,}
+  )
 }
-const cano = {cap:'Cancel Order', tar: 'cancelorder',type:'warn'};
-
+const compCtrl = (t,p)=>{
+  const msg ='Complete this order and go to payment & confirmation?';
+  let ctrls = [];
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'complete','order'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
+  return ({
+    msg:msg,
+    ctrls:ctrls,}
+  )
+}
+const changeCtrl = (t,p)=>{
+  const msg ='Do you really want to change the name for this order?';
+  let ctrls = [];
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'change','name'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
+  return ({
+    msg:msg,
+    ctrls:ctrls,}
+  )
+}
+const removeCtrl = (t,p) =>{
+  const pType = p.type;
+  const msg = pType==='menu'?'Are you sure you want to discard this pizza?':'Do you really want to remove this pizza?';
+  let ctrls = [];
+  if(pType==='menu'){
+    ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes-start over',t,'remove','restart'));
+  }
+  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'remove','revieworder'));
+  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
+  return ({
+    msg:msg,
+    ctrls:ctrls,}
+  )
+}
+function buildConfirmationCtrl(type, label, owner, tarType, tarName){
+  const ctrlType = type==='yes'?'warn':'prev';
+  const key = `${owner}-${type}-${tarType}-${tarName}`
+  return ({
+    btnClass: `btn-${ctrlType}`,
+    btnCapt: label,
+    listKey: key,
+    ownerType: tarType,
+    ownerName: tarName,
+    targetType: type,
+    targetName: owner,
+    action: ctrlType,
+    hasSpecial: true,    
+    trigger: 'special',  
+  })
+}
 export default StepFactory;

@@ -1,6 +1,5 @@
 import PizzaOrder from './PizzaOrder';
 import PizzaMenu from './itemMenu';
-import StepFactory from './StepFactory';
 
 class OrderControl {
   functionList = {
@@ -17,12 +16,11 @@ class OrderControl {
     this.pizzaOrder = new PizzaOrder(); 
     this.pizzaMenu = new PizzaMenu();          
     this.start = false;
-    this.currentStep = null;
+    this.stepInfo = null;        
     this.currentPizzaID = 0;
-    this.prevStep = null;
-    
     this.ProcessAction = this.ProcessAction.bind(this);
-    this.ProcessStep = this.ProcessStep.bind(this);    
+    this.menuStep = this.pizzaMenu.MenuSteps;
+    this.stepMsg = '';    
   }
   get isStarted(){
     return this.start;
@@ -44,87 +42,90 @@ class OrderControl {
     this.pizzaOrder = new PizzaOrder();
     return this;
   }
-  StepControls(){
-    return StepFactory(this.currentStep);
+  StepMsg(){
+    return this.stepMsg;
   }
   CurrentStep(){
-    //returns the current step
-    const curStep =this.currentStep;
-    const stepOptions = {
-      name: curStep.name,
-      type: curStep.type,      
-      hasElements: false,     
-    };
-    if(curStep.type==='menu'){
-      const ele = this.pizzaMenu.getMenuStep(curStep.name);
-      stepOptions.msg = ele.msg;
-      stepOptions.hasElements = true;      
-      stepOptions.elements = ele.elements;
-      stepOptions.hasRows = ele.hasRows;
-      stepOptions.hasMulti = ele.hasMulti;
-      curStep.next=ele.next;
-      curStep.prev = ele.prev;
-      curStep.choices = null;
-      curStep.secondOrder = false;
-    } else if(curStep.type==='edit'){
-        curStep.next='';
-        curStep.prev='';
-      if(curStep.name==='editpizza'){
-        curStep.choices = this.pizzaMenu.MenuSteps;
-        curStep.secondOrder = this.prevStep.second;        
-      } else if(curStep.name==='editorder'){
-        curStep.choices = this.pizzaOrder.PizzaList;
-        curStep.secondOrder = true;
-      }
+    const curStepName = this.stepInfo.currentStep.name;
+    const curStepType = this.stepInfo.currentStep.type;
+    const hasMenuElements = this.menuStep.findIndex((i)=> i===curStepName)!==-1?true:false;
+    const elements = hasMenuElements?this.pizzaMenu.getMenuStep(curStepName):null;
+    if(hasMenuElements){
+      this.stepMsg = elements.msg;
+    } else {
+      //do something else to get the message
     }
-    this.currentStep = curStep;    
-    return stepOptions;
-  }  
-  ProcessStep(){
-    return {
-      CurrentStep:this.CurrentStep(),
-      StepControls:this.StepControls()
+    const stepInfo = {
+      stepName: curStepName,
+      curStepType: curStepType,
+      hasMenuElements: hasMenuElements,
+      elements: elements,
     }
+    return stepInfo;
+  }
+  StepInfo(){        
+    return this.stepInfo;
   }
   ProcessAction(val){
-    const key = val.key;
-    const target = val.target;
-    const ref = val.refType;
-    const spc = val.spc;  
-    this.prevStep = this.currentStep;
-    if(!spc){
-      alert('Regular Menu Step')
+    /* ownerType, ownerName, targetType, targetName, hasSpecial, trigger*/
+    //types: menu|edit|review|special[remove|change|complete|cancel]
+    //names: {item}|{pizzaID}|pizza|order|special[mainpage|storeselect|restart|order|name|revieworder]
+    //trigger: goto|special|remove|change|complete|cancel
+    const action = val.action;
+    const selections = val.selections;
+    if(action.hasSpecial){
+      this.ProcessSpecial(val);
+
     } else {
-      this.functionList[target]();
-
+      if(action.actionType==='next'){
+        this.GoToNextStep(action.targetType, action.targetName);
+      }
     }
+  }
+  ProcessSpecial(val){
 
   }
-  cancel(v){
+  GoToNextStep(type, name){
+    if(type==='menu'){
+      this.changeMenuStep(name);
+    }
+  }
+  GoToPrevStep(type, name){
+
+  }
+  changeMenuStep(step){
+    const i = this.menuStep.findIndex((s)=>s===step);
+    if(i===-1) return null;
     
-    alert(`Cancel ${v}`)
-  }
-  
-  remove(id){
-
-  }
-  specialinstmsg(){
-
-  }
-  addnewpizza(){
     const curStep = {
       type: 'menu',
-      name: 'crusts',
-      next: '',
-      prev: '',
-      choices: null,
-      second:false,      
+      name: this.menuStep[i],            
     }
-    this.currentStep = curStep;
+    const prevStep = {
+      type: 'menu',
+      name: this.menuStep[i], 
+    }
+    if(i===0){
+      prevStep.type='chatbot';
+      prevStep.name='2'
+    }
+    const nextStep = {
+      type:'menu',
+      name:this.menuStep[i+1],
+    }
+    const stepInfo = {
+      currentStep: curStep,
+      prevStep: prevStep,
+      nextStep: nextStep,
+      isRetRevO: false,
+    }
+    this.stepInfo = stepInfo;
+   
+  }
+  addnewpizza(){     
+    this.changeMenuStep('crusts')
     this.currentPizzaID = this.pizzaOrder.MakeNewPizza();
   }
-  completeorder(){
-
-  }
+  
 }
 export default OrderControl;

@@ -1,28 +1,46 @@
-import React, {useState} from 'react';
+import React from 'react';
 import '../css/OrderStyle.css';
-
+import StepFactory from './StepFactory';
 
 class OrderStep extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      selected:[null],
+      selected:[],
+      trigger: false,
     }
     this.triggerNext = this.triggerNext.bind(this);
     this.onSelect = this.onSelect.bind(this);    
   }
   triggerNext(val){
-    const key = val.key;
-    const target = val.target;
-    const ref = val.refType;
+   /* ownerType, ownerName, targetType, targetName, hasSpecial, trigger*/
     const ordercontrol = this.props.step.metadata;
-    ordercontrol.ProcessAction(val);
+    //update order
+    const selectedObjs = this.state.selected;
+    const processObj = {action:val, selections:selectedObjs}
+    ordercontrol.ProcessAction(processObj);
+    //trigger next step in chatbot
+    const type = `${val.trigger}:${val.actionType}(${val.ownerType}:${val.ownerName}=>${val.targetType}:${val.targetName})`
+    const msg = selectedObjs.length===0?'No Message':JSON.stringify(selectedObjs);
+    const data = {
+      value:selectedObjs,
+      type:type,
+      msg:msg,
+    }
+    this.setState({trigger: true}, () => {
+      this.props.triggerNextStep(data);
+    });
   }
   onSelect(val){
-    const i = this.state.selected.findIndex(p=>p===val.key);
-    
-    const v = i===-1?this.state.selected.concat(val.key):this.state.selected.splice(i,1);
-    this.setState({selected:v});    
+    const currrentlySelected = this.state.selected
+    const i = currrentlySelected.findIndex(p=>p===val.key);
+    if (i===-1){
+      const v = currrentlySelected.concat(val.key);
+      this.setState({selected:v});
+    } else {
+      currrentlySelected.splice(i,1);
+      this.setState({selected:currrentlySelected});
+    }       
   }
   render(){
     const ordercontrol = this.props.step.metadata;
@@ -30,32 +48,35 @@ class OrderStep extends React.Component {
       const name = this.props.steps.ordername.value;
       ordercontrol.isStarted = name;
     }
-    const updatedStep = ordercontrol.ProcessStep();
-    const currentStep = updatedStep.CurrentStep;
-    const stepCtrls = updatedStep.StepControls;
-    
-    return <BuildStep stepOptions={currentStep} selected={this.state.selected} stepCtrls={stepCtrls} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
+    const currentStep = ordercontrol.CurrentStep();
+    const stepInfo = ordercontrol.StepInfo();    
+    const stepCtrls = StepFactory(stepInfo);
+    const stepMsg = ordercontrol.StepMsg();
+
+    return <BuildStep displayMsg={stepMsg} stepOptions={currentStep} selected={this.state.selected} stepCtrls={stepCtrls} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
   }  
 }
 function BuildStep(props){
   const {stepOptions, stepCtrls} = props;
-  const hasElements = stepOptions.hasElements;
+  const hasElements = stepOptions.hasMenuElements;
+const stepMsg = props.displayMsg!==''?<div className="orderStepMsg">{props.displayMsg}</div>:null;
   const elementArray = hasElements?
-    <ElementArray elements={stepOptions.elements} hasRows={stepOptions.hasRows} 
-    hasMult={stepOptions.hasMulti} selected={props.selected} onSelect={props.onSelect}/>
+    <ElementArray stepInfo={stepOptions.elements} selected={props.selected} onSelect={props.onSelect}/>
     :null;
   const controlArray = <ControlArray stepCtrls={stepCtrls} onTrigger={props.onTrigger}/>
+  const stepClassName = `orderstep-${stepOptions.curStepType}-${stepOptions.stepName}`;
   return (
-    <div className="orderStep">
+    <div className={stepClassName}>
+      {stepMsg}
       {elementArray}
       {controlArray}
     </div>
   )  
 }
 function ElementArray(props){
-  const elements = props.elements;
-  const hasRows = props.hasRows;
-  const hasMulti = props.hasMulti;  
+  const elements = props.stepInfo.elements;
+  const hasRows = props.stepInfo.hasRows;
+  const hasMulti = props.stepInfo.hasMulti;  
   const click = props.onSelect;
   const sel = props.selected;
   return (
@@ -64,6 +85,7 @@ function ElementArray(props){
     elements.map((e)=>{
       const rowName = e.name;
       const rowClass = e.rClass;
+      const rowKey = `${rowClass}-${rowName}`;
       const rowBtns = e.btns.map((b)=>{
         const key = b.listKey;
         const i = sel.findIndex(p=>p===key)
@@ -78,7 +100,7 @@ function ElementArray(props){
         )
       });
       return (
-        <div className={rowClass}>
+        <div className={rowClass} key={rowKey}>
           <div className="rowTitle">{rowName}</div>
           <div className="rowBtns">            
             {rowBtns}
@@ -108,14 +130,14 @@ function ControlArray(props){
     const capt = s.btnCapt;
     const btnClass = s.btnClss;
     const key = s.listKey;
-    const target = s.trigger;
-    const spc = s.spc;
-    const refType = s.refType;
-    const ret = {
-      key: key,
-      target: target,
-      spc: spc,
-      refType: refType,
+    const ret = {      
+      ownerType: s.ownerType,
+      ownerName: s.ownerName,
+      targetType: s.targetType,
+      targetName: s.targetName,
+      actionType: s.action,
+      hasSpecial: s.hasSpecial,    
+      trigger: s.trigger,
     }
     return (
       <li key={key} className={btnClass}>
