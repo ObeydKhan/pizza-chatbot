@@ -62,6 +62,19 @@ class PizzaOrder {
       return `No ${itemType} added`
 
     } else {
+      const out = [].concat(this.ReturnPizzaItems(itemType));
+      let retStr = ''; 
+      const l = out.length
+      for(let x =0; x<l;x++){
+        if(x===0){
+          retStr =`${out[x].itemMsg}`
+        }
+        if(x!==(l-1)){
+          retStr = `${retStr}, ${out[x].itemMsg}`
+        } else {
+
+        }
+      }
       return `Added some stuff`;
     }
   }
