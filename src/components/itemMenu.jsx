@@ -132,6 +132,7 @@ class itemMenu{
         btnCapt: o.short,
         listKey:`${step}-${itemID}-${opt}-${o.id}`,
         btnMsg:o.name,
+        btnType: opt,
         itemInfo: itemInfo,
       };
       return btn;

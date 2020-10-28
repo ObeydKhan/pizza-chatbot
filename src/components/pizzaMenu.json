@@ -96,11 +96,11 @@
     ],  
     "qty": [
       {"id": "0", "name": "None", "short":"", "class":"hide"},
-      {"id": "1", "name": "Regular", "short":"Reg", "class":"btn"},
-      {"id": "2", "name": "Lite", "short":"Lite", "class":"btn"},
-      {"id": "3", "name": "Extra", "short":"Xtra", "class":"btn"},
-      {"id": "4", "name": "Double", "short":"Dbl", "class":"btn"},
-      {"id": "5", "name": "Triple", "short":"Trpl", "class":"btn"}],    
+      {"id": "1", "name": "Regular", "short":"Reg", "class":""},
+      {"id": "2", "name": "Lite", "short":"Lite", "class":""},
+      {"id": "3", "name": "Extra", "short":"Xtra", "class":""},
+      {"id": "4", "name": "Double", "short":"Dbl", "class":""},
+      {"id": "5", "name": "Triple", "short":"Trpl", "class":""}],    
     "half": [
       {"id": "1", "name": "On the Left Half", "short": "L", "class":"LH"},
       {"id": "2", "name": "On the Whole Pizza", "short": "", "class":"WP"},
