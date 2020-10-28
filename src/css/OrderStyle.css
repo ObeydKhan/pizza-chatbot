@@ -7,40 +7,122 @@
   padding: 0px;
   padding-bottom: 16px;
 }
+
 .rsc .rsc-cs .orderStep{
+  /*root node for all custom components*/
   text-align: left;
+  display: block;
+}
+.rsc .rsc-cs .orderStepMsg{
+  /*message node for bot message*/
+  background: #DD841F;
+  border-radius: 18px 18px 18px 0;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+  
+  margin: 0 0 10px 0;
+  padding: 12px;
+}
+.rsc .rsc-cs .menuEleList {
+  /*root node for menu elements*/
+  text-align: left;
+  float: left;
+}
+.rsc .rsc-cs .simpleMenu{   
+  /*list wrapper for simple menu items*/
+  list-style-type: none;
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;  
+ }
+ .rsc .rsc-cs .simpleMenu li {
+  list-style-type: none;
+  float:left;
+}
+.rsc .rsc-cs .multiRowMenu{   
+  /*list wrapper for multi row menu items*/
+  list-style-type: none;
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+ }
+.rsc .rsc-cs .multiRowMenu li {
+  list-style-type: none;
+  float:left;
+}
+.rsc .rsc-cs .menuEleRow{
+  /*menu element row wrapper*/
+  list-style-type: none;
+  display: inline-block;  
+  margin: 0px;
+  padding: 0px;
+  text-align: left;  
+} 
+.rsc .rsc-cs .rowBtns{
+   /*wrapper for button list*/
+   list-style-type: none;
+   float: left;  
+   margin: 0px;
+   padding: 0px;
+   text-align: left; 
+ }
+.rsc .rsc-cs .rowTitle{
+  /*wrapper for menu row title*/
+  display: inline-block;
+  border-radius: 22px 0px 0px 22px;
+  font-size: 14px;
+  border:none;
+  width: 100px;
+  margin-right: 6px;
+  text-align: left;
+  background-color: #dd841f;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+ }
+.rsc .rsc-cs .btn-item{
+  /*menu button list wrapper*/
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .rsc .rsc-cs .btn-item:hover{
   opacity: 0.7;
 }
-.rsc .rsc-cs .ctrlBtn:hover{
-  opacity: 0.7;
-}
-.rsc .rsc-cs .menuEleList{   
-  list-style-type: none;
-  /*display: inline-block;*/
-  text-align: center;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-}
-.rsc .rsc-cs .btn-item{
-  display: inline-block;
-  border-radius: 22px;
-  font-size: 14px;
-  width: 65px;
-  border:none;
-  text-align: center;
-  background-color: #dd841f;
-  color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsc .rsc-cs .orderStepMsg{
-
-}
 .rsc .rsc-cs .menuBtn{
+  /*standard menu button*/  
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  border:none;
+  border-radius: 22px;
+  /*display: inline-block;
+  
+  font-size: 14px;
+  width: 65px;
+  
+  text-align: center;
+  
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;*/
+}
+.rsc .rsc-cs .btn-qty-{
+  /*menu button list wrapper*/
   display: inline-block;
   border-radius: 22px;
   font-size: 14px;
@@ -53,52 +135,58 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.rsc .rsc-cs .btnNavigationArray{
-
-}
-.rsc .rsc-cs .btnCtrlList{
-  list-style-type: none;
+.rsc .rsc-cs .halfBtns{
   display: inline-block;
+  border-radius: 10px;
+  font-size: 0px;
+  width: 10px;
+  border:none;
   text-align: center;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
+  background-color: lightslategray;
+  color: lightslategray;
+  padding: 0px;  
 }
-.rsc .rsc-cs .ctrlBtn{
+/*.rsc .rsc-cs .btn-half-WP{
   display: inline-block;
-  border-radius: 22px;
-  margin-top: 2px;
+  border-radius: 20px;
   font-size: 14px;
-  width: 173px;
+  width: 20px;
   border:none;
   text-align: center;
   background-color: #dd841f;
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-}
-.rsc .rsc-cs .btn-qty-hide{
-  width: 0px;
-  height: 0px;
+  color: #dd841f;
   padding: 0px;
-  margin: 0px;
-  border-radius: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-.rsc .rsc-cs .btn-warn{
+.rsc .rsc-cs .btn-half-LH{
   display: inline-block;
-  border-radius: 22px;
-  margin-top: 2px;
+  border-radius: 20px 0px 0px 20px;
   font-size: 14px;
-  width: 173px;
+  width: 20px;
   border:none;
-  text-align: center;
-  background-color: salmon;
+  text-align: right;
+  background-color: #dd841f;
   color: white;
-  padding: 10px;
-  cursor: pointer;
-  
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-.rsc .rsc-cs .btn-select{
+.rsc .rsc-cs .btn-half-RH{
+  display: inline-block;
+  border-radius: 0px 20px 20px 0px;
+  font-size: 14px;
+  width: 20px;
+  border:none;
+  text-align: left;
+  background-color: #dd841f;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}*/
+.rsc .rsc-cs .btn-qty-select{
+  /*selected menu items*/
   display: inline-block;
   border-radius: 22px;
   font-size: 14px;
@@ -111,8 +199,118 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.rsc .rsc-cs .menuList {
-  text-align: left;
+.rsc .rsc-cs .btn-half-RH-select{
+  /*selected menu items*/
+  display: inline-block;
+  border-radius: 15px;
+  font-size: 14px;
+  width: 15px;
+  border:none;
+  text-align: center;
+  background-color: purple;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsc .rsc-cs .btn-half-WP-select{
+  /*selected menu items*/
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: purple;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsc .rsc-cs .btn-half-LH-select{
+  /*selected menu items*/
+  display: inline-block;
+  border-radius: 15px;
+  font-size: 14px;
+  width: 15px;
+  border:none;
+  text-align: center;
+  background-color: purple;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsc .rsc-cs .btn-select{
+  /*selected menu items*/
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: purple;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsc .rsc-cs .btn-qty-hide{
+  /*hidden menu buttons*/
+  width: 0px;
+  height: 0px;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
+}
+.rsc .rsc-cs .btnNavigationArray{
+/*root node for all control buttons*/
+  list-style-type: none;
+  display: block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;  
+}
+.rsc .rsc-cs .btnCtrlList{
+  /*list for control buttons*/
+  list-style-type: none;  
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  float: left;  
+}
+.rsc .rsc-cs .btnCtrlList li {
+  float: left;
+}
+.rsc .rsc-cs .btn-ctrl{
+  /*standard control button*/ 
+  border-radius: 22px;
+  margin-top: 2px;
+  font-size: 14px;  
+  border:none;
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+.rsc .rsc-cs .btn-ctrl:hover{
+  opacity: 0.7;
+}
+.rsc .rsc-cs .btn-warn{
+  /*warning buttons*/  
+  border-radius: 22px;
+  margin-top: 2px;
+  font-size: 14px; 
+  border:none;
+  text-align: center;
+  background-color: salmon;
+  color: white;
+  padding: 10px;
+  cursor: pointer;  
+}
+.rsc .rsc-cs .btn-warn:hover{
+  opacity: 0.7;
 }
 .rsc .rsc-cs .menuOptions {
   display: inline-block;
@@ -135,14 +333,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.rsc .rsc-cs .menuEleRows{
-  list-style-type: none;
-  display: inline-block;
-  text-align: center;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-}
+
 .rsc .rsc-cs .menuOptionsEle {
   padding: 0px;    
   
@@ -196,85 +387,10 @@
   padding: 0px;
   cursor: pointer;
 }
-.rsc .rsc-cs .wpBtn{
-  display: inline-block;
-  border-radius: 20px;
-  font-size: 14px;
-  width: 20px;
-  border:none;
-  text-align: center;
-  background-color: #dd841f;
-  color: #dd841f;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsc .rsc-cs .lhBtn{
-  display: inline-block;
-  border-radius: 20px 0px 0px 20px;
-  font-size: 14px;
-  width: 20px;
-  border:none;
-  text-align: right;
-  background-color: #dd841f;
-  color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsc .rsc-cs .rhBtn{
-  display: inline-block;
-  border-radius: 0px 20px 20px 0px;
-  font-size: 14px;
-  width: 20px;
-  border:none;
-  text-align: left;
-  background-color: #dd841f;
-  color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsc .rsc-cs .nBtn{
-  display: inline-block;
-  border-radius: 20px;
-  font-size: 14px;
-  width: 20px;
-  border:none;
-  text-align: center;
-  background-color: #c4945d;
-  color: #c4945d;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
-.rsc .rsc-cs .menuListOptsBtn {
-  display: inline-block;
-  border-radius: 22px;
-  font-size: 14px;
-  width: 65px;
-  border:none;
-  text-align: center;
-  background-color: #dd841f;
-  color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsc .rsc-cs .selMenuListOptsBtn{
-  display: inline-block;
-  border-radius: 22px;
-  font-size: 14px;
-  width: 65px;
-  border:none;
-  text-align: center;
-  background-color: salmon;
-  color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
+
+
+
 .rsc .rsc-cs .nextStep {
   display: inline-block;
   border-radius: 22px;
@@ -289,6 +405,4 @@
   cursor: pointer;
 }
 
-.rsc .rsc-cs .ctrlBtn:hover:focus, :active{
-  outline: none;
-}
+

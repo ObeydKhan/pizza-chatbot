@@ -16,7 +16,7 @@ function getCtrls(owner, next, prev, isRetRevO){
   if(owner.type==='menu'){
     const a = next.type==='menu'?next:{type:'special', name:'specialinstmsg'}
     ctrlArry = ctrlArry.concat([['next', next.type==='menu'?`Next Step -> ${next.name}`:'Next Step -> Special Instructions', owner, a, 'goto']]);
-    ctrlArry = ctrlArry.concat([['prev', prev.type==='menu'?`Prev Step -> ${prev.name}`:'Start Over', owner, prev, 'goto']]);
+    ctrlArry = ctrlArry.concat([['prev', prev.type==='menu'?`Prev Step -> ${prev.name}`:'Prev Step -> Order Name', owner, prev, 'goto']]);
   } else if(owner.type==='edit'){
     if(owner.name==='pizza'){      
       const a = next.map((i)=>{
@@ -53,8 +53,10 @@ function getCtrls(owner, next, prev, isRetRevO){
 function buildCtrlObj(ctrlType, btnCapt, owner, target, tarFunc){
 const key = `${owner.type}:${owner.name}-${tarFunc}(${target.type}:${target.name})`;
 const specStep = tarFunc==='goto'?false:buildSpecialStep(tarFunc, owner);
+const btnCat = ctrlType==='warn'?'warn':'ctrl';
   return ({
     btnClass: `btn-${ctrlType}`,
+    btnCat: `btn-${btnCat}`,
     btnCapt: btnCapt,
     listKey: key,
     ownerType: owner.type,
@@ -140,6 +142,7 @@ function buildConfirmationCtrl(type, label, owner, tarType, tarName){
   return ({
     btnClass: `btn-${ctrlType}`,
     btnCapt: label,
+    btnCat: `btn-${ctrlType}`,
     listKey: key,
     ownerType: type,
     ownerName: owner,

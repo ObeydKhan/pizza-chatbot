@@ -137,7 +137,7 @@ function BuildStep(props){
 function BuildSpecialStep(props){
   const stepMsg = <div className="orderStepMsg">{props.stepInfo.stepMsg}</div>;
   const controlArray = <ControlArray stepCtrls={props.stepInfo.stepCtrls} onTrigger={props.onTrigger}/>
-  const stepClassName = `orderstep-${props.stepInfo.msgClass}`;
+  const stepClassName = `orderStep`;
   return (
     <div className={stepClassName}>
       {stepMsg}     
@@ -149,14 +149,14 @@ function BuildReviewStep(props){
   const reviewType = props.reviewType;
   if(reviewType==='pizza'){
     const id = props.pizzaOrder.CurrentPizzaID;    
-    const retclass = `review-pizza-${id}`;
+    
     const topMsg = `Summary for Pizza #${id}`;
     const reviewStr = props.pizzaOrder.CurrentPizzaString;
     const controlArray = <ControlArray stepCtrls={props.stepCtrls} onTrigger={props.onTrigger}/>
     return (
-      <div className="pizzaReviewMsg">
-        <div className="pizzaIDmsg">{topMsg}</div>
-        <div className={retclass}>{reviewStr}</div>
+      <div className="orderStep">
+        <div className="orderStepMsg">{topMsg}</div>
+        <div className="pizzaReviewMsg">{reviewStr}</div>
         {controlArray}
       </div>
     )
@@ -171,7 +171,7 @@ function BuildStandardStep(props){
     <ElementArray stepInfo={stepOptions.elements} selected={props.selected} onSelect={props.onSelect}/>
     :null;
   const controlArray = <ControlArray stepCtrls={stepCtrls} onTrigger={props.onTrigger}/>
-  const stepClassName = `orderstep-${stepOptions.curStepType}-${stepOptions.stepName}`;
+  const stepClassName = `orderStep`;
   return (
     <div className={stepClassName}>
       {stepMsg}
@@ -181,63 +181,87 @@ function BuildStandardStep(props){
   )  
 }
 function ElementArray(props){
-  const elements = props.stepInfo.elements;
   const hasRows = props.stepInfo.hasRows;
+  const eleArray = hasRows?MultiRowArray(props):SimpleItemArray(props);
+  return (
+    <div className="menuEleList">      
+      {eleArray}      
+    </div>    
+  )
+}
+function SimpleItemArray(props){
+  const elements = props.stepInfo.elements;  
   const hasMulti = props.stepInfo.hasMulti;  
   const click = props.onSelect;
   const sel = props.selected;
+  const retArray = elements.map((e)=>{ 
+    const capt = e.btnCapt;
+    const key = e.listKey;
+    const val = {itemInfo:e.itemInfo, multi:hasMulti};
+    const i = sel.findIndex(p=>p===key)
+    const eleClass = i===-1?e.btnClass:'btn-select';          
+    return (
+      <li key={key} className={eleClass}>
+        <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
+      </li>
+    )
+  })
   return (
-    <ul className="menuEleList">
-    {hasRows?    
-    elements.map((e)=>{
-      const rowName = e.name;
-      const rowClass = e.rClass;
-      const rowKey = `${rowClass}-${rowName}`;
-      const rowBtns = e.btns.map((b)=>{
-        const key = b.listKey;
-        const i = sel.findIndex(p=>p===key)
-        const capt =b.btnCapt;        
-        const val = {itemInfo:b.itemInfo, multi:hasMulti};
-        const eleClass =  i===-1?b.btnClass:'btn-select';
-                
-        return (
-          <li key={key} className={eleClass}>
-            <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
-          </li>
-        )
-      });
-      return (
-        <div className="menuEleRows" key={rowKey}>
-          <div className="menuRow" key={rowKey}>
-          <div className="rowTitle">{rowName}</div>
-          <ul className="rowBtns">            
-            {rowBtns}
-          </ul>
-          </div>
-        </div>
-      )
-    }):elements.map((e)=>{ 
-      const capt = e.btnCapt;
-      const key = e.listKey;
-      const val = {itemInfo:e.itemInfo, multi:hasMulti};
-      const i = sel.findIndex(p=>p===key)
-      const eleClass = i===-1?e.btnClass:'btn-select';
-            
-      return (
-        <li key={key} className={eleClass}>
-          <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
-        </li>
-      )
-    })
-    }
-    </ul>    
+    <ul className="simpleMenu">
+      {retArray}
+    </ul>
   )
+}
+function MultiRowArray(props){
+  const elements = props.stepInfo.elements;  
+  const hasMulti = props.stepInfo.hasMulti;  
+  const click = props.onSelect;
+  const sel = props.selected;
+  const retArray = elements.map((e)=>{
+    const rowName = e.name;
+    const rowClass = e.rClass;
+    const rowKey = `${rowClass}-${rowName}`;
+    const halfBtns = e.btns.filter((b)=> b.btnType==='half');
+    const qtyBtns = e.btns.filter((b)=> b.btnType==='qty');
+    const halfRow = halfBtns.length===0?null:<ul className="halfBtns">{BtnArray(halfBtns, sel, click, hasMulti)}</ul>
+    const qtyRow = qtyBtns.length===0?null:<ul className="qtyBtns">{BtnArray(qtyBtns, sel, click, hasMulti)}</ul>
+    return (
+      <div className="menuEleRow" key={rowKey}>                  
+        <ul className="rowBtns">
+          <div className="rowTitle">{rowName}</div>            
+          {halfRow}
+          {qtyRow}
+        </ul>        
+      </div>
+    )
+  })
+  return (
+    <ul className="multiRowMenu">
+      {retArray}
+    </ul>
+  )
+}
+function BtnArray(btns, sel, click, hasMulti){  
+  const rowBtns = btns.map((b)=>{       
+    const key = b.listKey;
+    const i = sel.findIndex(p=>p===key)
+    const capt =b.btnCapt;        
+    const val = {itemInfo:b.itemInfo, multi:hasMulti};
+    const eleClass =  i===-1?b.btnClass:`${b.btnClass}-select`;            
+    return (
+      <li key={key} className={eleClass}>
+        <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
+      </li>
+    )
+  });
+  return rowBtns
 }
 function ControlArray(props){
   const stepControls = props.stepCtrls.map((s)=>{
     if(s===null) return null;
     const capt = s.btnCapt;
-    const btnClass = s.btnClss;
+    //const listClass = s.btnClass;
+    const btnClass = `${s.btnCat}`
     const key = s.listKey;
     const ret = {      
       ownerType: s.ownerType,
@@ -249,7 +273,7 @@ function ControlArray(props){
       trigger: s.trigger,
     }
     return (
-      <li key={key} className={btnClass}>
+      <li key={key}>
         <button className={btnClass} onClick={()=> {return props.onTrigger(ret)}}>{capt}</button>
       </li>
     )
