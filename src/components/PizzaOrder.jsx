@@ -68,14 +68,11 @@ class PizzaOrder {
       for(let x =0; x<l;x++){
         if(x===0){
           retStr =`${out[x].itemMsg}`
-        }
-        if(x!==(l-1)){
+        } else {        
           retStr = `${retStr}, ${out[x].itemMsg}`
-        } else {
-
         }
       }
-      return `Added some stuff`;
+      return retStr;
     }
   }
   getPizzaItems(type){

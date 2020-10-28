@@ -207,12 +207,14 @@ function ElementArray(props){
         )
       });
       return (
-        <ul className="menuEleRows" key={rowKey}>
+        <div className="menuEleRows" key={rowKey}>
+          <div className="menuRow" key={rowKey}>
           <div className="rowTitle">{rowName}</div>
-          <div className="rowBtns">            
+          <ul className="rowBtns">            
             {rowBtns}
+          </ul>
           </div>
-        </ul>
+        </div>
       )
     }):elements.map((e)=>{ 
       const capt = e.btnCapt;
@@ -248,7 +250,7 @@ function ControlArray(props){
     }
     return (
       <li key={key} className={btnClass}>
-        <button className="ctrlBtn" onClick={()=> {return props.onTrigger(ret)}}>{capt}</button>
+        <button className={btnClass} onClick={()=> {return props.onTrigger(ret)}}>{capt}</button>
       </li>
     )
   })

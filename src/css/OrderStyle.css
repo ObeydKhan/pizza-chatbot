@@ -18,7 +18,7 @@
 }
 .rsc .rsc-cs .menuEleList{   
   list-style-type: none;
-  display: inline-block;
+  /*display: inline-block;*/
   text-align: center;
   margin: 0px;
   padding: 0px;
