@@ -10,9 +10,15 @@
 .rsc .rsc-cs .orderStep{
   text-align: left;
 }
+.rsc .rsc-cs .btn-item:hover{
+  opacity: 0.7;
+}
+.rsc .rsc-cs .ctrlBtn:hover{
+  opacity: 0.7;
+}
 .rsc .rsc-cs .menuEleList{   
   list-style-type: none;
-  display: inline-block;
+  /*display: inline-block;*/
   text-align: center;
   margin: 0px;
   padding: 0px;
@@ -31,20 +37,66 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.rsc .rsc-cs .menuBtn{
+.rsc .rsc-cs .orderStepMsg{
 
+}
+.rsc .rsc-cs .menuBtn{
+  display: inline-block;
+  border-radius: 22px;
+  font-size: 14px;
+  width: 65px;
+  border:none;
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .rsc .rsc-cs .btnNavigationArray{
 
 }
 .rsc .rsc-cs .btnCtrlList{
-
+  list-style-type: none;
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
 }
-.rsc .rsc-cs .btn-ctrl{
-
+.rsc .rsc-cs .ctrlBtn{
+  display: inline-block;
+  border-radius: 22px;
+  margin-top: 2px;
+  font-size: 14px;
+  width: 173px;
+  border:none;
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+.rsc .rsc-cs .btn-qty-hide{
+  width: 0px;
+  height: 0px;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
 }
 .rsc .rsc-cs .btn-warn{
-
+  display: inline-block;
+  border-radius: 22px;
+  margin-top: 2px;
+  font-size: 14px;
+  width: 173px;
+  border:none;
+  text-align: center;
+  background-color: salmon;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  
 }
 .rsc .rsc-cs .btn-select{
   display: inline-block;
@@ -83,13 +135,20 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
+.rsc .rsc-cs .menuEleRows{
+  list-style-type: none;
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
 .rsc .rsc-cs .menuOptionsEle {
   padding: 0px;    
   
   text-align: left;
 }
-.rsc .rsc-cs .menuListOpts {
+.rsc .rsc-cs .row-item {
   list-style-type: none;
   display: inline-block;
   text-align: center;
@@ -102,17 +161,6 @@
   display: inline-block;
 
 }
-.rsc .rsc-cs .menuListOptsEle:visited{
-  background-color: #a85d06;
-  opacity: 0.1;
-}
-.rsc .rsc-cs:hover{
-  opacity: 0.7;
-}
-.rsc .rsc-cs .menuListOptsEle:hover:focus, :active{
-  outline: none;
-}
-
 .rsc .rsc-cs .menuListOptsEleNone{
   cursor: pointer;
   margin-top: 2px;
@@ -133,12 +181,6 @@
   padding: 0px;
   padding-top: 10px;
   padding-bottom: 10px;
-}
-.rsc .rsc-cs .menuListOptsEleNone:hover{
-  opacity: 0.7;
-}
-.rsc .rsc-cs .menuListOptsEleNone:hover:focus, :active{
-  outline: none;
 }
 .rsc .rsc-cs .menuHalfOpts{
   display: inline-block;
@@ -246,9 +288,7 @@
   padding: 10px;
   cursor: pointer;
 }
-.rsc .rsc-cs .nextStep:hover{
-  opacity: 0.7;
-}
-.rsc .rsc-cs .nextStep:hover:focus, :active{
+
+.rsc .rsc-cs .ctrlBtn:hover:focus, :active{
   outline: none;
 }
