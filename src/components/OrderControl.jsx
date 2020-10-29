@@ -4,38 +4,23 @@ import PizzaMenu from './itemMenu';
 class OrderControl {
   constructor(){  
     this.pizzaOrder = new PizzaOrder(); 
-    this.pizzaMenu = new PizzaMenu();          
-    this.start = false;
-    this.currentStepInfo = null;        
-    this.currentPizzaID = 0;
+    this.pizzaMenu = new PizzaMenu();   
+    this.currentStepInfo = null;
     this.ProcessAction = this.ProcessAction.bind(this);
-    this.menuStep = this.pizzaMenu.MenuSteps;
-    this.stepMsg = '';
-    this.specInstSet = false;
-    this.currentBotKey = '';
+    this.menuStep = this.pizzaMenu.MenuSteps;       
     this.botKeys = [];
-    this.isSpecialStep = false;
-    this.specialStep = null;       
+    this.specialStep = null;
+           
   }
   get IsSpecialStep(){
-    return this.isSpecialStep;
-  }
-  set IsSpecialStep(val){
-    this.isSpecialStep = false;
-  }
-  get SpecialStep(){
-    return this.specialStep;
-  }
+    return this.specialStep!==null;
+  }  
   set SpecialStep(val){
-    this.specialStep = val;
-  }
-  get isStarted(){
-    return this.start;
-  }
-  set isStarted(name){
-    this.pizzaOrder.Name = name;
-    this.addnewpizza();
-    this.start = true;
+    if(val===null){
+      this.specialStep = null;
+    } else {
+      this.specialStep = val;      
+    }    
   }
   set botKey(val){
     if (this.currentBotKey!==val){
@@ -46,130 +31,49 @@ class OrderControl {
   get botKey(){
     return this.currentBotKey;
   }
+
   HandleItemSelect(val){
-    const itemType = val.itemInfo.item;
-    const itemID = val.itemInfo.itemID;
-    const hasMulti = val.hasMulti;
-    const hasQty = val.itemInfo.hasOwnProperty('qty');
-    const hasHalf = val.itemInfo.hasOwnProperty('half');
-    const qty = hasQty?val.itemInfo.qty:'0';
-    const half = hasHalf?val.itemInfo.half:'0';
-    const qtyMsg = hasQty?this.pizzaMenu.GetOptMsg('qty',qty)+' ':'';
-    const halfMsg = hasHalf?' ' +this.pizzaMenu.GetOptMsg('half',half):'';
-    const itemName = this.pizzaMenu.GetItemName(itemType,itemID);
-    const itemMsg = `${qtyMsg}${itemName}${halfMsg}`;
-    const retVal = {id:itemID, name:itemName, qty:qty, qtyMsg:qtyMsg, half:half, halfMsg:halfMsg, itemMsg:itemMsg}    
-    const curSelectItems = [].concat(this.pizzaOrder.ReturnPizzaItems(itemType));
-    if(curSelectItems.length===0){
-      //add item      
-      const add = {type:itemType, values:retVal};
-      this.pizzaOrder.SavePizzaItems(add);
-    } else {
-      //handle single/multiselct + qty/half
-      
-      const i = curSelectItems.findIndex((p)=>p.id===itemID);
-      if(i===-1){
-        //item not found
-        if(hasMulti){
-          const add = curSelectItems.concat(retVal); 
-          const ret = {type:itemType, values:add}          
-          this.pizzaOrder.SavePizzaItems(curSelectItems.concat(ret));
-        } else {
-          //item not in collection - replace existing item
-          
-          curSelectItems.splice(0,1,[retVal]);
-          const add = {type:itemType, values:curSelectItems};
-          this.pizzaOrder.SavePizzaItems(add);
-        }
-      } else {
-        if(curSelectItems[i].itemMsg===itemMsg){
-          //item is previously selected - remove  
-          curSelectItems.splice(i,1);
-          const add = {type:itemType, values:curSelectItems};
-          this.pizzaOrder.SavePizzaItems(add);
-        } else {        
-          const foundQty = curSelectItems[i].qty;
-          const foundHalf = curSelectItems[i].half;
-          if(qty==='0'){
-            retVal.qty = foundQty;
-            retVal.qtyMsg = curSelectItems[i].qtyMsg;
-          }
-          if(half==='0'){
-            retVal.half = foundHalf;
-            retVal.halfMsg = curSelectItems[i].halfMsg;
-          }
-          retVal.itemMsg = `${retVal.qtyMsg}${itemName}${retVal.halfMsg}`;
-          curSelectItems.splice(i,1,[retVal]);
-          const add = {type:itemType, values:curSelectItems};
-          
-          this.pizzaOrder.SavePizzaItems(add);
-        }
-      }
-    } 
-    const updatedItems = this.pizzaOrder.ReturnPizzaItems(itemType);
-    if(updatedItems.length===0) return []
-    let spec = []
-    if(!Array.isArray(updatedItems)){      
-      const init = `${itemType}-${updatedItems.id}`;
-      spec = spec.concat(init);
-      const q =updatedItems.qty!=='0'?[`${init}-qty-${updatedItems.qty}`]:[];
-      const h =updatedItems.half!=='0'?[`${init}-half-${updatedItems.half}`]:[];
-      spec = spec.concat(q);
-      spec = spec.concat(h);
-      return spec;
-    }
-    
-    const ret = updatedItems.map((i)=> {
-      const init = `${itemType}-${i.id}`;
-      
-      const q =i.qty!=='0'?[`${init}-qty-${i.qty}`]:[];
-      const h =i.half!=='0'?[`${init}-half-${i.half}`]:[];
-      spec = spec.concat(q);
-      spec = spec.concat(h);
-      return init;
-
-    })
-    //return = list key=>[${itemType}-${itemID}-${opt}-${o.id},${step}-${i.id}]
-    
-    return ret.concat(spec);
+    return this.pizzaOrder.SelectPizzaItems(val);
   }
-
-  RestartOrder(){       
-    this.pizzaOrder = new PizzaOrder();
-    return this;
-  }
-  StepMsg(){
-    return this.stepMsg;
-  }
-  CurrentStep(){
-    const curStepName = this.currentStepInfo.currentStep.name;
-    const curStepType = this.currentStepInfo.currentStep.type;
+  get CurrentStepInfo(){
+    const stepInfo = this.currentStepInfo;
+    const curStepName = stepInfo.currentStep.name;
+    const curStepType = stepInfo.currentStep.type;
     const hasMenuElements = this.menuStep.findIndex((i)=> i===curStepName)!==-1?true:false;
     const elements = hasMenuElements?this.pizzaMenu.getMenuStep(curStepName):null;
     if(hasMenuElements){
-      this.stepMsg = elements.msg;
+      stepInfo.stepMsg = elements.msg;
     } else {
       //do something else to get the message
-      this.stepMsg = `Step ${curStepName} with type ${curStepType}`;
+      stepInfo.stepMsg = `Step ${curStepName} with type ${curStepType}`;
     }
+    const getBuildType = (val) => {
+      if(val.isSpecialStep) return 'specialStep';
+      switch (val.type){
+        case 'review':
+          return 'reviewStep';
+        case 'edit':
+          return val.name==='order'?'editOrderStep':'editStep';
+        default:
+          return 'standard';
+      }      
+    }
+    const buildType = getBuildType({isSpecialStep:this.IsSpecialStep, type:curStepType, name:curStepName});
     const stepProcesingInfo = {
-      stepName: curStepName,
-      curStepType: curStepType,
+      stepInfo: stepInfo,
+      stepMsg: stepInfo.stepMsg,      
+      buildType: buildType,
       hasMenuElements: hasMenuElements,
       elements: elements,
     }
     return stepProcesingInfo;
-  }
-  StepInfo(){        
-    return this.currentStepInfo;
-  }
+  }  
   get handleSpecialInst(){
     return this.specInstSet;
   }
   set handleSpecialInst(val){
     this.specInstSet=val;
   }
-
   set specialInstructions(instr){
     this.pizzaOrder.currentPizza.SpecialInstructions = instr;
     if(instr!==''){
@@ -181,18 +85,27 @@ class OrderControl {
     //types: menu|edit|review|special[remove|change|complete|cancel]
     //names: {item}|{pizzaID}|pizza|order|special[mainpage|storeselect|restart|order|name|revieworder]
     //trigger: goto|special|remove|change|complete|cancel
-    const action = val.action;
-    const selections = val.selections;
+    const action = val.input;
+    const botKey = val.key;
+    const botID = val.stepID;
+    const newKey = `${botID}-${botKey.subString(0,7)}`;
+    this.botKeys.push(newKey);
     
     if(action.hasSpecial){
       return this.ProcessSpecial(val);
     } else {
       if(action.actionType==='next'){
-        return this.GoToNextStep(action.targetType, action.targetName, action.ownerType, action.ownerName, selections);
+        return this.GoToNextStep(action.targetType, action.targetName, action.ownerType, action.ownerName);
       } else if(action.actionType==='prev'){
         return this.GoToPrevStep(action.targetType, action.targetName, action.ownerType, action.ownerName);
+      } else if(action.actionType==='edit'){
+
+      }else if(action.actionType==='review'){
+
       }
     }
+
+    return {msg:'', trigger:'', botKey:newKey}
   }
   ProcessSpecial(val){
     const chck = val.action.hasSpecial.hasOwnProperty('msgClass');
@@ -216,24 +129,20 @@ class OrderControl {
     
     return retDef;
   }
-  GoToNextStep(newType, newName, prevType, prevName, selections){
+  GoToNextStep(newType, newName, prevType, prevName){
     const ret={msg:'', trigger:'pizzabuilder'};
     //handle selections
     if(prevType==='menu'||prevType==='edit'){
-      const items = {type:prevName, selected:selections};
-      ret.msg = this.pizzaOrder.setPizzaItems(items);
+      this.pizzaOrder.SaveItemChanges = true;
     }
-    if(newType==='menu'){
+    if(newType==='menu'||newType==='special'){
       //change menustep
-      this.currentStepInfo = this.changeMenuStep(newName);      
-    } else if(newType==='special'){
-      //change step to special instruction step
-      this.currentStepInfo = this.setSpecialInstStep();      
-    } else if(newType==='new'){
-      
+      this.currentStepInfo = this.changeMenuStep(newName);          
+    } else if(newType==='new'){      
       return this.addnewpizza();
     } else if(newType==='edit'){
       //go to edits
+
     } else if(newType==='review'){
       //go to review
 
@@ -242,7 +151,9 @@ class OrderControl {
   }
   GoToEditStep(val){
     const ret={msg:'Going to edit step', trigger:'pizzabuilder'};
-
+    if(prevType==='menu'||prevType==='edit'){
+      this.pizzaOrder.SaveItemChanges = false;
+    }
     return ret;
   }
   GoToReviewStep(val){
@@ -260,50 +171,38 @@ class OrderControl {
     }
     return ret;
   }
-  setSpecialInstStep(){
-    const curStep = {
-      type: 'review',
-      name: 'pizza',            
-    }
-    const prevStep = {
-      type: 'menu',
-      name: this.menuStep[this.menuStep.length-1], 
-    }    
-    const nextStep = {
-      type:'',
-      name:'',
-    }    
-    const stepInfo = {
-      currentStep: curStep,
-      prevStep: prevStep,
-      nextStep: nextStep,
-      isRetRevO: false,
-    }
-    return stepInfo;
-  }
+ 
   changeMenuStep(step){
-    const i = this.menuStep.findIndex((s)=>s===step);
-    if(i===-1) return null;
-    
-    const curStep = {
-      type: 'menu',
-      name: this.menuStep[i],            
-    }
-    const prevStep = {
-      type: 'menu',
-      name: this.menuStep[i-1], 
-    }
-    if(i===0){
-      prevStep.type='chatbot';
-      prevStep.name='2'
-    }
-    const nextStep = {
-      type:'menu',
-      name:this.menuStep[i+1],
-    }
-    if (i===this.menuStep.length-1){
-      nextStep.type='special'
-      nextStep.name='instruction'
+    const curStep = {}
+    const prevStep ={}
+    const nextStep ={}
+    if(step==='instruction'){
+      curStep.type= 'review';
+      curStep.name= 'pizza';
+      prevStep.type='menu';
+      prevStep.name=this.menuStep[this.menuStep.length-1];
+      nextStep.type='';      
+      nextStep.name='';
+    } else {
+      const i = this.menuStep.findIndex((s)=>s===step);
+
+      if(i===-1) return null;
+      curStep.type= 'menu';
+      curStep.name= this.menuStep[i];
+      if(i===0){
+        prevStep.type='chatbot';
+        prevStep.name='2'
+      } else {
+        prevStep.type='menu';
+        prevStep.name=this.menuStep[i-1];
+      }
+      if (i===this.menuStep.length-1){
+        nextStep.type='special'
+        nextStep.name='instruction'
+      } else {
+        nextStep.type='menu';      
+        nextStep.name= this.menuStep[i+1];
+      }
     }
     const stepInfo = {
       currentStep: curStep,
@@ -314,10 +213,8 @@ class OrderControl {
     return stepInfo;    
   }
   addnewpizza(){     
-    this.currentStepInfo = this.changeMenuStep('crusts')
-    this.specialSet = false;
-    this.currentPizzaID = this.pizzaOrder.MakeNewPizza();
-    this.currentSelectedItems = [];
+    this.currentStepInfo = this.changeMenuStep(this.menuStep[0])
+    this.currentPizzaID = this.pizzaOrder.MakeNewPizza();    
     const ret={msg:'Adding a new pizza', trigger:'pizzabuilder'};
 
     return ret;
@@ -370,7 +267,6 @@ class OrderControl {
       default:
     }
     return ret;
-  }
-  
+  }  
 }
 export default OrderControl;

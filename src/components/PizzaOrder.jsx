@@ -2,8 +2,7 @@ import Pizza from './Pizza';
 class PizzaOrder {
   constructor() {
     this.orderName= '';
-    this.pizzas= [];
-    this.pizzaCnt = 0;
+    this.pizzas= [];    
     this.lastID = 0;
     this.currentPizza = null;        
   }
@@ -12,23 +11,40 @@ class PizzaOrder {
   }  
   get Name(){
     return this.orderName;  
-  }
-  get PizzaCnt(){
-    return this.pizzaCnt;
   }  
-  get NextPizzaID(){
-    return this.lastID+1;
-  }
-  
-  get NewPizza(){    
-    return new Pizza(this.lastID+1);
-  }
   get PizzaList(){    
     return this.pizzas.map((p)=>{
       return p.PizzaID;
     });
   }
-  set UpdatePizzas(pizza){
+  get CurrentPizzaID(){
+    if(this.currentPizza!==null){
+      return this.currentPizza.PizzaID;
+    }
+    return 0;
+  }
+  OrderIsStarted(){
+    return this.orderName!=='';
+  }
+  StartNewOrder(name){
+    this.CancelOrder();
+    this.orderName= name;
+    this.MakeNewPizza();
+  }
+  CancelOrder(){
+    this.orderName= '';
+    this.pizzas= [];    
+    this.lastID = 0;
+    this.currentPizza = null;
+  }
+  CancelPizza(){
+    this.currentPizza = null;    
+  }
+  MakeNewPizza(){
+    this.currentPizza = new Pizza(this.lastID+1);
+  }
+  SavePizzaToOrder(){    
+    const pizza = this.currentPizza;    
     const id = pizza.PizzaID;
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
     if(i!==-1){
@@ -37,72 +53,23 @@ class PizzaOrder {
     }
     else {
       this.lastID = pizza.PizzaID;
-      this.pizzaCnt = this.pizzas.push(pizza);
+      this.pizzas = this.pizzas.concat(pizza);
     }
   }
-  set CurrentPizza(id){
+  set SaveItemChanges(val){
+    this.currentPizza.SaveItemChanges =val;
+  }  
+  SelectPizzaItems(values){
+    return this.currentPizza.SelectPizzaItems(values);
+  }
+  SelectionArray(type){
+    return this.currentPizza.SelectionArray(type);
+  }
+  ChangeCurrentPizza(id){
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
     if(i!==-1){
-      this.currentPizza = this.pizzas[i];
-    } else {
-      this.currentPizza = null;
-    }
-  }
-  get CurrentPizzaID(){
-    if(this.currentPizza!==null){
-      return this.currentPizza.PizzaID;
-    }
-    return 0;
-  }
-  setPizzaItems(val){
-    const itemType = val.type;
-    const itemSelc = val.selected;
-    
-    if(itemSelc.length===0){
-      return `No ${itemType} added`
-
-    } else {
-      const out = [].concat(this.ReturnPizzaItems(itemType));
-      let retStr = ''; 
-      const l = out.length
-      for(let x =0; x<l;x++){
-        if(x===0){
-          retStr =`${out[x].itemMsg}`
-        } else {        
-          retStr = `${retStr}, ${out[x].itemMsg}`
-        }
-      }
-      return retStr;
-    }
-  }
-  getPizzaItems(type){
-    const items = this.currentPizza.GetPizzaItem(type);
-    if(items===`No ${type}`){
-      return false;
-    }
-    return items;
-  }
-  CancelPizza(){
-    this.currentPizza = null;
-    return 0;
-  }
-  MakeNewPizza(){
-    this.currentPizza = this.NewPizza;
-    return this.CurrentPizzaID;
-  }
-  AddPizzaToOrder(){
-    this.UpdatePizzas = this.currentPizza;
-  }
-  ReturnPizzaItems(items){
-    return this.currentPizza.GetPizzaItem(items);
-  }
-  SavePizzaItems(items){
-    this.currentPizza.PizzaItems = items;
-  }
-  GetPizza(id){
-    const i = this.pizzas.findIndex(p => p.PizzaID === id);
-    if(i!==-1){
-      return this.pizzas[i]
+      this.currentPizza =this.pizzas[i];
+      return this.currentPizza
     } else {
       return null;
     }
@@ -113,9 +80,12 @@ class PizzaOrder {
       this.pizzas.splice(i,1);
       this.pizzaCnt = this.pizzas.length();
     }
+    if(this.currentPizza.PizzaID===id){
+      this.CancelPizza();
+    }
   }
-  get CurrentPizzaString(){
-   return this.currentPizza.PizzaString;
+  get CurrentPizzaString(){  
+   return this.currentPizza.PizzaInfo;
   }
   GetPizzaString(id){
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
@@ -123,7 +93,16 @@ class PizzaOrder {
       return `No pizza ${id}`;
     }
     const pizza = this.pizzas[i];
-    return pizza.PizzaString;
+    return pizza.PizzaInfo;
+  }
+  GetOrderSummary(){
+    const infoMap= this.pizzas.map((p)=> {return p.PizzaInfo});
+    const cnt = infoMap.length;
+    return ({
+      orderName:this.orderName,
+      pizzaCnt: cnt,
+      pizzaInfo:infoMap,
+    })
   }  
 }
 
