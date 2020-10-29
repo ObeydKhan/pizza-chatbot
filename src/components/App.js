@@ -20,11 +20,9 @@ class App extends React.Component {
   }
   setStore(locObj){
     const page = 'Main';    
-    const order = this.state.order.RestartOrder();
     this.setState({
       showPage: page,
-      locObj: locObj,
-      order: order,     
+      locObj: locObj,           
     });    
   }
   updateLoc(props){
@@ -36,20 +34,13 @@ class App extends React.Component {
     });
   }
   resetOrder(){
-    const locObj = this.state.locObj;
-    const page = 'Location';
-    const order = this.state.order.RestartOrder();
-    this.setState({
-      locObj:locObj,
-      showPage: page,
-      order: order,      
-    })
+
   }
   cancelOrder(){
-    const order = this.state.order.RestartOrder();
-    this.setState({
-      order: order,      
-    });
+
+  }
+  completeOrder(){
+
   }
   get StoreBanner(){
     const {locObj} = this.state;
@@ -64,9 +55,6 @@ class App extends React.Component {
       </div>
     );
     return banner;
-  }
-  completeOrder(){
-
   }
   render(){                 
     const banner = this.StoreBanner;
