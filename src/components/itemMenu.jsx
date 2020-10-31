@@ -106,7 +106,7 @@ class itemMenu{
         btnMsg:i.name,
         itemInfo: {
           item:step,
-          itemID:i.id,          
+          id:i.id,          
         },        
       };
       return btn;
@@ -118,7 +118,7 @@ class itemMenu{
     const btnArry = optList.map((o)=> {
       const itemInfo= {
         item:step,
-        itemID:itemID,
+        id:itemID,
         [opt]:o.id,
       };
       const btn = {

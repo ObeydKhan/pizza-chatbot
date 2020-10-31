@@ -11,13 +11,17 @@ function Summary(props){
 
 function single(props){  
   const sum = `Pizza #${props.id} Summary`
-  const rows = props.table.map((i)=>{return pizzaMsg(i)})
+  const sumCl =`summary-${props.id}`;
+  let x = 0
+  const rows = props.table.map((i)=>{x++; return pizzaMsg(i,x)})
   return(
     <table>
-      <tr><th colspan="2">{sum}</th></tr>
-      {rows}
-      <tr><td colspan="2">Special Instructions:</td></tr>
-      <tr><td colspan="2">{props.specInst}</td></tr>
+      <thead className={sumCl}><tr><th colSpan="2">{sum}</th></tr></thead>
+      <tbody>
+        {rows}
+        <tr><td colSpan="2">Special Instructions:</td></tr>
+        <tr><td colSpan="2">{props.specInst}</td></tr>
+      </tbody>
     </table>
   )
 }
@@ -29,9 +33,11 @@ function finalO(props){
   const msg2 = <div className="reviewH">{`There are ${cnt} pizzas in this order`}</div>;
   return ([].concat(msg1,msg2,tables))
 }
-function pizzaMsg(props){
-  const ret = props.map((i)=> {
-    return(<tr><td>{i.tr}</td><td>{i.str}</td></tr>)
+function pizzaMsg(i, x){
+  const items = [].concat(i);
+  const rowCl = `${i.tr}-row-pizza-${x}`;
+  const ret = items.map((i)=> {
+    return(<tr className={rowCl}><td>{i.tr}</td><td>{i.str}</td></tr>)
   })
   return ret;
 }

@@ -29,8 +29,10 @@ class Pizza {
     const values = props.values    
     if(values.length===0&&this.items.hasOwnProperty(t)) {
       delete this.items[t];
+    } else {
+      this.items[t]=values;
     }
-    this.items[t]=values;    
+        
   }
   GetPizzaItems(type){
     if(this.items===null||!this.items.hasOwnProperty(type)) {
@@ -105,7 +107,7 @@ class Pizza {
     const hasHalf = itemInfo.hasOwnProperty('half');
     const updItem = {id: '',qty:'',half:'',};
     const itemValues = {
-      id:itemInfo.itemID,
+      id:itemInfo.id,
       qty:hasQty?itemInfo.qty:'0',
       half:hasHalf?itemInfo.half:'0',
     };

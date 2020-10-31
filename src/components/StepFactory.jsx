@@ -37,7 +37,7 @@ function BuildContents(props){
   return (<div className={contents.cName}>{contents.retArray}</div>)
 }
 function ReviewMsgArray(props){
-  const msgs = props.stepInfo.stepContents.contents;
+  const msgs = [].concat(props.stepInfo.stepContents.contents);
   return (
     msgs.map((m)=>{
       return (<div className="reviewItem">{m}</div>)
@@ -50,13 +50,13 @@ function SimpleItemArray(props){
   const elements = contents.elements;  
   const hasMulti = contents.hasMulti;  
   const click = props.onSelect;
-  const sel = contents.selected;
+  const sel = props.selected;
   const retArray = elements.map((e)=>{ 
     const capt = e.btnCapt;
     const key = e.listKey;
     const val = {itemInfo:e.itemInfo, multi:hasMulti};
     const i = sel.findIndex(p=>p===key)
-    const eleClass = i===-1?key:'btn-select';          
+    const eleClass = i===-1?(capt===''?'btn-hide':key):'btn-select';          
     return (
       <li key={key} className={eleClass}>
         <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
@@ -74,7 +74,7 @@ function MultiRowArray(props){
   const elements = contents.elements;  
   const hasMulti = contents.hasMulti; ;  
   const click = props.onSelect;
-  const sel = contents.selected;
+  const sel = props.selected;
   const retArray = elements.map((e)=>{
     const rowName = e.name;
     const rowClass = e.rClass;

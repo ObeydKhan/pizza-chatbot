@@ -7,7 +7,14 @@ class PizzaOrder {
     this.currentPizza = null;
     this.stepsProcessed = 0;   
     this.currentStepInfo = null;
-    this.botKeys = [];            
+    this.botKeys = [];
+    this.addNewPizza = false;            
+  }
+  set newPizza(val){
+    this.addNewPizza = val;
+  }
+  get newPizza(){
+    return this.addNewPizza;
   }
   SetStep(step){
     this.currentStepInfo = step;
@@ -94,6 +101,7 @@ class PizzaOrder {
   }
   MakeNewPizza(prev){    
     this.currentPizza = new Pizza(this.lastID+1);
+    this.addNewPizza = false;
   }
   SavePizzaToOrder(){    
     if(!this.hasCurrent) return null;
