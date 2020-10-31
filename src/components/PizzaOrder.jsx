@@ -4,7 +4,25 @@ class PizzaOrder {
     this.orderName= '';
     this.pizzas= [];    
     this.lastID = 0;
-    this.currentPizza = null;        
+    this.currentPizza = null;
+    this.stepsProcessed = 0;   
+    this.currentStepInfo = null;
+    this.botKeys = [];            
+  }
+  SetStep(step){
+    this.currentStepInfo = step;
+  }
+  GetStep(){
+    return this.currentStepInfo;
+  }
+  get hasCurrent(){
+    return this.currentPizza!==null;
+  }
+  ProcessStep(stepKey){
+    this.stepsProcessed++;
+    const bot = `Step-${this.stepsProcessed}: ${stepKey.substring(0,5)}`;
+    this.botKeys.push(bot)
+    return bot;
   }
   set Name(value){    
     this.orderName= value;
@@ -28,22 +46,57 @@ class PizzaOrder {
   }
   StartNewOrder(name){
     this.CancelOrder();
-    this.orderName= name;
-    this.MakeNewPizza();
+    if(name===''){
+      this.orderName= ' ';
+    } else {
+      this.orderName= name;
+    }    
   }
   CancelOrder(){
     this.orderName= '';
     this.pizzas= [];    
     this.lastID = 0;
     this.currentPizza = null;
+    this.stepsProcessed = 0;   
+    this.currentStepInfo = null;
+    this.botKeys = [];
+  }
+  SpecialActions(props){
+    switch(props.type){
+      case 'cancel':
+        switch(props.name){
+          case 'mainpage':            
+            break;
+          case 'storeselect':
+            break;
+          default:
+            this.CancelOrder();
+        }  
+        break;
+      case 'remove':
+        switch(props.name){
+          case 'restart':
+            this.currentPizza = null;
+            this.MakeNewPizza({type:'', name:'2'})
+            break;
+          case 'remove':
+            const id = this.currentPizza.PizzaID;            
+            this.RemovePizza(id);
+            break;
+          default:
+        }
+      break;
+      default:
+    }
   }
   CancelPizza(){
     this.currentPizza = null;    
   }
-  MakeNewPizza(){
+  MakeNewPizza(prev){    
     this.currentPizza = new Pizza(this.lastID+1);
   }
   SavePizzaToOrder(){    
+    if(!this.hasCurrent) return null;
     const pizza = this.currentPizza;    
     const id = pizza.PizzaID;
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
@@ -56,22 +109,48 @@ class PizzaOrder {
       this.pizzas = this.pizzas.concat(pizza);
     }
   }
-  set SaveItemChanges(val){
-    this.currentPizza.SaveItemChanges =val;
-  }  
+  EditSelections(type){
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    p.EditSelections(type);
+    this.currentPizza = p;
+    
+  }
+  get SpecialInstructions(){
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    const ret = p.SpecialInstructions;
+    this.currentPizza = p;
+    return ret
+  } 
+  set SpecialInstructions(val){
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    p.SpecialInstructions = val;
+    this.currentPizza = p;
+    
+  }
   SelectPizzaItems(values){
-    return this.currentPizza.SelectPizzaItems(values);
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    const ret = p.SelectPizzaItems(values);
+    this.currentPizza = p;
+    return ret;    
   }
   SelectionArray(type){
-    return this.currentPizza.SelectionArray(type);
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    const ret = p.SelectionArray(type);
+    this.currentPizza = p;
+    return ret;    
   }
   ChangeCurrentPizza(id){
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
     if(i!==-1){
       this.currentPizza =this.pizzas[i];
-      return this.currentPizza
+      return true
     } else {
-      return null;
+      return false;
     }
   }
   RemovePizza(id){    
@@ -80,14 +159,21 @@ class PizzaOrder {
       this.pizzas.splice(i,1);
       this.pizzaCnt = this.pizzas.length();
     }
-    if(this.currentPizza.PizzaID===id){
+    if(this.hasCurrent&&this.currentPizza.PizzaID===id){
       this.CancelPizza();
     }
+    const step = {type:'review', name:'order'};
+    this.SetStep({current:step, prev:step, next:step})
   }
-  get CurrentPizzaString(){  
-   return this.currentPizza.PizzaInfo;
+  GetPizzaItems(type){
+    if(!this.hasCurrent) return null;
+    const p = this.currentPizza;
+    const ret = p.getSelectedItems(type);
+    this.currentPizza = p;
+    return ret;
   }
   GetPizzaString(id){
+    if(isNaN(id)) return this.currentPizza.PizzaInfo;
     const i = this.pizzas.findIndex(p => p.PizzaID === id);
     if(i===-1){
       return `No pizza ${id}`;
