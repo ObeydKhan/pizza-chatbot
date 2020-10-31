@@ -4,14 +4,25 @@ class Pizza {
     this.id = id;
     this.items = {};    
     this.specinst='';
-    this.itemslist = {};
+    this.templist = {};
   }
-  set SaveItemChanges(val){
-    if(val){
-      this.itemslist =this.items;
-    } else {
-      this.items=this.itemslist;
-    }
+  EditSelections(type){
+    switch(type){
+    case 'save':
+      //do nothing
+      break;
+    case 'drop':
+      //reverse changes
+      if(this.items.hasOwnProperty(type)){
+        this.items[type] = this.templist[type];
+      }
+      break;
+    default:
+      //create temp list to save existing items
+      if(this.items.hasOwnProperty(type)){
+        this.templist[type] =this.items[type];
+      }
+    }             
   }
   set PizzaItems(props) {
     const t = props.type;
@@ -20,6 +31,12 @@ class Pizza {
       delete this.items[t];
     }
     this.items[t]=values;    
+  }
+  GetPizzaItems(type){
+    if(this.items===null||!this.items.hasOwnProperty(type)) {
+      return {id: '',qty:'',half:'',};
+    }
+    return this.items[type];
   }
   SelectPizzaItems(values){
     const hasMulti = values.multi;
@@ -32,22 +49,22 @@ class Pizza {
   SelectionArray(type){
     const curItemArry = [].concat(this.getSelectedItems(type));
     const select = this.arrayReduce(curItemArry);    
-    return this.arrayBuild(select);
+    return this.arrayBuild(type, select);
   }
   arrayBuild(type,array){
-    if(array.length===0){
+    if(array.length===0||array===null||array===undefined){
       return [];
     }
     const str = array.shift();
     const z = str.indexOf('-0');
     if(str===''||str==='0'||z!==-1){
-      return [].concat(this.arrayBuild(array));
+      return [].concat(this.arrayBuild(type,array));
     }
     const out = `${type}-${str}`;
-    return [out].concat(this.arrayBuild(array))
+    return [out].concat(this.arrayBuild(type,array))
   }
   arrayReduce(array){
-    if(array.length===0){
+    if(array.length===0||array[0].id===''){
       return [];
     }
     const item = array.shift();
@@ -60,13 +77,16 @@ class Pizza {
   singleItemSelect(itemInfo){
     const type = itemInfo.item;
     const curItem = this.getSelectedItems(type);
-    const updItem = this.updateItem(itemInfo, curItem);
+    const updItem = this.updateItem(itemInfo, curItem[0]);
     if (updItem.id==='') return [];
     return [].concat(updItem);
   }
   multiItemSelect(itemInfo){
     const type = itemInfo.item;
     const curItemArry = [].concat(this.getSelectedItems(type));
+    if(curItemArry.length===1&&curItemArry[0].id===''){
+      return [].concat(this.updateItem(itemInfo,curItemArry[0]))
+    }
     const index = curItemArry.findIndex((i)=>i.id===itemInfo.id);
     if(index===-1){
       return curItemArry.concat(this.updateItem(itemInfo,index))
@@ -83,7 +103,7 @@ class Pizza {
   updateItem(itemInfo, curitem){        
     const hasQty = itemInfo.hasOwnProperty('qty');
     const hasHalf = itemInfo.hasOwnProperty('half');
-    const updItem = this.getSelectedItems('empty');
+    const updItem = {id: '',qty:'',half:'',};
     const itemValues = {
       id:itemInfo.itemID,
       qty:hasQty?itemInfo.qty:'0',
@@ -114,9 +134,9 @@ class Pizza {
   }
   getSelectedItems(type){
     if(this.items===null||!this.items.hasOwnProperty(type)) {
-      return {id: '',qty:'',half:'',};
+      return [].concat({id: '',qty:'',half:'',});
     }
-    return this.items[type];
+    return [].concat(this.items[type]);
   }   
   get Pizza(){
     return this;
@@ -133,7 +153,7 @@ class Pizza {
   get PizzaInfo(){    
     return ({
       id: this.id,
-      items: this.itemslist,
+      items: this.items,
       specinst: this.specinst,      
     });
   } 

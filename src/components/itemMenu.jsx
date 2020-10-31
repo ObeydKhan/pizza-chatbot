@@ -1,9 +1,8 @@
 import Menu from './pizzaMenu.json';
-
 class itemMenu{
   constructor(){
     this.menu = Menu;
-    const obj = this.menu.menuSteps;
+    
     const arr = function(obj) {      
       let x;
       let ret = [];
@@ -12,14 +11,15 @@ class itemMenu{
       }
       return ret;
     };    
-    this.menuSteps = arr(obj);         
+    this.menuSteps = arr(this.menu.menuSteps);         
   }
+
   get MenuSteps(){
     return this.menuSteps;
   }
   GetItemName(type,id){
     const items = this.menu.menuSteps[type];
-    const val = items.values.find((i)=>i.id===id)
+    const val = items.values.find((i)=>i.id===id);
     return val.name;
   }
   GetItemID(type,name){
@@ -28,39 +28,33 @@ class itemMenu{
     return val.id;
   }
   GetOptMsg(type, id){
+    //if(id==='0') return '';
     const items = this.menu.options[type];
     const val = items.find((i)=>i.id===id)
     return val.name;
   }
-  getMenuStep(step){    
-    const hasQty = this.getHasQty(step);
-    const hasHalf = this.getHasHalf(step);
-    const hasMulti = this.getHasMultiple(step);
-    const hasSizes = this.getHasSizes(step);
-    let oEle = [];
-    if(hasQty||hasHalf){
-      oEle = this.buildMultRowStep(step,hasHalf,hasQty);
-    } else {
-      oEle = this.buildSimpleStep(step);
-    }
-    let msg = '';
-    if(hasMulti){
-     msg = `Please select the combination of ${step} you would like on the pizza`;
+  getStepMessage(step){
+    if(this.getHasMultipleSelect(step)){
+     return `Please select the combination of ${step} you would like on the pizza`;
     } else {
       let single = step.substring(0,step.length-1);
-      msg = `Please select a ${single} for the pizza`;
+      return `Please select a ${single} for the pizza`;
     }
-    const n = this.getNext(step);
-    const orderStep = {      
-      msg: msg,
-      next: n==='EOM'?'specialinstmsg':n,
-      prev: this.getPrev(step),
-      elements: oEle,
-      hasRows: (hasHalf||hasQty),
-      hasMulti: hasMulti,
-      hasSizes: hasSizes,
-    };
-    return orderStep;
+  }
+  getContentType(step){
+    if( this.getHasQty(step)|| this.getHasHalf(step)){
+      return 'multi';
+    } else {
+      return 'simple';
+    }
+  }
+  getStepElements(step){    
+    if(this.menuSteps.findIndex(s => s === step)===-1) return null;    
+    if( this.getHasQty(step)|| this.getHasHalf(step)){
+     return this.buildMultRowStep(step,this.getHasHalf(step),this.getHasQty(step));
+    } else {
+      return this.buildSimpleStep(step);
+    }
   }
   getNext(step){
     const i = this.menuSteps.findIndex(s => s === step)
@@ -159,7 +153,7 @@ class itemMenu{
     const ret = obj.half;
     return ret;
   }
-  getHasMultiple(step){
+  getHasMultipleSelect(step){
     const obj = this.menu.menuSteps[step];
     const ret = obj.multiple;
     return ret;

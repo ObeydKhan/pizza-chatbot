@@ -2,6 +2,7 @@ import React from 'react';
 import GeoIcon from '../resources/GeoIcon.jsx';
 import '../css/StoreLoc.css';
 
+
 class StoreLoc extends React.Component {
   constructor(props){
     super(props);    
@@ -13,13 +14,13 @@ class StoreLoc extends React.Component {
     };
     this.storeSearch = this.storeSearch.bind(this);    
     this.storeSelect = this.storeSelect.bind(this);
-    this.resetSearch = this.resetSearch.bind(this);    
-    this.input = React.createRef();
+    this.resetSearch = this.resetSearch.bind(this); 
+    
   }
-  buildSearchMenu(locObj){
+  buildSearchMenu(locObj, forwardedRef){
     const showSearch = this.state.isSearch;
     if(showSearch){
-      return <StoreSearchMenu locObj={locObj} search={this.storeSearch} select={this.storeSelect}/>
+      return <StoreSearchMenu locObj={locObj} forwardedRef={forwardedRef} search={this.storeSearch} select={this.storeSelect}/>
     }
     return null;
   }
@@ -31,13 +32,13 @@ class StoreLoc extends React.Component {
     };
     this.props.update(updateProps);
   }
-  storeSearch(searchObj){
-    
+  storeSearch(searchObj){    
     const locObj = searchObj.locObj;
     const method = searchObj.method;
+    
     const obj = {
       method: method,
-      usrStr: method==='User Entry'?this.input.current.value:'',
+      usrStr: method==='User Entry'?this.props.forwardedRef.current.value:'',
     };
     locObj.storeSearch = obj;
     this.setState({     
@@ -72,9 +73,10 @@ class StoreLoc extends React.Component {
   render(){    
     const {locObj, showPage} = this.props.appState;
     const show= showPage==='Location'?true:false;   
+    const {forwardedRef}=this.props;
     return(
       <>
-      {show && this.buildSearchMenu(locObj)}
+      {show && this.buildSearchMenu(locObj, forwardedRef)}
       {show && this.buildStoreSelectMenu(locObj)}
       </>
     )
@@ -93,7 +95,7 @@ function StoreSearchMenu(props) {
       <div className="searchBoxBanner">Find Locations</div>
       <div className="searchOptions">
         <MakeGeoDialog locObj={locObj} search={props.search}/>
-        <MakeUserDialog locObj={locObj} search={props.search} refIn={props.ref} />
+        <MakeUserDialog locObj={locObj} search={props.search} forwardedRef={props.forwardedRef} />
       </div>
     </div>              
       <MakePrevDialog locObj={locObj} select={props.select}/>
@@ -127,6 +129,7 @@ function MakeUserDialog(props) {
   const searchObj = {
     method: 'User Entry',
     locObj: locObj,
+    ref: props.forwardedRef,
   };    
   return (
     <>
@@ -136,7 +139,7 @@ function MakeUserDialog(props) {
       if(event.key === 'Enter') {
         this.storeSearch(searchObj); 
         event.preventDefault();}}}>
-      <input className="userInputString" type="text" ref={props.refIn}/>
+      <input className="userInputString" type="text" ref={props.forwardedRef}/>
       {capStr}
     </form>
       <button className="userSearchBtn" type="button" onClick={() => props.search(searchObj)}>
