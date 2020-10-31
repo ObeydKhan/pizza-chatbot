@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "51f14cd89e23730730821fb519f52152",
+    "revision": "d7d1ba9ef8bfbd97a920264f8c75908a",
     "url": "/pizza-chatbot/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pizza-chatbot/static/css/2.8aa5a7f8.chunk.css"
   },
   {
-    "revision": "4ec81d626701ee75be48",
-    "url": "/pizza-chatbot/static/css/main.bb9e37bb.chunk.css"
+    "revision": "449968f2f787ba5d1783",
+    "url": "/pizza-chatbot/static/css/main.7625c3fd.chunk.css"
   },
   {
     "revision": "81f1f4587e52d26c8281",
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pizza-chatbot/static/js/2.e8d01f71.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4ec81d626701ee75be48",
-    "url": "/pizza-chatbot/static/js/main.b284ce04.chunk.js"
+    "revision": "449968f2f787ba5d1783",
+    "url": "/pizza-chatbot/static/js/main.486765e4.chunk.js"
   },
   {
     "revision": "4c773cc615b121c9cbb4",

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/pizza-chatbot/precache-manifest.16b99917c925406cf7724229ad29804e.js"
+  "/pizza-chatbot/precache-manifest.f68f343b759e0dd27d1d6fc54e6d2c8d.js"
 );
 
 self.addEventListener('message', (event) => {
