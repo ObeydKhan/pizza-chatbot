@@ -8,17 +8,16 @@ class OrderStep extends React.Component {
   constructor(props){
     super(props);
     this.state={       
-      pizzaMenu: new PizzaMenu(),
-      order:this.props.step.metadata,
+      pizzaMenu: new PizzaMenu(),      
       selectedOptions:[],     
-      trigger: false,
+      trigger: false,      
     }    
     this.triggerNext = this.triggerNext.bind(this);
     this.onSelect = this.onSelect.bind(this);    
   }
   checkRequiredInput(props){
     if((props.owner.name==='crusts'||props.owner.name==='sizes')&&this.state.selectedOptions.length===0){
-      const trig = (props.trigger.name==='remove'||props.trigger.name==='cancel')?true:false;      
+      const trig = (props.target.name==='remove'||props.target.name==='cancel'||(props.hasOwnProperty('btnCapt')&&(props.btnCapt.indexOf('Prev')!==-1)))?true:false;      
       return trig;
     }
     return true;
@@ -29,24 +28,24 @@ class OrderStep extends React.Component {
       return null;
     }
     const order = this.props.step.metadata;
+    const isPrev = (props.hasOwnProperty('btnCapt')&&(props.btnCapt.indexOf('Prev')!==-1));
     const getUserMsg = (props) =>{
       switch(props.target.type){
       case 'new':
         //add new pizza
-        order.SavePizzaToOrder();
-        this.CreateNewPizza(props.owner);
-        return props.stepMsg;     
+        order.newPizza = true;        
+        return 'Adding a new pizza to the order';     
       case 'edit':
         //handle edits
         return this.HandelEdit(props);      
       case 'menu' || 'review':
         order.SetStep(this.CreateStep(props));
-        return this.CreateItemMsg(props.owner.name);       
+        return isPrev?`Going back to ${this.state.pizzaMenu.getPrev(props.owner.name)}`:this.CreateItemMsg(props.owner.name);       
       case 'special':
         order.SetStep(this.CreateStep(props));
         return props.stepMsg;      
       default:
-        return this.HandleSpecialActions();
+        return this.HandleSpecialActions(props);
       }
     }
     //change current step info to with new 'key'
@@ -60,14 +59,15 @@ class OrderStep extends React.Component {
     
     //trigger next step in chatbot
     const type = `(${props.owner.type}:${props.owner.name})=>(${props.target.type}:${props.target.name})`
-    
+    const selc = isPrev?this.props.step.metadata.SelectionArray(this.state.pizzaMenu.getPrev(props.owner.name)):[];
     const data = {
       preserveMsg:true,
       stepMsg: props.stepMsg,      
       type:type,
       msg:getUserMsg(props),
     }
-    this.setState({selected:[],trigger: true, order:order}, () => {
+    this.props.step.metadata = order;
+    this.setState({selectedOptions:selc,trigger: true}, () => {
       this.props.triggerNextStep(data);
     });
   }
@@ -76,13 +76,16 @@ class OrderStep extends React.Component {
     const order = this.props.step.metadata
     const currrentlySelected = order.SelectPizzaItems(val);
     this.props.step.metadata = order;
-    this.setState({selectedOptions:currrentlySelected, order:order});      
+    this.setState({selectedOptions:currrentlySelected});      
   }
   CreateStep(props){       
     const next = (step)=>{
       switch(step.type){
         case 'menu':         
-          return {type:step.type, name:this.state.pizzaMenu.getNext(step.name)};         
+          const chkNxt = this.state.pizzaMenu.getNext(step.name);
+          const next = chkNxt==='EOM'?'Special Instructions':chkNxt;
+          const type = chkNxt==='EOM'?'special':step.type;   
+          return {type:type, name:next};         
         case 'edit':          
           if(step.name==='save'||step.name==='drop') return {type:'review', name:'pizza'}
           const name = step.name.length<3?'pizza':step.name;
@@ -112,7 +115,7 @@ class OrderStep extends React.Component {
     };    
     const stepMsg = (step) => {
       switch(step.type){
-        case 'menu':         
+        case 'menu':
           return this.state.pizzaMenu.getStepMessage(step.name);         
         case 'edit':         
           return step.name==='pizza'?'Please select an option below:':this.state.pizzaMenu.getStepMessage(step.name);         
@@ -134,10 +137,14 @@ class OrderStep extends React.Component {
           return false;
       }
     }
+    const isPrev = (props.hasOwnProperty('btnCapt')&&(props.btnCapt.indexOf('Prev')!==-1));
+    const chkPrev = isPrev?this.state.pizzaMenu.getPrev(props.target.name):props.owner.name;
+    const prevStep = chkPrev==='BOM'?'Enter Name':chkPrev
+    const prevType  =chkPrev==='BOM'?'special':props.target.type;
     if(props.owner.type!=='special'){
       const returnStep = {
         current:props.target, 
-        prev:props.owner, 
+        prev:{type:prevType, name:prevStep}, 
         next:next(props.target),
         isReturnFromReviewOrder:fromReviewOrder(props),
         stepMsg:stepMsg(props.target), 
@@ -168,13 +175,14 @@ class OrderStep extends React.Component {
   CreateSummaryTable(pizza){
     const id = pizza.id;
     const items = pizza.items;
+    const itemTypeArray = this.state.pizzaMenu.MenuSteps;
     const spcinst = pizza.specinst;
-    const stringArray = items.map((i)=> {
-      const item = Object.getOwnPropertyNames(i)[0];
-      //const val = [].concat(this.props.step.metadata.GetPizzaItems(item));
-      const str = this.CreateItemMsg(item);
+    const stringArray = itemTypeArray.map((i)=> {
+      if(!items.hasOwnProperty(i)){return `No ${i} added`}
+      const item = items[i];     
+      const str = this.getItemString(i,item);
       return ({
-        tr:item,
+        tr:i,
         td:str,
       })
     })
@@ -184,23 +192,29 @@ class OrderStep extends React.Component {
       specInst:spcinst,
     })
   }
-  CreateItemMsg(type){
-    const items = [].concat(this.props.step.metadata.GetPizzaItems(type));
-    if(items.length===0||(items.length===1&&items[0].id==='')){
-      return `No ${type} added`;
-    }    
+  getItemString(type,items){
+    
     const retArray = items.map((item)=>{      
+      if(item.id==='0'||item.id==='') return `No ${type} added`;
       const itemName = this.state.pizzaMenu.GetItemName(type,item.id);
       const qty = item.qty!=='0'?`${this.state.pizzaMenu.GetOptMsg('qty',item.qty)} `:'';
       const half = item.half!=='0'?` ${this.state.pizzaMenu.GetOptMsg('half',item.half)}`:'';
       return `${qty}${itemName}${half}`;
     })
     return retArray.join(', ')
+  }
+  CreateItemMsg(type){
+    const items = [].concat(this.props.step.metadata.GetPizzaItems(type));
+    if(items.length===0||(items.length===1&&items[0].id==='')){
+      return `No ${type} added`;
+    }    
+    return this.getItemString(type,items);
   }   
   CreateNewPizza(prev){
     const cur = {type:'menu', name:this.state.pizzaMenu.getStep(0)};
     this.props.step.metadata.MakeNewPizza()
-    this.props.step.metadata.SetStep(this.CreateStep({owner:prev, target:cur}));    
+    this.props.step.metadata.SetStep(this.CreateStep({owner:prev, target:cur}));
+    this.setState({addNewPizza:false});    
   }
   HandelEdit(props){
     const altTrigger = props.target.name==='specialinstmsg'||props.target.name==='name';
@@ -224,12 +238,29 @@ class OrderStep extends React.Component {
   HandleSpecialActions(props){
     switch(props.target.type){
       case 'complete':
-        this.props.steps.trigger = 'endmsg1';      
+        this.props.step.trigger = 'endmsg1';      
         break;
+      case 'inst':
+        const prev=props.owner;
+        const next = {type:'review', name:'pizza'};
+        const cur = props.target;
+        this.props.step.metadata.SetStep({current:cur, next:next, prev:prev});
+        this.props.step.trigger = props.target.name;
+        return this.CreateItemMsg(props.owner.name);        
       default:
-        this.props.step.metadata.SpecialAction(props.target);
+        this.props.step.metadata.SpecialActions(props.target);
     }
     return props.stepMsg;
+  }
+  componentDidMount(){
+    const order = this.props.step.metadata;
+    if(order.newPizza){
+      order.SavePizzaToOrder();
+      this.CreateNewPizza({type:'review',name:'pizza'})
+      order.newPizza = false
+      this.props.step.metadata = order;
+    }
+    
   }  
   render(){
     const order = this.props.step.metadata;
@@ -242,11 +273,15 @@ class OrderStep extends React.Component {
           order.specialInstructions = this.props.steps.specialinstentry.value;
           delete this.props.steps.specialinstentry
         }
+        const owner = {type:'inst', name:'specialinstmsg'};
+        const target = {type:'review', name:'pizza'};        
+        order.SetStep(this.CreateStep({owner:owner, target:target}));
       delete this.props.steps.specialinstmsg;
       delete this.props.steps.specialinstques;
     }   
-    const currentStep = order.GetStep();    
-    return <StepFactory stepInfo={currentStep} selected={this.state.selected}  onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
+    const currentStep = order.GetStep();
+    if (currentStep.current.type==='inst') return null;    
+    return <StepFactory stepInfo={currentStep} selected={this.state.selectedOptions}  onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
   }  
 }
 export default OrderStep;
