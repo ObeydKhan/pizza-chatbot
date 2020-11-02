@@ -1,10 +1,12 @@
 import React from 'react';
+import Summary from './Summary';
+
 function StepFactory(props) {
   const stepInfo = props.stepInfo;
   const curType = stepInfo.current.type;
   const isSpecial = curType==='special';
   const controls = isSpecial?BuildSpecialStep(stepInfo.current,stepInfo.prev):getCtrls(stepInfo);
-  const stepMsg = controls.stepMsg.replace("{0}",stepInfo.stepMsg)
+  const stepMsg = controls.stepMsg.replace("{0}",stepInfo.stepMsg)  
   const displayMsg = <div className="orderStepMsg">{stepMsg}</div>;
   const stepContents = props.stepContents!==''?BuildContents(props):<div></div>;
   const controlArray = <ControlArray stepMsg={stepMsg} stepCtrls={controls.stepCtrls} onTrigger={props.onTrigger}/>
@@ -37,12 +39,7 @@ function BuildContents(props){
   return (<div className={contents.cName}>{contents.retArray}</div>)
 }
 function ReviewMsgArray(props){
-  const msgs = [].concat(props.stepInfo.stepContents.contents);
-  return (
-    msgs.map((m)=>{
-      return (<div className="reviewItem">{m}</div>)
-    })
-  )
+  return (Summary(props.stepInfo.stepContents.contents))
 }
 
 function SimpleItemArray(props){
@@ -50,7 +47,7 @@ function SimpleItemArray(props){
   const elements = contents.elements;  
   const hasMulti = contents.hasMulti;  
   const click = props.onSelect;
-  const sel = props.selected;
+  const sel = contents.selected;
   const retArray = elements.map((e)=>{ 
     const capt = e.btnCapt;
     const key = e.listKey;
@@ -74,7 +71,7 @@ function MultiRowArray(props){
   const elements = contents.elements;  
   const hasMulti = contents.hasMulti; ;  
   const click = props.onSelect;
-  const sel = props.selected;
+  const sel = contents.selected;
   const retArray = elements.map((e)=>{
     const rowName = e.name;
     const rowClass = e.rClass;
@@ -136,16 +133,7 @@ function ControlArray(props){
     </div>
   )
 }
-function GetStepMsg(step){
-  switch(step){
-    case 'edit':
-      return '{0}';
-    case 'review':
-      return 'Please {0} and select an option below:'
-    default:
-      return '{0}'
-  }
-}
+
 function getCtrls(stepInfo){
   const owner = stepInfo.current;
   const next = stepInfo.next;
@@ -164,11 +152,11 @@ function getCtrls(stepInfo){
     ctrlArry = ctrlArry.concat([[prev.type==='menu'?`Prev Step(${prev.name})`:'Prev Step(Order Name)', owner, prev]]);
   } else if(owner.type==='edit'){
     if(owner.name==='pizza'){      
-      const a = next.map((i)=>{
-        return [[`Edit ${i}`, owner, {name:i, type:'edit'}]]
+      const a = next.name.map((i)=>{
+        return ([`Edit ${i}`, owner, {name:i, type:'edit'}])
       })
       ctrlArry = ctrlArry.concat(a);
-      ctrlArry = ctrlArry.concat(['Edit Special Instructions', owner, {type:'inst', name:'specialinstmsg'}]);
+      ctrlArry = ctrlArry.concat([['Edit Special Instructions', owner, {type:'inst', name:'specialinstmsg'}]]);
       ctrlArry = ctrlArry.concat([['Finished Editing', owner, isRetRevO?{name:'order',type:'review'}:{name:'pizza',type:'review'}]]);
     } else {
       ctrlArry = ctrlArry.concat([['Save Changes', owner, {name:'save', type:'edit'}]]);
@@ -180,7 +168,7 @@ function getCtrls(stepInfo){
       ctrlArry = ctrlArry.concat([['Add a Pizza', owner, {name:'new', type:'new'}]]);
       ctrlArry = ctrlArry.concat([['Go to Final Review', owner, {name:'order', type:'review'}]]);
     } else {
-      const a = next.map((i)=>{
+      const a = next.name.map((i)=>{
         return [`Edit Pizza ${i}`, owner, {name:i, type:'edit'}, 'goto']
       })
       ctrlArry = ctrlArry.concat(a);
@@ -194,7 +182,7 @@ function getCtrls(stepInfo){
       return buildCtrlObj(i[0],i[1],i[2]);
     });  
   return({
-    stepMsg:GetStepMsg(owner.name),    
+    stepMsg:'{0}',    
     stepCtrls:ctrlVals,
   })
 }
@@ -221,7 +209,7 @@ function BuildSpecialStep(step, prev){
       case 'change':
         return changeCtrl(t,p)
       default:
-        return ''
+        return {msg:'No special step created', ctrls:[]};
     }
   }
   const ctrlVals = vals(step,prev);

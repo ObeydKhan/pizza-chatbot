@@ -10,17 +10,16 @@ function Summary(props){
 }
 
 function single(props){  
-  const sum = `Pizza #${props.id} Summary`
-  const sumCl =`summary-${props.id}`;
+  const sum = `Pizza #${props.id} Summary`  
   let x = 0
   const rows = props.table.map((i)=>{x++; return pizzaMsg(i,x)})
   return(
     <table>
-      <thead className={sumCl}><tr><th colSpan="2">{sum}</th></tr></thead>
-      <tbody>
+      <thead className="pizza-sum"><tr><th colSpan="2">{sum}</th></tr></thead>
+      <tbody className="sum-table-body">
         {rows}
-        <tr><td colSpan="2">Special Instructions:</td></tr>
-        <tr><td colSpan="2">{props.specInst}</td></tr>
+        <tr className="specialInstHead"><td colSpan="2">Special Instructions:</td></tr>
+        <tr className="specialInstRow"><td colSpan="2">{props.specInst}</td></tr>
       </tbody>
     </table>
   )
@@ -37,7 +36,7 @@ function pizzaMsg(i, x){
   const items = [].concat(i);
   const rowCl = `${i.tr}-row-pizza-${x}`;
   const ret = items.map((i)=> {
-    return(<tr className={rowCl}><td>{i.tr}</td><td>{i.str}</td></tr>)
+    return(<tr className="sum-row" key={rowCl}><td>{i.tr}</td><td>{i.td}</td></tr>)
   })
   return ret;
 }

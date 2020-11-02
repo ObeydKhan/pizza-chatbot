@@ -11,12 +11,11 @@ class App extends React.Component {
     super(props);    
     this.updateLoc = this.updateLoc.bind(this);
     this.setStore = this.setStore.bind(this);
-    this.mainPage = this.mainPage.bind(this);
-    
+    this.mainPage = this.mainPage.bind(this);    
     this.state = {
       showPage: 'Location',       
       locObj: this.props.locObj,      
-      order: new Order(),
+      order: new Order('new'),
     };
     this.input = React.createRef();        
   }

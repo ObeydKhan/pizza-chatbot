@@ -42,7 +42,7 @@ class Pizza {
   }
   SelectPizzaItems(values){
     const hasMulti = values.multi;
-    const itemInfo = values.itemInfo;    
+    const itemInfo = values.itemInfo;
     const items = hasMulti?this.multiItemSelect(itemInfo):this.singleItemSelect(itemInfo);
     this.PizzaItems = {type:itemInfo.item, values:items}    
     //returns selection array
@@ -145,10 +145,7 @@ class Pizza {
   }
   set SpecialInstructions(value){
     this.specinst=value;
-  }
-  get SpecialInstructions(){
-    return this.specinst;
-  }
+  }  
   get PizzaID(){
     return this.id;
   }

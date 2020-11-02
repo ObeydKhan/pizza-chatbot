@@ -34,11 +34,11 @@ class itemMenu{
     return val.name;
   }
   getStepMessage(step){
+    const proper = this.menu.menuSteps[step].properL;
     if(this.getHasMultipleSelect(step)){
-     return `Please select the combination of ${step} you would like on the pizza`;
-    } else {
-      let single = step.substring(0,step.length-1);
-      return `Please select a ${single} for the pizza`;
+     return `Please select the combination of ${proper} you would like on the pizza`;
+    } else {      
+      return `Please select a ${proper} for the pizza`;
     }
   }
   getContentType(step){
@@ -64,6 +64,10 @@ class itemMenu{
     const i = this.menuSteps.findIndex(s => s === step)
     return this.getStep(i-1);
   }
+  checkStep(step){
+    const i = this.menuSteps.findIndex(s => s === step)
+    return i!==-1
+  }
   getStep(i){
     if(i>=this.menuSteps.length){      
       return 'EOM';
@@ -77,7 +81,7 @@ class itemMenu{
     const items = this.getItemsList(step);
     const itemArry = items.map((i)=> {
       const id = i.id;
-      const name = i.name;
+      const name = i.short;
       let btns = [];
       if(hasHalf){
         const b = this.buildOptBtns(step, 'half', id);
@@ -101,7 +105,7 @@ class itemMenu{
     const itemArry = items.map((i)=> {   
       const btn = {
         btnClass:'btn-item',
-        btnCapt:i.name,
+        btnCapt:i.short,
         listKey:`${step}-${i.id}`,
         btnMsg:i.name,
         itemInfo: {
