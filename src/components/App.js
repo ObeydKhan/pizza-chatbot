@@ -63,8 +63,8 @@ class App extends React.Component {
       <>
       <div className="mainPageArea">
       <header>
-        <a href="/"><img src={logo} alt="Logo" onClick={() => this.resetOrder()}></img></a>
-        <a href="/"><h1>Slice</h1></a>
+        <a href="/pizza-chatbot"><img src={logo} alt="Logo"></img>
+        <h1>Slice</h1></a>
         {banner}
       </header>      
       <StoreLoc appState={this.state} 
