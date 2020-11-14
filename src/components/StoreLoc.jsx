@@ -2,7 +2,6 @@ import React from 'react';
 import GeoIcon from '../resources/GeoIcon.jsx';
 import '../css/StoreLoc.css';
 
-
 class StoreLoc extends React.Component {
   constructor(props){
     super(props);    
@@ -14,8 +13,7 @@ class StoreLoc extends React.Component {
     };
     this.storeSearch = this.storeSearch.bind(this);    
     this.storeSelect = this.storeSelect.bind(this);
-    this.resetSearch = this.resetSearch.bind(this); 
-    
+    this.resetSearch = this.resetSearch.bind(this);    
   }
   buildSearchMenu(locObj, forwardedRef){
     const showSearch = this.state.isSearch;
@@ -30,12 +28,11 @@ class StoreLoc extends React.Component {
       page:'Location',
       resetSearch: true,
     };
-    this.props.update(updateProps);
+    this.props.onTriggerLoc(updateProps);
   }
   storeSearch(searchObj){    
     const locObj = searchObj.locObj;
-    const method = searchObj.method;
-    
+    const method = searchObj.method;    
     const obj = {
       method: method,
       usrStr: method==='User Entry'?this.props.forwardedRef.current.value:'',
@@ -47,11 +44,11 @@ class StoreLoc extends React.Component {
       searchMeth: locObj.searchMeth,
       searchLoc: locObj.searchLoc,      
     });
-    const updateProps={
+    const retProps={
       locObj: locObj,
       page:'Location'
     };
-    this.props.update(updateProps);
+    this.props.onTriggerLoc(retProps);
   }
   buildStoreSelectMenu(locObj){
     const showSelect = this.state.isSelect;
@@ -67,16 +64,22 @@ class StoreLoc extends React.Component {
     this.setState({
       isSearch: false,
       isSelect: false,     
-    });    
-    this.props.set(locObj); 
+    });
+    const retProps={
+      locObj: locObj,
+      page:'Main'
+    };    
+    this.props.onTriggerLoc(retProps); 
   }  
   render(){    
     const {locObj, showPage} = this.props.appState;
-    const show= showPage==='Location'?true:false;   
+    const show= showPage==='Location'?true:false;
+    const sel = locObj.curStoreID!=='0'   
     const {forwardedRef}=this.props;
+    console.log(`Loc render ${sel}`);
     return(
       <>
-      {show && this.buildSearchMenu(locObj, forwardedRef)}
+      {show&&!sel && this.buildSearchMenu(locObj, forwardedRef)}
       {show && this.buildStoreSelectMenu(locObj)}
       </>
     )

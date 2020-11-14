@@ -1,47 +1,48 @@
 import React from 'react';
 import '../css/OrderStyle.css';
 import StepFactory from './StepFactory';
+import ItemSelect from './ItemSelect';
 
 class OrderStep extends React.Component {
   constructor(props){
-    super(props);
-    const order = this.props.step.metadata;
-
-    this.state={
-      nameSet:order.orderName!=='',             
-      displayStep: order.GetDisplayStep(),           
+    super(props);    
+  /*step factory props:
+    .type: {this.props.type}
+    .stepObject: {this.props.stepObject}
+    .onTrigger: this.triggerNext(v=>props.onTrigger)
+    .itemList: {this.props.itemList}
+    .pizzaID: {this.props.pizzaID}
+    .name: {this.props.ordername}  
+    .selected: {this.state.selected}
+    .onSelect: (v)=>this.onSelect    
+  */
+    this.state={     
+      selected:GetSelected(this.props.type,this.props.order,this.props.step),      
       trigger: false,      
-    }    
-    this.triggerNext = this.triggerNext.bind(this);
-    this.onSelect = this.onSelect.bind(this);    
-  }
-  
-  triggerNext(props){   
-    const order = this.props.step.metadata;
-    if(!order.CurrentStepSelection(props)){
-      alert(`You must select one of the available ${props.owner.name}`);
-      return null;
     }        
-    const processTrigger = order.ProcessStep({trigger:props, key:this.props.step.key});
-    const userMsg = processTrigger.userMsg;
-    const trigger = processTrigger.trigger;
+    this.triggerNext = this.triggerNext.bind(this);
+    this.onSelect = this.onSelect.bind(this);        
+  }
+  triggerNext(props){
+    const selected = this.state.selected.SaveSelected();            
+    const trig = props;
+    trig.selected = selected;
+    const processTrigger = props.onTrigger(trig);
+    if(!processTrigger) {return null;}
     //change current step info to with new 'key'
-    const stepKey = processTrigger.key;    
+    const bot = `(${props.type})=>${props.value}(id=${this.props.step.key.substring(0,5)})`;   
     const genericStep = this.props.steps.pizzabuilder;
-    this.props.step.id = stepKey;
-    genericStep.id = stepKey;
+    this.props.step.id = bot;
+    genericStep.id = bot;
     delete genericStep.metadata;
-    this.props.steps[stepKey] = genericStep; 
-    
+    this.props.steps[bot] = genericStep;     
     //trigger next step in chatbot
-    this.props.step.trigger = trigger;  
-
-    const type = `(${props.owner.type}:${props.owner.name})=>(${props.target.type}:${props.target.name})`;    
+    this.props.step.trigger = processTrigger.trigger;        
     const data = {
       preserveMsg:true,
-      stepMsg: props.stepMsg,      
-      type:type,
-      msg:userMsg,
+      stepMsg: processTrigger.stepMsg,      
+      type:bot,
+      msg:processTrigger.userMsg,
     }    
     this.setState({trigger: true,}, () => {
       this.props.triggerNextStep(data);
@@ -49,18 +50,14 @@ class OrderStep extends React.Component {
   }
   onSelect(val){
     if(val===null||val===undefined) return null;
-    const order = this.props.step.metadata
-    order.SelectPizzaItems(val);    
-    const dispStep = order.GetDisplayStep();
-    this.setState({displayStep:dispStep});      
+    const sel = this.state.selected;
+    sel.selected = val;
+    this.setState({selected:sel});      
   }  
   componentDidMount(){
-    const order = this.props.step.metadata;    
-    if(!this.state.nameSet){
-      const name = this.props.steps.ordername.value;
-      order.StartNewOrder(name);
-      const dispStep = order.GetDisplayStep();
-      this.setState({displayStep:dispStep});      
+    const order = this.props.order;    
+    if(!order.ordername){
+      order.ordername = this.props.steps.ordername.value;            
     } else if(order.getSpecial){
       const inst = this.props.steps.specialinstques.value==='yes'?this.props.steps.specialinstentry.value:'';       
       order.AddSpecialInstructions(inst);      
@@ -69,12 +66,17 @@ class OrderStep extends React.Component {
     }    
   }
     
-  render(){    
-    const dispStep = this.state.displayStep;    
-    if(dispStep===null){
-      return null
-    }        
-    return <StepFactory stepInfo={dispStep} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
+  render(){
+    const itemSelect = this.state.itemSelect.selected;
+    console.log('Orderstep render');        
+    return <StepFactory refProps={this.props.refProps} selected={itemSelect} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
   }  
 }
+
+function GetSelected(type,items,stepname,multi){
+  if(type!=='menu'&&type!=='editMenu'){return null}  
+  return new ItemSelect(stepname,items,multi);  
+}
+  
+   
 export default OrderStep;

@@ -1,8 +1,9 @@
-import Menu from './pizzaMenu.json';
-class itemMenu{
-  constructor(){
-    this.menu = Menu;
-    
+import Items from './menuItems.json';
+import Options from './menuOptions.json';
+class ItemMenu{
+  #items=null;
+  #step=-1;
+  constructor(){    
     const arr = function(obj) {      
       let x;
       let ret = [];
@@ -11,162 +12,112 @@ class itemMenu{
       }
       return ret;
     };    
-    this.menuSteps = arr(this.menu.menuSteps);         
+    this.#items = arr(Items);         
   }
-
-  get MenuSteps(){
-    return this.menuSteps;
-  }
-  GetItemName(type,id){
-    const items = this.menu.menuSteps[type];
-    const val = items.values.find((i)=>i.id===id);
-    return val.name;
-  }
-  GetItemID(type,name){
-    const items = this.menu.menuSteps[type];
-    const val = items.values.find((i)=>i.name===name)
-    return val.id;
-  }
-  GetOptMsg(type, id){
-    //if(id==='0') return '';
-    const items = this.menu.options[type];
-    const val = items.find((i)=>i.id===id)
-    return val.name;
-  }
-  getStepMessage(step){
-    const proper = this.menu.menuSteps[step].properL;
-    if(this.getHasMultipleSelect(step)){
-     return `Please select the combination of ${proper} you would like on the pizza`;
-    } else {      
-      return `Please select a ${proper} for the pizza`;
+  set step(val){
+    const i = this.#step;
+    switch (val){
+      case 'next':
+        const x = this.#items.length;        
+        this.#step = i+1>=x?x:i+1;
+        break;
+      case 'prev':
+        this.#step = i-1<=0?0:i-1;
+        break;
+      case 'new':
+        this.#step = 0;
+        break;
+      default:
+        const s = this.#items.findIndex(s => s === val);
+        this.#step = s<0?0:s;
+        break;
     }
   }
-  getContentType(step){
-    if( this.getHasQty(step)|| this.getHasHalf(step)){
-      return 'multi';
+  get step(){
+    return this.getStep(this.#step);
+  }
+  GetCaption(src,type,id){
+    const item = (m,t,id)=>{
+      switch(m){
+        case 'items':
+          return Items[t].values.find((i)=>i.id===id).caption;
+        case 'opts':
+          return Options[t].values.find((i)=>i.id===id).caption;
+        default:
+          return null;}}   
+    return item(src,type,id);
+  }
+  GetDescription(src,type,id){
+    const item = (m,t,id)=> {
+      switch(m) {
+      case 'items':
+        return Items[t].values.find((i)=>i.id===id).description;
+      case 'opts':
+        return Options[t].values.find((i)=>i.id===id).description;
+      default:
+        return null;
+      }
+    }
+    return item(src,type,id);
+  }
+  GetStepProper(step){
+    if(step==='specialinstmsg'){
+      return 'Special Instructions'
+    } else if(step==='ordername'){
+      return 'Name'
+    } else if(step==='next'){      
+      const s = this.getStep(this.#step+1);
+      return Items[s].properU
+    } else if(step==='prev'){
+      const s = this.getStep(this.#step-1);
+      return Items[s].properU
+    } else if(this.checkStep(step)){
+      return Items[step].properU
     } else {
-      return 'simple';
+      return Items[this.#step].properU
     }
   }
-  getStepElements(step){    
-    if(this.menuSteps.findIndex(s => s === step)===-1) return null;    
-    if( this.getHasQty(step)|| this.getHasHalf(step)){
-     return this.buildMultRowStep(step,this.getHasHalf(step),this.getHasQty(step));
-    } else {
-      return this.buildSimpleStep(step);
-    }
-  }
-  getNext(step){
-    const i = this.menuSteps.findIndex(s => s === step)
-    return this.getStep(i+1);
-  }
-  getPrev(step){
-    const i = this.menuSteps.findIndex(s => s === step)
-    return this.getStep(i-1);
-  }
+  get StepObject(){
+    const step = this.step;
+    const info = Items[step];
+    return {
+      name: step,
+      botMsg:info.msg,
+      properU:info.properU,
+      properL:info.properL,
+      multi:info.multiple,
+      controls: {
+        nextName:this.GetStepProper('next'),
+        prevName:this.GetStepProper('prev'),
+      },
+      content: {
+        sizes:info.sizes?Options.sizes:false,
+        crusts:info.crusts?Options.crusts:false,
+        half:info.half?Options.half:false,
+        qty:info.qty?Options.qty:false,
+        values:info.values,
+        allergy:Options.allergy,
+      }
+    };
+  }  
   checkStep(step){
-    const i = this.menuSteps.findIndex(s => s === step)
+    const i = this.items.findIndex(s => s === step)
     return i!==-1
   }
   getStep(i){
-    if(i>=this.menuSteps.length){      
-      return 'EOM';
+    if(i>=this.items.length){      
+      return 'specialinstmsg';
     } else if(i<0){
-      return 'BOM';
+      return 'ordername';
     } else {     
-      return this.menuSteps[i];      
+      return this.#items[i];      
     }   
+  }
+  get stepList(){
+    return this.#items.map((i)=>{
+      const name = this.GetStepProper(i);
+      return {val:i, name:name}
+    });
   } 
-  buildMultRowStep(step, hasHalf, hasQty){
-    const items = this.getItemsList(step);
-    const itemArry = items.map((i)=> {
-      const id = i.id;
-      const name = i.short;
-      let btns = [];
-      if(hasHalf){
-        const b = this.buildOptBtns(step, 'half', id);
-        btns = btns.concat(b);
-      }
-      if(hasQty){
-        const b = this.buildOptBtns(step, 'qty', id);
-        btns = btns.concat(b);
-      }
-      const itemRow = {
-        name:name,
-        rClass: `row-item`,
-        btns: btns,
-      };
-      return itemRow;
-    })
-    return itemArry;
-  }
-  buildSimpleStep(step){
-    const items = this.getItemsList(step);
-    const itemArry = items.map((i)=> {   
-      const btn = {
-        btnClass:'btn-item',
-        btnCapt:i.short,
-        listKey:`${step}-${i.id}`,
-        btnMsg:i.name,
-        itemInfo: {
-          item:step,
-          id:i.id,          
-        },        
-      };
-      return btn;
-    })
-    return itemArry;
-  }
-  buildOptBtns(step, opt, itemID){ 
-    const optList = this.getOptsList(opt);    
-    const btnArry = optList.map((o)=> {
-      const itemInfo= {
-        item:step,
-        id:itemID,
-        [opt]:o.id,
-      };
-      const btn = {
-        btnClass:`btn-${opt}-${o.class}`,
-        btnCapt: o.short,
-        listKey:`${step}-${itemID}-${opt}-${o.id}`,
-        btnMsg:o.name,
-        btnType: opt,
-        itemInfo: itemInfo,
-      };
-      return btn;
-    })
-    return btnArry;
-  }
-  getItemsList(step){
-    const obj = this.menu.menuSteps[step];
-    const ret = obj.values;
-    return ret;
-  }  
-  getHasSizes(step){
-    const obj = this.menu.menuSteps[step];
-    const ret = obj.sizes;
-    return ret;
-  }
-  getHasQty(step){
-    const obj = this.menu.menuSteps[step];
-    const ret = obj.qty;
-    return ret;
-  }
-  getHasHalf(step){
-    const obj = this.menu.menuSteps[step];
-    const ret = obj.half;
-    return ret;
-  }
-  getHasMultipleSelect(step){
-    const obj = this.menu.menuSteps[step];
-    const ret = obj.multiple;
-    return ret;
-  }
-  getOptsList(opt){
-    const obj = this.menu.options[opt];    
-    return obj;
-  }
 }
-
-
-export default itemMenu;
+export default ItemMenu;

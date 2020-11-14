@@ -10,12 +10,11 @@ class SimpleForm extends Component {
     this.handleEnd = this.handleEnd.bind(this);
   }
   handleEnd(){
-    //load order summary page
-    const order = this.props.order;
-    this.props.end(order)
+    //load order summary page    
+    this.props.onSpecial({val:'complete'});
   }
-  render() {
-    const order = this.props.order;          
+  render() {             
+    console.log('Bot render');
     return (
       <ThemeProvider theme={{
               background: '#f5f5f5',
@@ -51,10 +50,9 @@ class SimpleForm extends Component {
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep/>,              
+            component: <OrderStep refProps={this.props.refProps} onTrigger={this.props.onTriggerBot}/>,              
             waitAction: true, 
-            replace: true,
-            metadata: order,
+            replace: true,            
             trigger: 'pizzabuilder',           
           },
           {
@@ -94,6 +92,7 @@ class SimpleForm extends Component {
             end: true,            
           },
           ]}
+          floating={true}
         />
           </ThemeProvider>
       );

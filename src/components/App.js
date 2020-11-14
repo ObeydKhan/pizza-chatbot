@@ -1,77 +1,88 @@
 import React from 'react';
-import '../css/App.css';
-import DisplayMainArea from './DisplayMainArea';
-import logo from '../resources/SliceLogo.png';
 import Order from './PizzaOrder';
-
-import StoreLoc from './StoreLoc';
+import ItemMenu from './itemMenu';
+import {Header, MainArea, SliceBot} from './PageDisplay'
+import '../css/App.css';
+import BotTrigger from './BotTrigger';
 
 class App extends React.Component {
   constructor(props) {
     super(props);    
-    this.updateLoc = this.updateLoc.bind(this);
-    this.setStore = this.setStore.bind(this);
-    this.mainPage = this.mainPage.bind(this);    
+    this.onTriggerBot=this.onTriggerBot.bind(this);
+    this.onTriggerLoc=this.onTriggerLoc.bind(this);    
+    this.onTriggerSpecial =this.onTriggerSpecial.bind(this);        
     this.state = {
-      showPage: 'Location',       
-      locObj: this.props.locObj,      
-      order: new Order('new'),
+      showPage: 'Location',             
+      locObj: this.props.locObj,
+      botStep:{type:'', value:''},      
+      order: new Order(),
+      step: new ItemMenu(),      
     };
     this.input = React.createRef();        
   }
-  setStore(locObj){
-    const page = 'Main';    
-    this.setState({
-      showPage: page,
-      locObj: locObj,           
-    });    
-  }
-  updateLoc(props){
+  onTriggerLoc(props){
     const locObj = props.locObj;
-    const page = props.page;    
+    const page = props.page;
+    const botStep={type:'', value:''};
+    if(page==='Main'){
+      botStep.type = 
+      botStep.value
+    }    
     this.setState({
       locObj:locObj,
       showPage: page,             
     });
   }
-  mainPage(){
+  onTriggerSpecial(props){
+    if(props.val==='Reload') {this.reset()}
+    else if(props.val==='complete') {this.setState({showPage:'Final'})}    
+    this.setState({showPage:props.val});
+  }
+  onTriggerBot(props){
+    const trigger = props;
+    const type = trigger.type;
+    const value = trigger.value;
+    if(value===''&&(type==='cancel'||type==='complete'||type==='remove')){
+      trigger.prevStep = this.state.botStep;
+    } else if(type==='cancel'&&value!=='no'){
+      if(value==='main'){
+        this.reset();
+      } else if(value==='select'){
+        this.onTriggerLoc({locObj:this.state.locObj,page:'Location'})
+      } else if(value==='restart'){
+        
+      }
+    }
+    const triggerRet = BotTrigger({trigger:trigger, order:this.state.order, step:this.state.step});
+    if(!triggerRet){return false;}
 
+    this.setState({
+      botStep:triggerRet.botStep,
+      order:triggerRet.order,
+      step:triggerRet.step,
+    })
+    return {
+      trigger:triggerRet.tigger, 
+      stepMsg:triggerRet.stepMsg, 
+      userMsg:triggerRet.userMsg
+    }
   }
-  cancelOrder(){
-
+  reset(){
+    this.setState({
+      showPage: 'Location',             
+      locObj: this.props.locObj,      
+      botStep:{type:'', value:''},
+      order: new Order(),
+      step: new ItemMenu(),      
+    });
   }
-  completeOrder(){
-
-  }
-  get StoreBanner(){
-    const {locObj} = this.state;
-    const selectedStore = locObj.curStoreID;
-    if(selectedStore==='0'){ return null;}          
-    const storeInfo = locObj.curStoreInfo;
-    const banner = (
-      <div className="bannerHead">
-        <div className="bannerName">{storeInfo.name}</div>
-        <div className="bannerHours">{storeInfo.hours}</div>
-        <div className="bannerChange" onClick={() => this.updateLoc('Search')}>Change Location</div>
-      </div>
-    );
-    return banner;
-  }
-  render(){                 
-    const banner = this.StoreBanner;
+  render(){
+    console.log('App render');    
     return (
-      <>
-      <div className="mainPageArea">
-      <header>
-        <img src={logo} alt="Logo" onClick={() => this.resetOrder()}></img>
-        <h1>Slice</h1>
-        {banner}
-      </header>      
-      <StoreLoc appState={this.state} 
-        set={this.setStore} update={this.updateLoc} forwardedRef={this.input}/>      
-      <DisplayMainArea appState={this.state} 
-        reset={this.resetOrder} cancel={this.cancelOrder} complete={this.completeOrder}/>
-      </div>
+      <>      
+      <Header cnt={this.state.order.PizzaCount} locObj={this.state.locObj} onCart={this.onTriggerCart} onChange={this.onTriggerSpecial}/>      
+      <MainArea appState={this.state} onTriggerLoc={this.onTriggerLoc} forwardedRef={this.input}/>      
+      <SliceBot appState={this.state} onTrigger={this.onTriggerBot} onSpecial={this.onTriggerSpecial}/>
       </>     
     );
   }
