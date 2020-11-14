@@ -60,19 +60,22 @@ class App extends React.Component {
   render(){                 
     const banner = this.StoreBanner;
     return (
-      <>
       <div className="mainPageArea">
       <header>
         <a href="/pizza-chatbot"><img src={logo} alt="Logo"></img>
         <h1>Slice</h1></a>
         {banner}
+        <a href="/pizza-chatbot"><p>Search for location</p></a>
+        <a href="/locations"><p>Select location</p></a>
+        <a href="/slicebot"><p>Order pizzas</p></a>
+        <a href="/review"><p>Review order</p></a>
+        <a href="/summary"><p>Payment 	&amp; Confirmation</p></a>
       </header>      
       <StoreLoc appState={this.state} 
         set={this.setStore} update={this.updateLoc} forwardedRef={this.input}/>      
       <DisplayMainArea appState={this.state} 
         reset={this.resetOrder} cancel={this.cancelOrder} complete={this.completeOrder}/>
-      </div>
-      </>     
+      </div> 
     );
   }
 }

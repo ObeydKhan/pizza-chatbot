@@ -1,4 +1,5 @@
 import React from 'react';
+import {Route,Redirect} from 'react-router-dom';
 import GeoIcon from '../resources/GeoIcon.jsx';
 import '../css/StoreLoc.css';
 
@@ -56,7 +57,7 @@ class StoreLoc extends React.Component {
   buildStoreSelectMenu(locObj){
     const showSelect = this.state.isSelect;
     if(showSelect){
-      return <StoreSelectMenu locObj={locObj} reset={this.resetSearch} select={this.storeSelect}/>
+      return <><Redirect to="/pizza-chatbot/locations" /><Route path="/pizza-chatbot/locations" component={() => <StoreSelectMenu locObj={locObj} reset={this.resetSearch} select={this.storeSelect}/>}/></>
     }
     return null;
   }

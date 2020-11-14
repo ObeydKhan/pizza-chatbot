@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Route, Redirect} from 'react-router-dom';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import OrderStep from './OrderStep';
@@ -17,7 +18,9 @@ class SimpleForm extends Component {
   render() {
     const order = this.props.order;          
     return (
-      <ThemeProvider theme={{
+      <>
+      <Redirect to="/pizza-chatbot/slicebot" />
+      <Route path="/pizza-chatbot/slicebot" component={() => <ThemeProvider theme={{
               background: '#f5f5f5',
               fontFamily: 'Montserrat',
               headerBgColor: '#DD841F',
@@ -95,7 +98,9 @@ class SimpleForm extends Component {
           },
           ]}
         />
-          </ThemeProvider>
+          </ThemeProvider>}
+          />
+        </>
       );
     }
   }
