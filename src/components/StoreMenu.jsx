@@ -5,8 +5,7 @@ import veggie from "../resources/vegetarian.svg";
 import vegan from "../resources/vegan.svg";
 import '../css/DisplayMainArea.css';
 
-class StoreMenu extends React.Component {
-render(){
+function StoreMenu(step) {
   return(
     <div className="displayArea">
         <div className="menuSummary">
@@ -135,5 +134,5 @@ render(){
       </div>
   )
 }
-}
+
 export default StoreMenu;

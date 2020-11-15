@@ -1,30 +1,46 @@
-import React, { Component } from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import React from 'react';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import OrderStep from './OrderStep';
 
-class SimpleForm extends Component {
+class SliceBot extends React.Component{
   constructor(props){
-    super(props);
-    this.state={
-      refProps:null,
+    super(props)
+
+    this.state = {
+      triggered:false,
+      updated:false,            
     }
     this.handleEnd = this.handleEnd.bind(this);
+    this.trigger=this.trigger.bind(this);
+    this.appUpdate=this.appUpdate.bind(this);
   }
-  componentDidMount(){
-    const refProps = this.props.refProps;
-    this.setState({refProps:refProps})
+  componentDidMount(){  
+    
+  }
+  componentDidUpdate(prevProps){
+    if(this.props.appState!==prevProps.appState){
+      this.setState({triggered:false,updated:false})
+    }
   }
   handleEnd(){
     //load order summary page    
     this.props.onSpecial({val:'complete'});
   }
-  render() {    
-    return (
-      <>
-      <Redirect to="/pizza-chatbot/slicebot" />
-      <Route path="/pizza-chatbot/slicebot" component={() => <ThemeProvider theme={{
+  trigger(props){
+    this.props.onTriggerBot(props);
+    this.setState({triggered:true})
+  }
+  appUpdate(props){
+    this.props.onAppUpdate(props);
+    this.setState({updated:true})
+  }
+  
+  render(){
+    if(this.props.appState.locObj.curStoreID==='0'){return (null)}
+    return (   
+      <div className="chatBot" >
+                <ThemeProvider theme={{
               background: '#f5f5f5',
               fontFamily: 'Montserrat',
               headerBgColor: '#DD841F',
@@ -58,7 +74,7 @@ class SimpleForm extends Component {
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep refProps={this.props.refProps} onTrigger={this.props.onTrigger} onAppUpdate={this.props.onAppUpdate}/>,              
+            component: <OrderStep appState={this.props.appState} onTrigger={this.trigger} onAppUpdate={this.appUpdate}/>,              
             waitAction: true, 
             replace: true,            
             trigger: 'pizzabuilder',           
@@ -100,13 +116,12 @@ class SimpleForm extends Component {
             end: true,            
           },
           ]}
-          floating={true}
+          floating={false}
         />
-          </ThemeProvider>}
-          />
-        </>
-      );
-    }
+          </ThemeProvider>
+      </div>   
+    );   
   }
-  
-  export default SimpleForm;
+
+}
+export default SliceBot;
