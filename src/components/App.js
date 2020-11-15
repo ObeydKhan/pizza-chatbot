@@ -3,7 +3,8 @@ import Order from './PizzaOrder';
 import ItemMenu from './itemMenu';
 import {Header, MainArea, SliceBot} from './PageDisplay'
 import '../css/App.css';
-import BotTrigger from './BotTrigger';
+import '../css/DisplayMainArea.css';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -16,27 +17,46 @@ class App extends React.Component {
       locObj: this.props.locObj,
       botStep:{type:'', value:''},      
       order: new Order(),
-      step: new ItemMenu(),      
+      step: new ItemMenu(),           
     };
     this.input = React.createRef();        
   }
+    
   onTriggerLoc(props){
     const locObj = props.locObj;
     const page = props.page;
     const botStep={type:'', value:''};
     if(page==='Main'){
-      botStep.type = 
-      botStep.value
+      botStep.type = 'menu';
+      botStep.value = 'new';
     }    
     this.setState({
       locObj:locObj,
-      showPage: page,             
-    });
+      showPage: page,
+      botStep:botStep,             
+    });   
   }
   onTriggerSpecial(props){
     if(props.val==='Reload') {this.reset()}
     else if(props.val==='complete') {this.setState({showPage:'Final'})}    
-    this.setState({showPage:props.val});
+    else if(props.type==='start'){
+      const o = this.state.order;
+      const s = this.state.step;
+      o.CreateNewPizza();
+      o.ordername = props.val;
+      s.step = 'new';
+      const b = {type:'menu', value:this.state.step.stepList[0].val};
+      this.setState({showPage:'Menu',botStep:b,order:o,step:s});      
+    } else if(props.type==='inst') {
+      const o = this.state.order;
+      const s = this.state.step;
+      o.SpecialInstructions = props.val;
+      s.step = 'none';
+      const b = {type:'reviewPizza', value:''};
+      this.setState({showPage:'NonMenuStep',botStep:b,order:o,step:s});
+    } else {
+      this.setState({showPage:props.val});
+    }        
   }
   onTriggerBot(props){
     const trigger = props;
@@ -52,20 +72,13 @@ class App extends React.Component {
       } else if(value==='restart'){
         
       }
-    }
-    const triggerRet = BotTrigger({trigger:trigger, order:this.state.order, step:this.state.step});
-    if(!triggerRet){return false;}
-
+    }    
+    if(!props.triggerRet){return false;}
     this.setState({
-      botStep:triggerRet.botStep,
-      order:triggerRet.order,
-      step:triggerRet.step,
-    })
-    return {
-      trigger:triggerRet.tigger, 
-      stepMsg:triggerRet.stepMsg, 
-      userMsg:triggerRet.userMsg
-    }
+      botStep:props.triggerRet.botStep,
+      order:props.triggerRet.order,
+      step:props.triggerRet.step,
+    })    
   }
   reset(){
     this.setState({
@@ -73,19 +86,18 @@ class App extends React.Component {
       locObj: this.props.locObj,      
       botStep:{type:'', value:''},
       order: new Order(),
-      step: new ItemMenu(),      
+      step: new ItemMenu(),            
     });
   }
   render(){
-    console.log('App render');    
+                 
     return (
-      <>      
-      <Header cnt={this.state.order.PizzaCount} locObj={this.state.locObj} onCart={this.onTriggerCart} onChange={this.onTriggerSpecial}/>      
-      <MainArea appState={this.state} onTriggerLoc={this.onTriggerLoc} forwardedRef={this.input}/>      
-      <SliceBot appState={this.state} onTrigger={this.onTriggerBot} onSpecial={this.onTriggerSpecial}/>
-      </>     
-    );
+      <div className="sliceBot">
+        <Header appState={this.state} onChange={this.onTriggerSpecial}/>
+        <MainArea appState={this.state} onTriggerLoc={this.onTriggerLoc} forwardedRef={this.input}/>
+        <SliceBot appState={this.state} onTriggerBot={this.onTriggerBot} onAppUpdate={this.onTriggerSpecial}/>
+      </div>
+    )      
   }
 }
-
 export default App;

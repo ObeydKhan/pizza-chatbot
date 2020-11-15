@@ -1,8 +1,6 @@
 import Items from './menuItems.json';
 import Options from './menuOptions.json';
 class ItemMenu{
-  #items=null;
-  #step=-1;
   constructor(){    
     const arr = function(obj) {      
       let x;
@@ -12,29 +10,23 @@ class ItemMenu{
       }
       return ret;
     };    
-    this.#items = arr(Items);         
+    this.items = arr(Items);
+    this.optList = arr(Options);
+    this.stepNum=-1;
+    this.outOfScope=false;         
   }
   set step(val){
-    const i = this.#step;
-    switch (val){
-      case 'next':
-        const x = this.#items.length;        
-        this.#step = i+1>=x?x:i+1;
-        break;
-      case 'prev':
-        this.#step = i-1<=0?0:i-1;
-        break;
-      case 'new':
-        this.#step = 0;
-        break;
-      default:
-        const s = this.#items.findIndex(s => s === val);
-        this.#step = s<0?0:s;
-        break;
+    if(val==='none')
+    {this.outOfScope=true;
+    } else {
+    this.outOfScope=false;
+    this.stepNum=this.getStepNum(val);
     }
+
   }
   get step(){
-    return this.getStep(this.#step);
+    if(this.outOfScope) {return 'none';}
+    return this.getStep(this.stepNum);
   }
   GetCaption(src,type,id){
     const item = (m,t,id)=>{
@@ -61,25 +53,34 @@ class ItemMenu{
     return item(src,type,id);
   }
   GetStepProper(step){
+    if(this.outOfScope) {return 'none';}
     if(step==='specialinstmsg'){
       return 'Special Instructions'
     } else if(step==='ordername'){
       return 'Name'
-    } else if(step==='next'){      
-      const s = this.getStep(this.#step+1);
+    } else {     
+      const s = this.getStep(this.getStepNum(step))
+      if(s==='specialinstmsg'||s==='ordername'){return this.GetStepProper(s)}
       return Items[s].properU
-    } else if(step==='prev'){
-      const s = this.getStep(this.#step-1);
-      return Items[s].properU
-    } else if(this.checkStep(step)){
-      return Items[step].properU
+    }
+  }
+  GetStepTrigger(step){
+    if(this.outOfScope) {return 'none';}
+    const s = this.getStep(this.getStepNum(step)) 
+    if(this.checkStep(s)){
+      return 'pizzabuilder'
     } else {
-      return Items[this.#step].properU
+      return s
     }
   }
   get StepObject(){
+    if(this.outOfScope) {return null;}
     const step = this.step;
+    if(!this.checkStep(step)){return false};
     const info = Items[step];
+    const oList = this.optList.filter((o)=>{
+      return info[o]
+    })
     return {
       name: step,
       botMsg:info.msg,
@@ -87,10 +88,13 @@ class ItemMenu{
       properL:info.properL,
       multi:info.multiple,
       controls: {
+        nextTrig:this.GetStepTrigger('next'),
+        prevTrig:this.GetStepTrigger('prev'),
         nextName:this.GetStepProper('next'),
         prevName:this.GetStepProper('prev'),
       },
       content: {
+        optList:oList,
         sizes:info.sizes?Options.sizes:false,
         crusts:info.crusts?Options.crusts:false,
         half:info.half?Options.half:false,
@@ -110,11 +114,26 @@ class ItemMenu{
     } else if(i<0){
       return 'ordername';
     } else {     
-      return this.#items[i];      
+      return this.items[i];      
     }   
   }
+  getStepNum(val){
+    const i = this.stepNum;
+    switch (val){
+      case 'next':
+        const x = this.items.length;        
+        return i+1>=x?x:i+1;        
+      case 'prev':
+        return i-1<=0?0:i-1;        
+      case 'new':
+        return 0;        
+      default:
+        const s = this.items.findIndex(s => s === val);
+        return s<0?this.stepNum:s;        
+    }
+  }
   get stepList(){
-    return this.#items.map((i)=>{
+    return this.items.map((i)=>{
       const name = this.GetStepProper(i);
       return {val:i, name:name}
     });

@@ -1,9 +1,7 @@
 import React from 'react';
-import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles} from '@material-ui/core/styles';
-import Random from 'random-id';
 import df from "../resources/dairyfree.svg";
 import gf from "../resources/glutenfree.svg";
 import veggie from "../resources/vegetarian.svg";
@@ -26,8 +24,11 @@ export default function MenuComponent(props) {
       return {
         componentType:componentType,
         rowKey:props.rowKey,
-        rowtitle:{comp:ToolTipComponent(props.rowtitle),props:props.rowtitle},
-        rowbtns:{comp:props.rowbtns.map((b)=>{return ToolTipComponent(b)}),props:props.rowbtns}
+        rowtitle:ToolTipComponent(props.rowTitle),
+        rowbtns:props.rowbtns.map((b)=>{
+          const val = b;
+          b.onSelect = props.onSelect
+          return ToolTipComponent(val)})
       };
     case 'cart':
       return 'Cart Component';
@@ -44,18 +45,19 @@ function ToolTipComponent(props){
       case 'rowTitle':
         return <div className={type}>{props.itemCaption}</div>;
       case 'menuBtn':
-        return <button className={type} onClick={()=>{return props.onClick(props.itemVal)}}>{props.itemCaption}</button>;
+        return <button className={type} onClick={()=>{return props.onSelect(props.itemValue)}}>{props.itemCaption}</button>;
       default:
         return <div className='default'>Default Component</div>;
     }
   }
-  return (
-    <>
-      <HtmlTooltip title={<React.Fragment><Typography color="inherit">{props.itemCaption}</Typography>{props.itemDescription}</React.Fragment>} arrow placement="bottom-end" enterDelay={1500}>
-        {comp(props)}
-      </HtmlTooltip>
-    </>
-  );
+  const key =props.hasOwnProperty('itemKey')?props.itemKey:false;
+  const liClass = props.hasOwnProperty('btnClass')?props.btnClass:false;
+  const tip = (      
+    <HtmlTooltip title={<React.Fragment><Typography color="inherit">{props.itemCaption}</Typography>{props.itemDescription}</React.Fragment>} arrow placement="bottom-end" enterDelay={1500}>
+      {comp(props)}
+    </HtmlTooltip>)
+
+  return {comp:tip, key:key, iClass:liClass}
 }
 /*
 function MenuImage(){

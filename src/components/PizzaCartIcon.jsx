@@ -59,13 +59,12 @@ function PizzaCartIcon(props){
       </p>
       <PizzaCartIcon />
     </div>
-  );
-  console.log('Cart render');
+  );  
   return (
     <>
     <HtmlTooltip title={
-        <React.Fragment><Typography color="inherit">{'Pizza Cart'}</Typography>{'Click here to view your pizza cart'}</React.Fragment>}
-        arrow placement="bottom-end" enterDelay={1500}>
+        <React.Fragment><Typography color="inherit">Pizza Cart</Typography>Click here to view your pizza cart</React.Fragment>}
+        arrow placement="bottom-end" enterDelay={100}>
       <IconButton aria-label="cart">
         <StyledBadge badgeContent={cnt} color="secondary">
           <ShoppingCartIcon onClick={handleOpen}/>

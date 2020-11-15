@@ -12,8 +12,8 @@ export default function BotTrigger(props){
     userMsg:props.trigger.usr,
   };
   if(value==='next'){
-    const selected = props.trigger.selected;
-    order.CurrentItems = selected.SaveSelected();
+    
+    order.CurrentItems = props.trigger.selected;
     ret.userMsg = ret.userMsg.replace('{r}',getUserMsg(props))
   }       
   switch(type){
@@ -28,6 +28,9 @@ export default function BotTrigger(props){
         step.step = 'new'
         ret.trigger=value;
       } else {
+        if(props.trigger.hasOwnProperty('stepTrig')){
+          ret.trigger=props.trigger.stepTrig;
+        }
         step.step = value;
       }
       break;
@@ -71,9 +74,12 @@ export default function BotTrigger(props){
           }
         } 
       }
+      break;
     default:
       
   }
+  ret.order = order;
+  ret.step = step;
   return ret; 
 }
 function getUserMsg(props){
