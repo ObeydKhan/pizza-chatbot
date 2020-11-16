@@ -1,39 +1,35 @@
 import React from 'react';
 import '../css/OrderStyle.css';
 import StepFactory from './StepFactory';
-import ItemSelect from './ItemSelect';
-import { isNull } from 'lodash';
 import BotTrigger from './BotTrigger';
+import ItemSelect from './ItemSelect';
+
 class OrderStep extends React.Component {
   constructor(props){
     super(props);
-    const ref = this.getRefProps();
-    const set = ref?true:false;
+    
     const sel = (props)=>{      
-      const type=props.type;
-      if((type!=='menu'&&type!=='editMenu')||!props.hasStep){return false}
-      const value={
-        items:props.selected,
-        stepname:props.name,
-        multi:props.multi,
-        optList:props.content.optList};
-      return GetSelected(value)
-    }    
-    if(set){    
-      if(!ref.ordername&&this.props.previousStep.id==='ordername'){
-       this.props.onAppUpdate({type:'start', val:this.props.previousStep.value})                  
-      } else if(this.props.previousStep.id==='specialinstques'){
-        this.props.onAppUpdate({type:'inst', val:''})
-      } else if(this.props.previousStep.id==='specialinstentry'){
-        this.props.onAppUpdate({type:'inst', val:this.props.previousStep.value})
+      if(!props.step.StepObject){
+        const name = props.step.StepObject.name
+        const value={
+          items:props.state.order.GetCurrentItems(name),
+          stepname:name,
+          multi:props.step.StepObject.multi,
+          optList:props.step.StepObject.content.optList};
+        return GetSelected(value)
       }
-      
-    }
-    const select = set?sel(ref):[];
-    this.state={
-      refProps: ref,
-      setRef:set,     
-      selected:select,      
+        return false;
+    }        
+    if(!this.props.appState.order.ordername&&this.props.previousStep.id==='ordername'){
+      this.props.onAppUpdate({type:'start', val:this.props.previousStep.value})                  
+    } else if(this.props.previousStep.id==='specialinstques'){
+      this.props.onAppUpdate({type:'inst', val:''})
+    } else if(this.props.previousStep.id==='specialinstentry'){
+      this.props.onAppUpdate({type:'inst', val:this.props.previousStep.value})
+    }      
+    const s = sel(this.props.appState)
+    this.state={      
+      selected:s,      
       trigger: false,      
     }        
     this.triggerNext = this.triggerNext.bind(this);
@@ -43,6 +39,7 @@ class OrderStep extends React.Component {
     const selected = this.state.selected?this.state.selected.SaveSelected():false;            
     const trig = props;
     trig.selected = selected;
+    trig.prevStep = this.state.refProps.prevStep;
     if(props.type==='menu'){
       if(props.value==='next'){
         trig.stepTrig = this.state.refProps.nextTrig;
@@ -52,7 +49,7 @@ class OrderStep extends React.Component {
         trig.stepTrig ='pizzabuilder';
       }
     }
-    const processTrigger = BotTrigger({trigger:props, order:this.props.appState.order, step:this.props.appState.step});
+    const processTrigger = BotTrigger({trigger:trig, order:this.props.appState.order, step:this.props.appState.step});
     const triggerRet ={
       botStep:processTrigger.botStep,
       order:processTrigger.order,
@@ -80,43 +77,7 @@ class OrderStep extends React.Component {
       this.props.triggerNextStep(data);
     });
   }
-  getRefProps(){
-    const appState = this.props.appState;
-    if(isNull(appState)){return false}
-    if(appState.locObj.curStoreID==='0'){return 'NoLoc'}    
-    const type = appState.botStep.type;
-    const ref = {
-      type:type,     
-      pizzaID:appState.order.CurrentID,
-      ordername:appState.order.ordername,
-    };
-    if(type==='menu'||type==='editItem'){      
-      const step = appState.step.StepObject;
-      
-      if(step){
-        ref.name=step.name;
-        ref.botMsg = step.botMsg;
-        ref.multi=step.multi;
-        ref.nextTrig = step.controls.nextTrig;
-        ref.prevTrig = step.controls.prevTrig;
-        ref.nextName = step.controls.nextName;
-        ref.prevName = step.controls.prevName;
-        ref.selected = appState.order.GetCurrentItems(step.name);
-        ref.content = step.content;
-        ref.hasStep=true;      
-      } else {
-        ref.hasStep=false;
-      }
-    } else {
-      ref.itemList=type==='editPizza'?appState.step.stepList:type==='reviewOrder'?appState.order.PizzaList:false;
-      if(type==='reviewPizza'){
-        ref.content = appState.order.CurrentPizza;
-      } else if(type==='reviewOrder'){
-        ref.content = appState.order.OrderSummary;
-      }
-    }
-    return ref; 
-  }
+  
   onSelect(val){
     if(val===null||val===undefined) return null;
     const sel = this.state.selected;
@@ -126,31 +87,19 @@ class OrderStep extends React.Component {
   componentDidMount(){
 
   }
-  componentDidUpdate(prevProps){
-    if(this.props.appState!==prevProps.appState){
-      const ref = this.getRefProps();
-      const set = ref?true:false;
-      this.setState({refProps:ref,setRef:set})
+  componentDidUpdate(){
+    if(this.state.refProps!==this.props.steps['1'].metadata){
+      const ref = this.props.steps['1'].metadata;      
+      this.setState({refProps:ref})
     }
   }    
-  render(){    
-    const ref = ()=>{
-      if(!this.state.setRef||this.state.triggered||this.state.updated){
-        return this.getRefProps();
-      } else {
-        return this.state.refProps
-      }
-    }
-    const refProps = ref();    
+  render(){        
     const itemSelect = this.state.selected?this.state.selected.selected:[];            
-    return <StepFactory refProps={refProps} selected={itemSelect} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
+    return <StepFactory refProps={this.props.appState} selected={itemSelect} onTrigger={this.triggerNext} onSelect={this.onSelect}/>;
   }  
 }
-
 function GetSelected(props){
-
   return new ItemSelect(props.stepname,props.items,props.multi,props.optList);  
-}
+} 
   
-   
 export default OrderStep;

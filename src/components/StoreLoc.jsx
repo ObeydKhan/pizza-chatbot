@@ -7,82 +7,65 @@ class StoreLoc extends React.Component {
   constructor(props){
     super(props);    
     this.state = {
-      isSearch:true,
-      isSelect:false,
-      searchMeth: '',
-      searchLoc: '',      
+      locMode:this.props.appState.locObj.searchStep,
+      locObj:this.props.appState.locObj,     
     };
     this.storeSearch = this.storeSearch.bind(this);    
     this.storeSelect = this.storeSelect.bind(this);
     this.resetSearch = this.resetSearch.bind(this);    
   }
-  buildSearchMenu(locObj, forwardedRef){
-    const showSearch = this.state.isSearch;
-    if(showSearch){
-      return <StoreSearchMenu locObj={locObj} forwardedRef={forwardedRef} search={this.storeSearch} select={this.storeSelect}/>
+  componentDidUpdate(prevProps){
+    if(this.props.appState!==prevProps.appState){
+      this.setState({     
+        locMode:this.props.appState.locObj.searchStep,
+        locObj:this.props.appState.locObj,      
+      });
     }
-    return null;
   }
-  resetSearch(locObj){
-    const updateProps={      
-      locObj:locObj,
-      page:'Location',
-      resetSearch: true,
-    };
-    this.props.onTriggerLoc(updateProps);
+  resetSearch(){
+    const loc =this.props.appState.locObj;
+    loc.resetLoc();
+    this.props.onTriggerLoc(loc);
+    this.setState({     
+      locMode:loc.searchStep,
+      locObj:loc,     
+    });
   }
   storeSearch(searchObj){    
-    const locObj = searchObj.locObj;
-    const method = searchObj.method;    
+    const loc = this.state.locObj;        
     const obj = {
-      method: method,
-      usrStr: method==='User Entry'?this.props.forwardedRef.current.value:'',
+      method: searchObj,
+      usrStr: searchObj==='User Entry'?this.props.forwardedRef.current.value:'',
     };
-    locObj.storeSearch = obj;
+    loc.storeSearch = obj;
+    this.props.onTriggerLoc(loc);
     this.setState({     
-      isSearch: locObj.searchErr,
-      isSelect: !locObj.searchErr,
-      searchMeth: locObj.searchMeth,
-      searchLoc: locObj.searchLoc,      
+      locMode:loc.searchStep,
+      locObj:loc,     
     });
-    const retProps={
-      locObj: locObj,
-      page:'Location'
-    };
-    this.props.onTriggerLoc(retProps);
   }
-  buildStoreSelectMenu(locObj){
-    const showSelect = this.state.isSelect;
-    if(showSelect){
-      return <><Redirect to="/pizza-chatbot/locations" /><Route path="/pizza-chatbot/locations" component={() => <StoreSelectMenu locObj={locObj} reset={this.resetSearch} select={this.storeSelect}/>}/></>
-    }
-    return null;
-  }
-  storeSelect(selectObj){
-    const locObj = selectObj.locObj;
-    const selLoc = selectObj.selLoc;    
-    locObj.storeLoc = selLoc;    
-    this.setState({
-      isSearch: false,
-      isSelect: false,     
-    });
-    const retProps={
-      locObj: locObj,
-      page:'Main'
-    };    
-    this.props.onTriggerLoc(retProps); 
+  storeSelect(selectObj){    
+    const loc = this.state.locObj;
+    loc.storeLoc = selectObj;
+    this.props.onTriggerLoc(loc);
+    this.setState({     
+      locMode:loc.searchStep,
+      locObj:loc,     
+    }); 
   }  
   render(){    
-    const {locObj, showPage} = this.props.appState;
-    const show= showPage==='Location'?true:false;
-    const sel = locObj.curStoreID!=='0'   
-    const {forwardedRef}=this.props;
-    console.log(`Loc render ${sel}`);
+    const show= (type)=>{
+      switch(type){
+        case 'search':
+          return <StoreSearchMenu locObj={this.state.locObj} forwardedRef={this.props.forwardedRef} search={this.storeSearch} select={this.storeSelect}/>
+        case 'select':
+          return <><Redirect to="/pizza-chatbot/locations" /><Route path="/pizza-chatbot/locations" component={() => <StoreSelectMenu locObj={this.state.locObj} reset={this.resetSearch} select={this.storeSelect}/>}/></>
+        default:
+          return null;
+      }
+    }    
     return(
-      <>
-      {show&&!sel && this.buildSearchMenu(locObj, forwardedRef)}
-      {show && this.buildStoreSelectMenu(locObj)}
-      </>
+      <>{show(this.state.locMode)}</>
     )
   }
 }
@@ -112,14 +95,10 @@ function MakeGeoDialog(props) {
   const locObj = props.locObj;
   const hasErr = locObj.geoErr;
   const capStr = hasErr?locObj.geoErrMsg:'Locations near ' + locObj.geoZip;    
-  const clsStr = hasErr?"geoSearchFail": "geoSearchBtn";       
-  const searchObj = {
-    method: 'Geo Locate',
-    locObj: locObj,
-  };   
+  const clsStr = hasErr?"geoSearchFail": "geoSearchBtn";  
   return (
     <div className="geoSearchArea">
-      <button className={clsStr} onClick={() => props.search(searchObj)}>
+      <button className={clsStr} onClick={() => props.search('Geo Locate')}>
         <GeoIcon fill="#000000" className="geoSearchIcon"/>
         <div className="geoSearchBtnCapt">{capStr}</div>
       </button>
@@ -130,23 +109,18 @@ function MakeUserDialog(props) {
   const locObj = props.locObj;
   const hasErr = locObj.userErr;
   const capStr = hasErr?locObj.userErrMsg:null;    
-  const searchObj = {
-    method: 'User Entry',
-    locObj: locObj,
-    ref: props.forwardedRef,
-  };    
   return (
     <>
     <div className="userSearchArea">
     <div className="userSearchLabel">Enter a Zip Code</div>
     <form className="searchForm" onKeyDown={(event, i) => {
       if(event.key === 'Enter') {
-        this.storeSearch(searchObj); 
+        this.storeSearch('User Entry'); 
         event.preventDefault();}}}>
       <input className="userInputString" type="text" ref={props.forwardedRef}/>
       {capStr}
     </form>
-      <button className="userSearchBtn" type="button" onClick={() => props.search(searchObj)}>
+      <button className="userSearchBtn" type="button" onClick={() => props.search('User Entry')}>
       Submit</button>
     </div>
     </>
@@ -176,11 +150,7 @@ function StoreSelectMenu(props){
   const searchLoc = locObj.searchLoc;    
   const storeIDs = ['1','2','3'];
   const storeList = storeIDs.map((storeID) => {
-    const store = locObj.storeInfo(storeID);   
-    const ret = {
-      locObj: locObj,
-      selLoc: storeID,
-    };
+    const store = locObj.storeInfo(storeID);
     return (
       <li key={storeID} className="resultElement"> 
         <div className="store">
@@ -189,7 +159,7 @@ function StoreSelectMenu(props){
         </div>
         <div>
         <button className="selectBtn" onClick={() => {
-          props.select(ret)
+          props.select(storeID)
           }}>Select</button> 
         </div>
       </li> 
@@ -201,7 +171,7 @@ function StoreSelectMenu(props){
     <div className="storeSelectBanner">
       <h2>Results</h2>
       <div className="resultsCapt">Showing results near: {searchLoc}</div>
-      <div className="resultsChange" onClick={() => props.reset(locObj)}>Change Location</div>
+      <div className="resultsChange" onClick={() => props.reset()}>Change Location</div>
       </div>
       <ul className="resultsList">
         {storeList}

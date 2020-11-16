@@ -8,6 +8,8 @@ class MainArea extends React.Component{
       switch(type){
         case 'Location':
           return <StoreLoc appState={this.props.appState} onTriggerLoc={this.props.onTriggerLoc} forwardedRef={this.props.forwardedRef}/>;
+        case 'NonMenuStep':
+          return <div>This step doesnt have a menu item</div>;
         case 'Main':
           return <div>Something to display while waiting for the user to enter their name</div>;
         case 'Final':

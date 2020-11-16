@@ -4,33 +4,31 @@ export default function BotTrigger(props){
   const order = props.order;
   const step = props.step;
   const ret = {
-    botStep:{type:type, value:value},
+    botStep:type,
     order:null,
     step:null,
     trigger:'pizzabuilder',
     stepMsg:props.trigger.msg,
     userMsg:props.trigger.usr,
   };
-  if(value==='next'){
-    
+  if(value==='next'){    
     order.CurrentItems = props.trigger.selected;
     ret.userMsg = ret.userMsg.replace('{r}',getUserMsg(props))
   }       
   switch(type){
     case 'menu':      
     case 'editItem':
-      
-      if(value==='specialinstmsg'){
-        ret.botStep = {type:'reviewPizza',value:''};
-        ret.trigger=value;
-      } else if(value==='ordername'){
-        ret.botStep = {type:'menu',value:'crusts'};
-        step.step = 'new'
-        ret.trigger=value;
-      } else {
-        if(props.trigger.hasOwnProperty('stepTrig')){
-          ret.trigger=props.trigger.stepTrig;
+      const trig = props.trigger.hasOwnProperty('stepTrig')?props.trigger.stepTrig:'pizzabuilder';
+      if(trig==='specialinstmsg'||trig==='ordername') {
+        ret.trigger=trig;
+        step.step='none';
+        if(trig==='specialinstmsg'){
+          ret.botStep = 'reviewPizza';          
+        } else if(trig==='ordername'){
+          ret.botStep = '';          
         }
+      } else {        
+        ret.trigger=trig;        
         step.step = value;
       }
       break;
@@ -49,9 +47,9 @@ export default function BotTrigger(props){
       break;
     case 'spec':
       if(value==='specialinstentry'){
-        ret.botStep = {type:'editPizza',value:'cur'};
+        ret.botStep = 'editPizza';
       } else if(value==='ordername'){
-        ret.botStep = {type:'reviewOrder',value:''};
+        ret.botStep = 'reviewOrder';
       }
       ret.trigger=value;
       break;      
@@ -59,18 +57,18 @@ export default function BotTrigger(props){
     case 'cancel':      
     case 'complete':
       if(value==='no'){
-        ret.botStep = props.trigger.prevStep;
+        //ret.botStep = props.trigger.prevStep;
       } else if(value!=='') {
         if(type==='complete'){
           ret.trigger='endmsg1';
         } else if(type==='remove'){
           if(value==='cur'){
-            ret.botStep = {type:'menu',value:'crusts'};
+            ret.botStep = 'menu';
             order.CreateNewPizza();
             step.step = 'new';
           } else {
             order.RemovePizza(value);
-            ret.botStep = {type:'reviewOrder',value:''};
+            ret.botStep = 'reviewOrder';
           }
         } 
       }

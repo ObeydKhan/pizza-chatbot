@@ -1,12 +1,13 @@
 import React from 'react';
 
 function Summary(props){
-  const isFinal = props.hasOwnProperty('name');
+  /*const isFinal = props.hasOwnProperty('name');
   if(isFinal){
     return finalO(props)
   } else{
     return single(props)
-  }
+  }*/
+  return 'Test Summary'
 }
 
 function single(props){  

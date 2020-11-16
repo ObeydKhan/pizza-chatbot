@@ -3,10 +3,44 @@ import Summary from './Summary';
 import MenuArray from './MenuArray';
 import Random from 'random-id';
 
+
 function StepFactory(props){  
-  if(props.refProps.type===''||props.refProps.name==='specialinstmsg'){return null};
-  const step = Step(props)
-  const content = ContentFactory(props);
+  const appState = props.appState;
+  if(appState===null||appState===undefined){return null};
+  const type =appState.botStep;
+  if(type===''){return null};  
+  const ref = {
+    type:type,     
+    pizzaID:appState.order.CurrentID,
+    ordername:appState.order.ordername,
+    prevStep:appState.prevStep,
+  };
+  if(type==='menu'||type==='editItem'){      
+    const s = appState.step.StepObject;      
+    if(s){
+      ref.name=s.name;
+      ref.botMsg = s.botMsg;
+      ref.multi=s.multi;
+      ref.nextTrig = s.controls.nextTrig;
+      ref.prevTrig = s.controls.prevTrig;
+      ref.nextName = s.controls.nextName;
+      ref.prevName = s.controls.prevName;
+      ref.selected = appState.order.GetCurrentItems(s.name);
+      ref.content = s.content;
+      ref.hasStep=true;      
+    } else {
+      ref.hasStep=false;
+    }
+  } else {
+    ref.itemList=type==='editPizza'?this.state.step.stepList:type==='reviewOrder'?this.state.order.PizzaList:false;
+    if(type==='reviewPizza'){
+      ref.content = this.state.order.CurrentPizza;
+    } else if(type==='reviewOrder'){
+      ref.content = this.state.order.OrderSummary;
+    }
+  }  
+  const step = Step(ref)
+  const content = ContentFactory(ref);
   const btns = step.btns.map((b)=>{
     return (
       <li key={Random(8)} className="stepButton">
@@ -22,6 +56,7 @@ function StepFactory(props){
     </div>
   )
 }
+
 function Step(props){
   const type = props.refProps.type  
   switch(type){
@@ -156,4 +191,5 @@ function CompleteStep(props){
   ];
   return {msg:msg, btns:btns}
 }
+
 export default StepFactory;
