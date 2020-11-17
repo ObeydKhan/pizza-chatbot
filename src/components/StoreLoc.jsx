@@ -115,8 +115,9 @@ function MakeUserDialog(props) {
     <div className="userSearchLabel">Enter a Zip Code</div>
     <form className="searchForm" onKeyDown={(event, i) => {
       if(event.key === 'Enter') {
-        this.storeSearch('User Entry'); 
-        event.preventDefault();}}}>
+        event.preventDefault();
+        props.search('User Entry');
+        }}}>
       <input className="userInputString" type="text" ref={props.forwardedRef}/>
       {capStr}
     </form>
