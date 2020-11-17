@@ -1,6 +1,6 @@
 import React from 'react';
 import StoreLoc from './StoreLoc';
-
+import pizzaImage from '../resources/pizza-main-area.jpg';
 
 class MainArea extends React.Component{  
   render(){
@@ -11,11 +11,11 @@ class MainArea extends React.Component{
         case 'NonMenuStep':
           return <div>This step doesnt have a menu item</div>;
         case 'Main':
-          return <div>Something to display while waiting for the user to enter their name</div>;
+          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} />Something to display while waiting for the user to enter their name</div>;
         case 'Final':
           return <div>The final order summary and confirmation goes here</div>;      
         case 'Menu':
-          return <div>Filtered menu displaying only relevant items</div>
+          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} />Filtered menu displaying only relevant items</div>
         default:
           return <div>Default items?</div>
       }

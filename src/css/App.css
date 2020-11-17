@@ -10,6 +10,7 @@
 }
 header {
   padding: 20px;
+  padding-bottom: 0px;
   font-size: 18px;
   color: black;
   background-color: white;
@@ -71,10 +72,10 @@ padding-bottom: 10px;
 }
 .rsc .rsc-container {
   width: 490px;
-  height: 595px;
+  height: 545px;
 }
 .rsc .rsc-content {
-  height: 485px;
+  height: 425px;
 }/*
 .rsc-container ul li:last-child button{
   background-color: salmon;
@@ -88,7 +89,6 @@ svg.bi-arrow-right {
 .container {
   max-width: 65%;
   margin-left: 20rem;
-  margin-top: 1rem;
 }
 .nav a{
   font-family: 'Bebas Neue', cursive;
@@ -98,4 +98,8 @@ svg.bi-arrow-right {
 }
 .nav a:hover{
   color: #000;
+}
+.pizza-bgImg {
+max-width: 100%;
+height: auto;
 }
