@@ -11,7 +11,7 @@ class SliceBot extends React.Component{
 
   handleEnd(){
     //load order summary page    
-    this.props.onSpecial({val:'complete'});
+    this.props.onAppUpdate({val:'complete'});
   }
   render(){
     if(this.props.appState.appValues===null||this.props.appState.appValues===undefined){return null}

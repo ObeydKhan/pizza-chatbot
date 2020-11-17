@@ -13,7 +13,7 @@
   text-align: left;
   display: block;
 }
-.rsc .rsc-cs .orderStepMsg{
+.rsc .rsc-cs .stepMessage{
   /*message node for bot message*/
   background: #DD841F;
   border-radius: 18px 18px 18px 0;
@@ -152,19 +152,27 @@
   margin: 0px;
   border-radius: 0px;
 }
-.rsc .rsc-cs .btn-qty-{
+.rsc .rsc-cs .btn-item{
   /*menu button list wrapper*/
   display: inline-block;
-  border-radius: 22px;
-  font-size: 14px;
-  width: 65px;
-  border:none;
   text-align: center;
   background-color: #dd841f;
   color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  border:none;
+  border-radius: 15px;
+  width: 75px;
+  height: 75px;
+  padding: 10px;
+}
+.rsc .rsc-cs .menuBtn{
+  /*menu button list wrapper*/
+  text-align: center;
+  background-color: #dd841f;
+  color: white;
+  border:none;
+  border-radius: 15px;
+  width: 75px;
+  height: 60px;
 }
 .rsc .rsc-cs .halfBtns{
   display: inline-block;
@@ -277,14 +285,13 @@
   display: inline-block;
   border-radius: 22px;
   font-size: 14px;
-  width: 65px;
+  width: 75px;
   border:none;
   text-align: center;
   background-color: purple;
   color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
+
 }
 .rsc .rsc-cs .btn-qty-hide{
   /*hidden menu buttons*/
