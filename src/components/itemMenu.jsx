@@ -32,9 +32,47 @@ class ItemMenu{
     const item = (m,t,id)=>{
       switch(m){
         case 'items':
-          return Items[t].values.find((i)=>i.id===id).caption;
+        const i = (t)=>{
+          switch(t){
+            case 'type':
+              return Items.type.values;
+            case 'sauces':
+              return Items.sauces.values;
+            case 'cheeses':
+              return Items.cheeses.values
+            case 'meats':
+               return Items.meats.values;
+            case 'nonmeats':
+              return Items.nonmeats.values;
+            default:
+              return null;
+          }
+        }
+        const item= i(t);
+        const f = item.find((i)=>i.id===id);
+        const cap = f===undefined?'':f.caption;  
+        return cap
         case 'opts':
-          return Options[t].values.find((i)=>i.id===id).caption;
+          const o = (t)=>{
+            switch(t){
+              case 'crusts':
+                return Options.crusts;
+              case 'sizes':
+                return Options.sizes;
+              case 'qty':
+                return Options.qty;
+              case 'half':
+                 return Options.half;
+              case 'allergy':
+                return Options.allergy;
+              default:
+                return null;
+            }
+          }
+          const opt= o(t);
+          const a = opt.find((i)=>i.id===id);
+          const oc = a===undefined?'':a.caption; 
+          return oc
         default:
           return null;}}   
     return item(src,type,id);
@@ -42,10 +80,48 @@ class ItemMenu{
   GetDescription(src,type,id){
     const item = (m,t,id)=> {
       switch(m) {
-      case 'items':
-        return Items[t].values.find((i)=>i.id===id).description;
-      case 'opts':
-        return Options[t].values.find((i)=>i.id===id).description;
+        case 'items':
+          const i = (t)=>{
+            switch(t){
+              case 'type':
+                return Items.type.values;
+              case 'sauces':
+                return Items.sauces.values;
+              case 'cheeses':
+                return Items.cheeses.values
+              case 'meats':
+                 return Items.meats.values;
+              case 'nonmeats':
+                return Items.nonmeats.values;
+              default:
+                return null;
+            }
+          }
+          const item= i(t);
+          const f = item.find((i)=>i.id===id);
+          const cap = f===undefined?'':f.description;  
+          return cap
+          case 'opts':
+            const o = (t)=>{
+              switch(t){
+                case 'crusts':
+                  return Options.crusts;
+                case 'sizes':
+                  return Options.sizes;
+                case 'qty':
+                  return Options.qty;
+                case 'half':
+                   return Options.half;
+                case 'allergy':
+                  return Options.allergy;
+                default:
+                  return null;
+              }
+            }
+            const opt= o(t);
+            const a = opt.find((i)=>i.id===id);
+            const oc = a===undefined?'':a.description; 
+            return oc
       default:
         return null;
       }

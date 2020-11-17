@@ -16,7 +16,10 @@ export default function BotTrigger(props){
   if(value==='next'){    
     const s = props.trigger.selected.type;
     if(s==='type'){
-
+      const a = props.trigger.selected.values[0];
+      const chk = a.hasOwnProperty('sizes')&&a.hasOwnProperty('crusts');
+      const pass = chk&&a.sizes!==0&&a.crusts!==0;
+      if(!pass){return false}
     }
     order.CurrentItems = props.trigger.selected;    
     const n = step.GetStepProper(s);

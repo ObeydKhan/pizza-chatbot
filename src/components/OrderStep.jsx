@@ -11,32 +11,34 @@ class OrderStep extends React.Component {
     this.state={
       renderStep:true,                  
       itemSelect:null,      
-      trigger: false,      
+      trigger: false,
+      selectedItems:[],      
     }           
     this.triggerNext = this.triggerNext.bind(this);
     this.onTrigger = this.onTrigger.bind(this);
     this.update = this.update.bind(this);
                 
   }
-  update = action=>(state,props)=>{  
+  update = action=>()=>{  
     switch(action.type){
       case 'initial':        
-        const show = (props.appState.step.StepObject&&props.appState.order.ordername)?true:false;
-        if(!show||!props.appState.step.StepObject){
+        const show = (this.props.appState.step.StepObject&&this.props.appState.order.ordername)?true:false;
+        if(!show||!this.props.appState.step.StepObject){
           return{renderStep:false, itemSelect:null}
         } else {
-          const name = props.appState.step.StepObject.name
+          const name = this.props.appState.step.StepObject.name
           const value={
-            items:props.appState.order.GetCurrentItems(name),
+            items:this.props.appState.order.GetCurrentItems(name),
             stepname:name,
-            multi:props.appState.step.StepObject.multi,
-            optList:props.appState.step.StepObject.content.optList};
+            multi:this.props.appState.step.StepObject.multi,
+            optList:this.props.appState.step.StepObject.content.optList};
           const s= GetSelected(value)
-          return{renderStep:true, itemSelect:s}  
+          const sel = s.selected;
+          return{renderStep:true, itemSelect:s, selectedItems:sel}  
         }    
       case 'select':
-        const sel = state.itemSelect;
-        sel.selected = action.select;
+        const sel = this.state.itemSelect;
+        sel.selected = action.values;
         return{renderStep:true, itemSelect:sel};
       default:
         return null
@@ -67,6 +69,12 @@ class OrderStep extends React.Component {
     } else {      
       return true
     }
+  }
+  onSelect(values){
+    const sel = this.state.itemSelect;
+    sel.selected = values.values;
+    const s = sel.selected;
+    this.setState({itemSelect:sel, selectedItems:s})
   }
   componentDidMount(){   
     if(this.props.previousStep.id==='ordername'){
@@ -106,6 +114,16 @@ class OrderStep extends React.Component {
     const trig = props;
     trig.selected = selected;        
     const processTrigger = BotTrigger({trigger:trig, order:this.props.appState.order, step:this.props.appState.step});
+    if(!processTrigger){
+      const msgTitle = 'Alert'
+      const msg = 'You must select a valid crust type and size before continuing.'
+      const status = true;
+      const val ={status:status,title:msgTitle,msg:msg};
+      this.setState({
+        renderStep:true,
+      }, ()=>{this.props.updateAppState({type:'alert', values:val})})
+      return null;
+    }
     const triggerRet ={
       botStepClass:processTrigger.botStepClass,
       order:processTrigger.order,
@@ -145,8 +163,8 @@ class OrderStep extends React.Component {
   render(){
     const checkPrev= this.props.previousStep.id==='ordername'||this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry';    
     if(this.state.renderStep&&!this.state.trigger&&!checkPrev){
-      const selected = this.state.itemSelect?this.state.itemSelect.selected:[];            
-      return <StepFactory refProps={this.props.appState} selected={selected} onTrigger={this.onTrigger} onSelect={(a)=>{return this.setState(this.update(a))}}/>;
+      const selected = this.state.selectedItems;            
+      return <StepFactory refProps={this.props.appState} selected={selected} onTrigger={this.onTrigger} onSelect={(a)=>{return this.onSelect(a)}}/>;
     } else {
       return null;
     }       

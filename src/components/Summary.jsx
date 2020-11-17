@@ -56,22 +56,27 @@ export function getUserMsg(props){
   if(!props.sel){return `No ${props.name} selected`}
   const itemMenu = new ItemMenu();
   if(props.type==='type'){
-    const size = itemMenu.GetCaption('opts','sizes',props.sel.sizes);
-    const crust = itemMenu.GetCaption('opts','crusts',props.sel.crusts);
+    if(!props.sel[0].hasOwnProperty('sizes')&&!props.sel[0].hasOwnProperty('crusts')){
+      return 'Invalid pizza type';
+    }
+    const size = itemMenu.GetCaption('opts','sizes',props.sel[0].sizes);
+    const crust = itemMenu.GetCaption('opts','crusts',props.sel[0].crusts);
     return `This pizza is a ${size} with ${crust} crust`;
   } else {
     let hasHalf=false;
     const items = props.sel.map((i)=>{
-      const id = i.hasOwnProperty('id')?i.id:0;
-      const qty = i.hasOwnProperty('qty')?i.qty:0;
-      const half = i.hasOwnProperty('half')?i.half:2;
-      if(id===0||id.length<1||qty===0){
-        return {hID:3,item:false};
+      const id = i.hasOwnProperty('id')?i.id:'0';
+      const qty = i.hasOwnProperty('qty')?i.qty:'1';
+      const half = i.hasOwnProperty('half')?(i.half===0?'2':i.half):'2';
+      if(id==='0'||id.length<1||qty==='0'){
+        return {hID:'3',item:false};
       } else {
-        if(half!==2){hasHalf=true};
-          return {hID:half, item:itemMenu.GetCaption('items',props.type,id),
+        if(half!=='2'){hasHalf=true};
+        const ret =  {hID:half, item:itemMenu.GetCaption('items',props.type,id),
                   qty:itemMenu.GetCaption('opts','qty',qty),
-                  half:itemMenu.GetCaption('opts','half',half)};
+                  half:itemMenu.GetDescription('opts','half',half)};
+        ret.half.replace('{i}',ret.item);
+        return ret;
       }
     })
     items.filter((i)=>{return i.item});

@@ -3,7 +3,7 @@ import { isNull } from "lodash";
 class Pizza {
   constructor(id){
     this.id = id;
-    this.items = {};    
+    this.items = {};       
     this.specinst=null;   
   }
 

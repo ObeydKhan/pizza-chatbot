@@ -5,6 +5,7 @@ import {Header, MainArea, SliceBot} from './PageDisplay'
 import '../css/App.css';
 import '../css/DisplayMainArea.css';
 import AppState from './AppState';
+import BotAlertMsg from './BotAlertMsg';
 
 const appOrder = new Order();
 const menuStep = new ItemMenu();
@@ -17,6 +18,7 @@ class App extends React.Component {
     this.onTriggerSpecial =this.onTriggerSpecial.bind(this);
     this.updateAppState =this.updateAppState.bind(this);        
     this.state = {
+      alert:false,
       appValues:appValues,             
       locObj: this.props.locObj,           
       order: appOrder,
@@ -83,6 +85,11 @@ class App extends React.Component {
             locObj:locSet,
             appValues:appValues}});
         break;
+      case 'alert':
+        this.setState((state,props)=>{        
+          return{
+            alert:p.values}});
+        break;
       default:
         return null;
     }    
@@ -129,6 +136,11 @@ class App extends React.Component {
     } else if(type==='spec'){
       stateVal.appValues.appBotStepClass='edit'
       stateVal.appValues.appBotStepType=type;
+    } else if(type==='add'){
+      stateVal.appValues.appBotStepClass='menu';
+      stateVal.appValues.appBotStepType='name';
+      stateVal.step.step='new';
+      
     } else {
       stateVal.appValues.appBotStepClass=type
       stateVal.appValues.appBotStepType=value;
@@ -153,12 +165,13 @@ class App extends React.Component {
   }
   
   render(){   
-    
+    const alert = this.state.alert?<BotAlertMsg values={this.state.alert} onClose={(p)=>{return this.updateAppState(p)}}/>:null;
     return (
       <div className="sliceBot">
         <Header appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}}/>
         <MainArea appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
         <SliceBot appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} onTriggerBot={this.onTriggerBot} onAppUpdate={this.onTriggerSpecial}/>
+        {alert}
       </div>
     )      
   }

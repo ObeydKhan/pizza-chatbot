@@ -1,7 +1,7 @@
 import React from 'react';
 import StoreLoc from './StoreLoc';
 import pizzaImage from '../resources/pizza-main-area.jpg';
-
+import Summary from './Summary';
 class MainArea extends React.Component{  
   render(){
     const dispComp = (type)=>{      
