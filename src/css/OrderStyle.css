@@ -112,8 +112,6 @@
   text-align: center;
   background-color: #dd841f;
   color: white;
-  padding-top: 10px;
-  padding-bottom: 10px;
   margin-right: 10px;
 }
 
@@ -121,13 +119,6 @@
   opacity: 0.7 !important;
   color: green !important;
   background: blue !important;
-}
-
-.rsc .rsc-cs .btn-item:focus{
-  opacity: 0.7 !important;
-  color: green !important;
-  background: yellow !important;
-
 }
 
 .rsc .rsc-cs .btn-item:hover{
@@ -140,7 +131,18 @@
   background-color: #dd841f;
   color: white;
   border:none;
-  border-radius: 22px;  
+  border-radius: 15px;
+  width: 75px;
+  height: 60px;
+}
+
+.rsc .rsc-cs .menuBtn:focus{
+  /*standard menu button*/
+  border:none !important;
+  /*background: red !important;*/
+  outline: 0 !important;
+  /*background:rgb(221, 132, 31) !important;*/
+  background: #F5BA5E;
 }
 
 .rsc .rsc-cs .btn-hide{
