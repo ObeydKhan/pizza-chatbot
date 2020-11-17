@@ -1,5 +1,3 @@
-import { valHooks } from "jquery";
-
 class AppState {
   constructor(){
     this.display='Location';
@@ -16,17 +14,41 @@ class AppState {
         this.display='Menu';
         this.setName=true;
         this.updateBot=val;
+        this.showBot=true;
         break;
       case 'inst':
         this.display='NonMenuStep';        
         this.setInst=true;
-        this.updateBot=val;  
+        this.updateBot=val;
+        this.showBot=true;  
+        break;
+      case 'final':
+        this.display='Final';
+        this.setName=false;
+        this.setInst=false;
+        this.updateBot=false;
+        this.showBot=false;
+        break;
+      case 'none':
+        this.display='NonMenuStep';
+        this.setName=false;
+        this.setInst=false;
+        this.updateBot=false;
+        this.showBot=true;
+        break;
+      case 'loc':
+        this.display='Location';
+        this.setName=false;
+        this.setInst=false;
+        this.updateBot=false;
+        this.showBot=false;
         break;
       default:
         this.display='Menu';
         this.setName=false;
         this.setInst=false;
         this.updateBot=false;
+        this.showBot=true;
       }    
     this.botStepType = val;
   }

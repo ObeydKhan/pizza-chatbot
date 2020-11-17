@@ -14,7 +14,8 @@ class SliceBot extends React.Component{
     this.props.onSpecial({val:'complete'});
   }
   render(){
-    const showBot=this.props.appState.appValues===null?false:this.props.appState.appValues.showBot;        
+    if(this.props.appState.appValues===null||this.props.appState.appValues===undefined){return null}
+    const showBot=this.props.appState.appValues.showBot;        
     if(!showBot){return (null)}
     return (   
       <div className="chatBot" >

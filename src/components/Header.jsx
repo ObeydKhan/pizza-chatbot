@@ -26,7 +26,7 @@ class Header extends React.Component {
   }
   render(){
     if(!this.state.set){return null}
-    const onChange = this.props.onChange;
+    const updateAppState = this.props.updateAppState;
     const locObj = this.state.locObj;
     const cnt = this.state.order.PizzaCount;    
     const selectedStore = locObj.curStoreID;          
@@ -42,7 +42,7 @@ class Header extends React.Component {
         <div className="bannerHead">
           <div className="bannerName">{storeName}</div>
           <div className="bannerHours">{storeHours}</div>
-          <div className="bannerChange" onClick={() => onChange('change')}>{storeChange}</div>
+          <div className="bannerChange" onClick={() => {return updateAppState({type:'change', values:''})}}>{storeChange}</div>
         </div>
         <ProgressBar/>                
       </header>

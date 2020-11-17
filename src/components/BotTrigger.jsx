@@ -30,13 +30,17 @@ export default function BotTrigger(props){
         }
       } else {                
         step.step = value;
+        ret.botStepClass=type;
       }
       break;
     case 'editPizza':
+      ret.botStepClass=type;  
       if(!isNaN(value)){order.CurrentPizza=value}
       break;      
-    case 'reviewOrder':      
+    case 'reviewPizza':
+    case 'reviewOrder':            
     case 'add':
+      ret.botStepClass=type;  
       if(value==='save'){
         order.SavePizzaToOrder();
       }
@@ -62,12 +66,12 @@ export default function BotTrigger(props){
         if(type==='complete'){
           ret.trigger='endmsg1';
         } else if(type==='remove'){
+          order.RemovePizza(value);
           if(value==='cur'){
-            ret.botStepClass = 'menu';
+            ret.botStepClass = 'menu';            
             order.CreateNewPizza();
             step.step = 'new';
-          } else {
-            order.RemovePizza(value);
+          } else {            
             ret.botStepClass = 'reviewOrder';
           }
         } 

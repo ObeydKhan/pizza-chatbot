@@ -12,6 +12,7 @@ function StepFactory(props){
   const ref = {
     type:type,     
     pizzaID:appState.order.CurrentID,
+    isSaved:appState.order.IsSaved,
     ordername:appState.order.ordername,
     prevStep:appState.prevStep,
     onTrigger:props.onTrigger,
@@ -139,7 +140,7 @@ function ReviewPizzaStep(props){
   const btns = [
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'reviewOrder', value:'save', msg:msg, usr:"Go to final review"},caption:`Continue`},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'add', value:'save', msg:msg, usr:"Add another pizza to this order"},caption:`Add another pizza`},
-    {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'cur', msg:msg, usr:"Edit this pizza"},caption:`Edit Pizza`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'', msg:msg, usr:"Edit this pizza"},caption:`Edit Pizza`},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'', msg:msg, usr:"Remove this pizza"},caption:"Remove Pizza"},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:msg, usr:"Cancel this order"},caption:"Cancel Order"}    
   ];
@@ -161,10 +162,10 @@ function ReviewOrderStep(props){
   return {msg:msg, btns:btns}
 }
 function RemoveStep(props){
-  const {pizzaID, onTrigger}= props;  
-  const msg = pizzaID==='cur'?
+  const {pizzaID,isSaved, onTrigger}= props;  
+  const msg = !isSaved?
     'Do you want to discard this pizza?':'Do you want to remove this pizza?';
-  const res = pizzaID==='cur'?[{className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:'cur', msg:msg, usr:"Yes, and start a new pizza"},caption:"Yes, and start a new pizza"}]:[];
+  const res = !isSaved?[{className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:'cur', msg:msg, usr:"Yes, and start a new pizza"},caption:"Yes, and start a new pizza"}]:[];
   const btns = res.concat(
     {className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:pizzaID, msg:msg, usr:"Yes, Remove this pizza"},caption:"Yes, Remove this pizza"},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'no', msg:msg, usr:"No, go back"},caption:"No, go back"},

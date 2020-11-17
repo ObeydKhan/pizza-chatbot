@@ -59,20 +59,28 @@ class PizzaOrder {
     } 
   }
   RemovePizza(id){    
-    const i = this.pizzas.findIndex(p => p.PizzaID === id);
+    const chk = id==='cur'?(this.currentPizza!==null?this.currentPizza.PizzaID:false):id;
+    const i = chk?this.pizzas.findIndex(p => p.PizzaID === chk):-1;    
     if(i!==-1){
       this.pizzas.splice(i,1);      
     }
-    if(this.currentPizza!==null&&this.currentPizza.PizzaID===id){
+    if(this.currentPizza.PizzaID===chk){
       this.currentPizza=null;
     }
   }
   get CurrentID(){
-    if(this.saved){
+    if(this.currentPizza!==null){
       return this.currentPizza.PizzaID;
     } else {
-      return 'cur';
-    }
+      return -1
+    }        
+  }
+  get IsSaved(){
+    if(this.currentPizza!==null&&this.currentPizza.PizzaID===this.lastID){
+      return false;
+    } else {
+      return this.saved;
+    }    
   }   
   get PizzaCount(){
     return this.pizzas.length;

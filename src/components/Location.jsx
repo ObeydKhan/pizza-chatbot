@@ -44,24 +44,19 @@ class Location {
       user:this.#user,
       store:this.#store,
       search:this.#search,
-      }    
-    this.#user = {
-      isResolved: false,
-      entryErr: false,
-      errMsg: '',
-      zip: '',
-      cityState: ''
-    };
-    this.#store = {      
-      previous: this.#store.current};
-    this.#search = {
-      step:'search',
-      method: '',
-      searchLoc: '',
-      isResolved: false,
-      hasErr: false,
-      errMsg: '',
-    }
+      }   
+    this.#user.isResolved=false;
+    this.#user.entryErr=false;
+    this.#user.errMsg='';
+    this.#user.zip='';
+    this.#user.cityState='';            
+    this.#store.previous=this.#store.current;     
+    this.#search.step='search';
+    this.#search.method='';
+    this.#search.searchLoc='';
+    this.#search.isResolved=false;
+    this.#search.hasErr=false;
+    this.#search.errMsg='';    
   }
   resetLoc(){
     this.#user = {
@@ -156,9 +151,11 @@ class Location {
       this.#search.step='done';      
       this.#store.current = val;
     } else {
+      this.#search.step='done';
       this.#user=this.#prevObj.user;
       this.#store=this.#prevObj.store;
       this.#search=this.#prevObj.search;
+      this.#prevObj=null;
     }    
   }
   get curStoreID(){

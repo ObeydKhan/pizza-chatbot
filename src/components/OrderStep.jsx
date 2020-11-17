@@ -37,7 +37,8 @@ class OrderStep extends React.Component {
       itemSelect:null,      
       trigger: false,      
     }           
-    this.triggerNext = this.triggerNext.bind(this);            
+    this.triggerNext = this.triggerNext.bind(this);
+    this.onTrigger = this.onTrigger.bind(this);            
   }  
   componentDidUpdate(prevProps,prevState){    
     if(this.props.previousStep.id==='ordername'||this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry'){
@@ -80,7 +81,7 @@ class OrderStep extends React.Component {
       this.setState(update(a));
     }
   }
-  onTrigger(props){
+  triggerNext(props){
     const bot = `${props.bot}=>(id=${this.props.step.key.substring(0,5)})`;
     const genericStep = this.props.steps.pizzabuilder;
     this.props.step.id = bot;
@@ -98,7 +99,7 @@ class OrderStep extends React.Component {
       this.props.triggerNextStep(data);
     });  
   }
-  triggerNext(props){
+  onTrigger(props){
     const selected = this.state.itemSelect?this.state.itemSelect.SaveSelected():false;            
     const trig = props;
     trig.selected = selected;        
@@ -117,15 +118,19 @@ class OrderStep extends React.Component {
     ret.isuser = true;   
     ret.trigger = processTrigger.trigger;
     //change current step info to with new 'key'
-    this.onTrigger(ret);
+    this.triggerNext(ret);
   }  
   setOrderName(v){
     const ret = {bot:'(ordername)=>menusteps'}        
-    ret.stepmsg = `Thank you, ${v}, Let's create our first pizza for this order.`;
+    if(this.props.appState.appValues.appBotStepClass==='edit'){
+      ret.stepmsg =`Thank you, ${v}, I've updated the order name`;
+    } else {
+      ret.stepmsg = `Thank you, ${v}, Let's create our first pizza for this order.`;
+    }    
     ret.usermsg = null;
     ret.isuser = false;    
     ret.trigger = 'pizzabuilder'
-    this.onTrigger(ret);
+    this.triggerNext(ret);
   }
   setSpecInst(){
     const ret = {bot:'(Special Instructions)=>Review Pizza'}        
@@ -133,13 +138,13 @@ class OrderStep extends React.Component {
     ret.usermsg = null;
     ret.isuser = false;    
     ret.trigger = 'pizzabuilder'
-    this.onTrigger(ret);
+    this.triggerNext(ret);
   }     
   render(){
     const checkPrev= this.props.previousStep.id==='ordername'||this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry';    
     if(this.state.renderStep&&!this.state.trigger&&!checkPrev){
       const selected = this.state.itemSelect?this.state.itemSelect.selected:[];            
-      return <StepFactory refProps={this.props.appState} selected={selected} onTrigger={this.triggerNext} onSelect={(a)=>this.setState(update(a))}/>;
+      return <StepFactory refProps={this.props.appState} selected={selected} onTrigger={this.onTrigger} onSelect={(a)=>{return this.setState(update(a))}}/>;
     } else {
       return null;
     }       
