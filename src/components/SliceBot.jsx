@@ -52,7 +52,7 @@ class SliceBot extends React.Component{
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep appState={this.props.appState} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
+            component: <OrderStep appState={this.props.appState} onTriggerBot={this.props.onTriggerBot} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
             waitAction: true, 
             replace: true,            
             trigger: 'pizzabuilder',           

@@ -34,11 +34,11 @@ function StepFactory(props){
       ref.hasStep=false;
     }
   } else {
-    ref.itemList=type==='editPizza'?this.state.step.stepList:type==='reviewOrder'?this.state.order.PizzaList:false;
+    ref.itemList=type==='editPizza'?appState.step.stepList:type==='reviewOrder'?appState.order.PizzaList:false;
     if(type==='reviewPizza'){
-      ref.content = this.state.order.CurrentPizza;
+      ref.content = appState.order.CurrentPizza;
     } else if(type==='reviewOrder'){
-      ref.content = this.state.order.OrderSummary;
+      ref.content = appState.order.OrderSummary;
     }
   }  
   const step = Step(ref)

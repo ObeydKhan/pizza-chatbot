@@ -37,8 +37,7 @@ class OrderStep extends React.Component {
       itemSelect:null,      
       trigger: false,      
     }           
-    this.triggerNext = this.triggerNext.bind(this);
-    this.onSelect = this.onSelect.bind(this);        
+    this.triggerNext = this.triggerNext.bind(this);            
   }  
   componentDidUpdate(prevProps,prevState){    
     if(this.props.previousStep.id==='ordername'||this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry'){
@@ -49,7 +48,12 @@ class OrderStep extends React.Component {
           this.setState({renderStep:this.props.appState.appValues.appUpdateBot},
             ()=>{this.setOrderName(this.props.steps.ordername.value)});        
         }      
-      }
+      } else if(checkUp&&(this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry')){            
+        if(!prevState.renderStep){
+          this.setState({renderStep:this.props.appState.appValues.appUpdateBot},
+            ()=>{this.setSpecInst()});        
+        }      
+      } 
     }    
   }
   shouldComponentUpdate(nextProps,nextState){    
@@ -67,7 +71,7 @@ class OrderStep extends React.Component {
         renderStep:false,
       }, ()=>{this.props.updateAppState({type:'setName', values:this.props.steps.ordername.value})})
     } else if(this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry'){
-      const val = this.props.steps.hasOwnProperty('specialinstques')?this.props.steps.specialinstentry.value:''
+      const val = this.props.previousStep.id==='specialinstentry'?this.props.previousStep.value:''      
       this.setState({
         renderStep:false,
       }, ()=>{this.props.updateAppState({type:'setInst', values:val})})
@@ -114,14 +118,7 @@ class OrderStep extends React.Component {
     ret.trigger = processTrigger.trigger;
     //change current step info to with new 'key'
     this.onTrigger(ret);
-  }
-  
-  onSelect(val){
-    if(val===null||val===undefined) return null;
-    const sel = this.state.selected;
-    sel.selected = val;
-    this.setState({selected:sel});      
-  }
+  }  
   setOrderName(v){
     const ret = {bot:'(ordername)=>menusteps'}        
     ret.stepmsg = `Thank you, ${v}, Let's create our first pizza for this order.`;
@@ -131,10 +128,16 @@ class OrderStep extends React.Component {
     this.onTrigger(ret);
   }
   setSpecInst(){
-
+    const ret = {bot:'(Special Instructions)=>Review Pizza'}        
+    ret.stepmsg = `Okay, Let's review your pizza.`;
+    ret.usermsg = null;
+    ret.isuser = false;    
+    ret.trigger = 'pizzabuilder'
+    this.onTrigger(ret);
   }     
-  render(){    
-    if(this.state.renderStep&&this.props.appState.appValues.appUpdateBot&&!this.state.trigger){
+  render(){
+    const checkPrev= this.props.previousStep.id==='ordername'||this.props.previousStep.id==='specialinstques'||this.props.previousStep.id==='specialinstentry';    
+    if(this.state.renderStep&&!this.state.trigger&&!checkPrev){
       const selected = this.state.itemSelect?this.state.itemSelect.selected:[];            
       return <StepFactory refProps={this.props.appState} selected={selected} onTrigger={this.triggerNext} onSelect={(a)=>this.setState(update(a))}/>;
     } else {

@@ -48,7 +48,7 @@ class App extends React.Component {
         appOrder.SpecialInstructions = p.values;
         menuStep.step = 'none';
         appValues.appBotStepClass='reviewPizza';
-        appValues.appBotStepType='setInst';       
+        appValues.appBotStepType='inst';       
         this.setState((state,props)=>{        
           return {
             appValues:appValues,
@@ -115,7 +115,9 @@ class App extends React.Component {
     }
     stateVal.appValues = this.state.appValues
     if(value===''&&(type==='cancel'||type==='complete'||type==='remove')){
-      stateVal.prevStep = {appValues:this.state.appValues, order:this.state.order, step:this.state.step}
+      stateVal.prevStep = {appValues:this.state.appValues, order:this.state.order, step:this.state.step};
+      stateVal.appValues.appBotStepClass=type;
+      stateVal.appValues.appBotStepType=value;
     } else if(type==='cancel'&&value!=='no'){
       if(value==='main'){
         this.reset();
@@ -136,7 +138,7 @@ class App extends React.Component {
     }   
     if(!trigger.triggerRet){return false;}
     this.setState({
-      botStepClass:stateVal.botStepClass,
+      appValues:stateVal.appValues,
       order:stateVal.order,
       step:stateVal.step,
       prevStep:stateVal.prevStep,

@@ -14,9 +14,9 @@ export default function BotTrigger(props){
   if(value==='next'){    
     order.CurrentItems = props.trigger.selected;
     ret.userMsg = ret.userMsg.replace('{r}',getUserMsg(props))
-    ret.trigger = step.StepObject.controls.nextTrig;
+    ret.trigger = type==='menu'?step.StepObject.controls.nextTrig:'pizzabuilder';
   } else if(value==='prev'){
-    ret.trigger = step.StepObject.controls.prevTrig;
+    ret.trigger = type==='menu'?step.StepObject.controls.prevTrig:'pizzabuilder';
   }      
   switch(type){
     case 'menu':      
