@@ -45,7 +45,8 @@ function ToolTipComponent(props){
       case 'rowTitle':
         return <div className={type}>{props.itemCaption}</div>;
       case 'menuBtn':
-        return <button className={type} onClick={()=>{return props.onSelect(props.itemValue)}}>{props.itemCaption}</button>;
+        const sel = {type:'selelct', values:props.itemValue};      
+      return <button className={type} onClick={()=>{return props.onSelect(sel)}}>{props.itemCaption}</button>;
       default:
         return <div className='default'>Default Component</div>;
     }

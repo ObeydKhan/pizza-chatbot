@@ -4,25 +4,64 @@ import ItemMenu from './itemMenu';
 import {Header, MainArea, SliceBot} from './PageDisplay'
 import '../css/App.css';
 import '../css/DisplayMainArea.css';
+import AppState from './AppState';
+
+const appOrder = new Order();
+const menuStep = new ItemMenu();
+const appValues = new AppState();
+
 class App extends React.Component {
   constructor(props) {
     super(props);    
     this.onTriggerBot=this.onTriggerBot.bind(this);
     this.onTriggerLoc=this.onTriggerLoc.bind(this);    
-    this.onTriggerSpecial =this.onTriggerSpecial.bind(this);        
+    this.onTriggerSpecial =this.onTriggerSpecial.bind(this);
+    this.updateAppState =this.updateAppState.bind(this);        
     this.state = {
-      showPage: 'Location',
-      showBot:false,             
-      locObj: this.props.locObj,
-      botStep:'',      
-      order: new Order(),
-      step: new ItemMenu(),
-      prevStep:false,           
+      appValues:appValues,             
+      locObj: this.props.locObj,           
+      order: appOrder,
+      step: menuStep,
+      prevStep:false,                 
     };
-    this.input = React.createRef();        
+    this.input = React.createRef();
+            
   }
-
+  updateAppState = (p) => {    
+    const type = p.type;
+    switch (type) {    
+      case 'setName':
+        appOrder.ordername = p.values;      
+        appOrder.CreateNewPizza();      
+        menuStep.step = 'new';
+        appValues.appBotStepClass='menu';
+        appValues.appBotStepType='name';              
+        this.setState((state,props)=>{        
+          return {
+            appValues:appValues,
+            order:appOrder,
+            step:menuStep,
+          }
+        })
+        break;
+      case 'setInst':
+        appOrder.SpecialInstructions = p.values;
+        menuStep.step = 'none';
+        appValues.appBotStepClass='reviewPizza';
+        appValues.appBotStepType='setInst';       
+        this.setState((state,props)=>{        
+          return {
+            appValues:appValues,
+            order:appOrder,
+            step:menuStep,
+          }
+        })
+        break;
+      default:
+        return null;
+    }
     
+  };  
   onTriggerLoc(props){   
     const locMode = props.searchStep;
     const page = (t)=>{
@@ -38,39 +77,30 @@ class App extends React.Component {
       }
     }
     const p = page(locMode);
+    appValues.appDisplay =p;
+    appValues.appBotStepClass=p==='Main'?'menu':'';
+    appValues.appShowBot=p==='Main';
     this.setState({
       locObj:props,
-      showPage: p,
-      botStep:p==='Main'?'menu':'',
-      showBot:p==='Main',             
+      appValues:appValues                   
     });   
   }
   onTriggerSpecial(props){
     if(props.val==='Reload') {this.reset()}
-    else if(props.val==='complete') {this.setState({showPage:'Final'})}    
-    else if(props.type==='start'){
-      const o = this.state.order;
-      const s = this.state.step;
-      o.CreateNewPizza();
-      o.ordername = props.val;
-      s.step = 'new';      
-      this.setState({showPage:'Menu',botStep:'menu',order:o,step:s});      
-    } else if(props.type==='inst') {
-      const o = this.state.order;
-      const s = this.state.step;
-      o.SpecialInstructions = props.val;
-      s.step = 'none';      
-      this.setState({showPage:'NonMenuStep',botStep:'reviewPizza',order:o,step:s,showBot:true});
+    else if(props.val==='complete') {this.setState({display:'Final'})}    
+          
+   else if(props.type==='inst') {
+      
     } else if(props==='change'){
       const loc = this.state.locObj;
       loc.ChangeLoc();      
       this.setState({        
         locObj:loc,
-        showPage: 'Location',
+        display: 'Location',
         showBot:false,              
       });
     } else {
-      this.setState({showPage:props.val});
+      this.setState({display:props.val});
     }       
   }
   onTriggerBot(props){
@@ -78,13 +108,14 @@ class App extends React.Component {
     const type = trigger.type;
     const value = trigger.value;
     const stateVal = {
-      botStep:trigger.triggerRet.botStep,
+      appValues:new AppState(),
       order:trigger.triggerRet.order,
       step:trigger.triggerRet.step,
       prevStep:false,
     }
+    stateVal.appValues = this.state.appValues
     if(value===''&&(type==='cancel'||type==='complete'||type==='remove')){
-      stateVal.prevStep = {botStep:this.state.botStep, order:this.state.order, step:this.state.step}
+      stateVal.prevStep = {appValues:this.state.appValues, order:this.state.order, step:this.state.step}
     } else if(type==='cancel'&&value!=='no'){
       if(value==='main'){
         this.reset();
@@ -94,14 +125,18 @@ class App extends React.Component {
         
       }
     } else if(value==='no'){
-      stateVal.botStep = this.state.prevStep.botStep
+      stateVal.appValues = this.state.prevStep.appValues
       stateVal.order=this.state.prevStep.order
       stateVal.step=this.state.prevStep.step
       stateVal.prevStep=false;
+    } else {
+      stateVal.appValues.appBotStepClass=type
+      stateVal.appValues.appBotStepType=value
+
     }   
     if(!trigger.triggerRet){return false;}
     this.setState({
-      botStep:stateVal.botStep,
+      botStepClass:stateVal.botStepClass,
       order:stateVal.order,
       step:stateVal.step,
       prevStep:stateVal.prevStep,
@@ -109,22 +144,25 @@ class App extends React.Component {
   }
   reset(){
     this.setState({
-      showPage: 'Location',
+      display: 'Location',
       showBot:false,             
       locObj: this.props.locObj,      
-      botStep:'',
+      botStepClass:'',
       order: new Order(),
       step: new ItemMenu(),            
     });
   }
+  
   render(){   
+    
     return (
       <div className="sliceBot">
         <Header appState={this.state} onChange={this.onTriggerSpecial}/>
         <MainArea appState={this.state} onTriggerLoc={this.onTriggerLoc} forwardedRef={this.input}/>
-        <SliceBot appState={this.state} onTriggerBot={this.onTriggerBot} onAppUpdate={this.onTriggerSpecial}/>
+        <SliceBot appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} onTriggerBot={this.onTriggerBot} onAppUpdate={this.onTriggerSpecial}/>
       </div>
     )      
   }
 }
+
 export default App;

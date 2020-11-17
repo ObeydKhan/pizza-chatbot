@@ -20,6 +20,7 @@ import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
 import { speakFn } from './speechSynthesis';
+import { isNull } from 'lodash';
 
 class ChatBot extends Component {
   /* istanbul ignore next */
@@ -320,9 +321,11 @@ class ChatBot extends Component {
           });
         } else {
           delete currentStep.component;    
+          const usrMsg = !isNull(msg);
+          const out = usrMsg?msg:stepMsg;
           currentStep = Object.assign({}, currentStep, val, defaultUserSettings, {
-            user: true,
-            message: msg,
+            user: usrMsg,
+            message: out,
             trigger
           }); 
           

@@ -19,8 +19,9 @@ class MainArea extends React.Component{
         default:
           return <div>Default items?</div>
       }
-    }    
-    return (dispComp(this.props.appState.showPage));
+    }
+    const dis =this.props.appState.appValues===null?'Location':this.props.appState.appValues.appDisplay     
+    return (dispComp(dis));
   }
 }
 export default MainArea;

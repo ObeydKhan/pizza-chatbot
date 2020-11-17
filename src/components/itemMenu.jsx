@@ -120,11 +120,10 @@ class ItemMenu{
   getStepNum(val){
     const i = this.stepNum;
     switch (val){
-      case 'next':
-        const x = this.items.length;        
-        return i+1>=x?x:i+1;        
+      case 'next':               
+        return i+1;        
       case 'prev':
-        return i-1<=0?0:i-1;        
+        return i-1;        
       case 'new':
         return 0;        
       default:

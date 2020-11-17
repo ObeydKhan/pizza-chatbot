@@ -7,19 +7,15 @@ class SliceBot extends React.Component{
     super(props)
     
     this.handleEnd = this.handleEnd.bind(this);
-  }
-  componentDidMount(){  
-    
-  }
-  componentDidUpdate(){
-   
-  }
+      }   
+
   handleEnd(){
     //load order summary page    
     this.props.onSpecial({val:'complete'});
-  }  
-  render(){        
-    if(!this.props.appState.showBot){return (null)}
+  }
+  render(){
+    const showBot=this.props.appState.appValues===null?false:this.props.appState.appValues.showBot;        
+    if(!showBot){return (null)}
     return (   
       <div className="chatBot" >
         <ThemeProvider theme={{
@@ -56,7 +52,7 @@ class SliceBot extends React.Component{
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep appState={this.props.appState} onTrigger={this.props.onTriggerBot} onAppUpdate={this.props.onAppUpdate}/>,              
+            component: <OrderStep appState={this.props.appState} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
             waitAction: true, 
             replace: true,            
             trigger: 'pizzabuilder',           

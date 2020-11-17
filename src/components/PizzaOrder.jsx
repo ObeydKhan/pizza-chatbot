@@ -31,6 +31,13 @@ class PizzaOrder {
       this.pizzas = this.pizzas.concat(pizza);
     }
     this.saved=true;
+  }
+  get SpecialInstructions(){
+    if(this.currentPizza!==null){
+      return this.currentPizza.SpecialInstructions;
+    } else {
+      return false;
+    }
   } 
   set SpecialInstructions(val){
     if(this.currentPizza!==null){
@@ -38,7 +45,7 @@ class PizzaOrder {
     }    
   }  
   GetCurrentItems(type){
-    return this.currentPizza.GetPizzaItems(type);
+    return [].concat(this.currentPizza.GetPizzaItems(type));
   }
   set CurrentItems(props){
     if(props){

@@ -5,15 +5,17 @@ import Random from 'random-id';
 
 
 function StepFactory(props){  
-  const appState = props.appState;
+  const appState = props.refProps;
   if(appState===null||appState===undefined){return null};
-  const type =appState.botStep;
+  const type =appState.appValues.appBotStepClass;
   if(type===''){return null};  
   const ref = {
     type:type,     
     pizzaID:appState.order.CurrentID,
     ordername:appState.order.ordername,
     prevStep:appState.prevStep,
+    onTrigger:props.onTrigger,
+    onSelect:props.onSelect,
   };
   if(type==='menu'||type==='editItem'){      
     const s = appState.step.StepObject;      
@@ -25,7 +27,7 @@ function StepFactory(props){
       ref.prevTrig = s.controls.prevTrig;
       ref.nextName = s.controls.nextName;
       ref.prevName = s.controls.prevName;
-      ref.selected = appState.order.GetCurrentItems(s.name);
+      ref.selected = props.selected;
       ref.content = s.content;
       ref.hasStep=true;      
     } else {
@@ -49,7 +51,7 @@ function StepFactory(props){
     )
   })
   return (
-    <div className="sliceBotStep">
+    <div className="slicebotStepClass">
       <div className="stepMessage">{step.msg}</div>
       {content}
       <ul className="stepButtons">{btns}</ul>
@@ -58,7 +60,7 @@ function StepFactory(props){
 }
 
 function Step(props){
-  const type = props.refProps.type  
+  const type = props.type  
   switch(type){
     case 'menu': 
       return MenuStep(props);
@@ -82,11 +84,15 @@ function Step(props){
 }
 function ContentFactory(props){  
   const ContentType = (props) => {
-    const type = props.refProps.type  
+    const type = props.type  
     switch(type){
       case 'menu':      
       case 'editItem':
-        return MenuArray(props);    
+        if(props.hasStep){
+          return MenuArray(props);
+        } else {
+          return null
+        }            
       case 'reviewPizza':
       case 'reviewOrder':
         return Summary(props);        
@@ -97,8 +103,7 @@ function ContentFactory(props){
   return (ContentType(props))
 }
 function MenuStep(props){
-  const {refProps, onTrigger}= props;  
-  const {botMsg,nextName, prevName}  = refProps;         
+  const {botMsg,nextName, prevName, onTrigger}= props;            
   const btns = [
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'next', msg:botMsg, usr:"{r}"},caption:`Next (${nextName})`},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'prev', msg:botMsg, usr:`Go back to ${prevName}`},caption:`Back (${prevName})`},
@@ -108,8 +113,7 @@ function MenuStep(props){
   return {msg:botMsg, btns:btns}
 }
 function EditMenuStep(props){
-  const {refProps, onTrigger}= props;  
-  const {name,botMsg}  = refProps;       
+  const {name,botMsg, onTrigger}= props;         
   const btns = [
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'next', msg:botMsg, usr:`Update ${name} to {r}`},caption:`Save Changes`},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'prev', msg:botMsg, usr:"Discard changes"},caption:`Discard Changes`},    
@@ -117,8 +121,7 @@ function EditMenuStep(props){
   return {msg:botMsg, btns:btns}
 }
 function EditStep(props){
-  const {refProps, onTrigger}= props;
-  const {itemList, pizzaID} = refProps   
+  const {itemList, pizzaID, onTrigger}= props;     
   const msg = `Please select an item to change for this pizza`;
   const iBtns = itemList.map((i)=>{
     return {className:"reg",onTrigger:onTrigger,trigVal:{type:'editItem', value:i.val, msg:msg, usr:`Edit ${i.name}`},caption:`Edit ${i.name}`}
@@ -131,8 +134,7 @@ function EditStep(props){
   return {msg:msg, btns:btns}                    
 }
 function ReviewPizzaStep(props){
-  const {refProps, onTrigger}= props;
-  const ordername = refProps;  
+  const {ordername, onTrigger}= props;    
   const msg = `${ordername}, Please review this pizza and then select an option below`;
   const btns = [
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'reviewOrder', value:'save', msg:msg, usr:"Go to final review"},caption:`Continue`},
@@ -144,8 +146,7 @@ function ReviewPizzaStep(props){
   return {msg:msg, btns:btns}
 }
 function ReviewOrderStep(props){
-  const {refProps, onTrigger}= props;
-  const {itemList, ordername} = refProps   
+  const {itemList, ordername, onTrigger}= props;     
   const msg = `${ordername}, Please review your order and then select an option below`;
   const iBtns = itemList.map((i)=>{
     return {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:i, msg:msg, usr:`Edit Pizza ${i}`},caption:`Edit Pizza ${i}`}
@@ -160,8 +161,7 @@ function ReviewOrderStep(props){
   return {msg:msg, btns:btns}
 }
 function RemoveStep(props){
-  const {onTrigger}= props;
-  const pizzaID = props.refProps;
+  const {pizzaID, onTrigger}= props;  
   const msg = pizzaID==='cur'?
     'Do you want to discard this pizza?':'Do you want to remove this pizza?';
   const res = pizzaID==='cur'?[{className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:'cur', msg:msg, usr:"Yes, and start a new pizza"},caption:"Yes, and start a new pizza"}]:[];

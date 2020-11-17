@@ -3,11 +3,10 @@ import MenuComponent from './MenuComponent';
 import Random from 'random-id';
 
 function MenuArray(props){
-  if(!props.refProps.hasStep){return null};
-  const item = props.refProps;
+  if(!props.hasStep){return null};  
   const sel = props.selected;  
-  const step = item.name;
-  const content = item.content;
+  const step = props.name;
+  const content = props.content;
   const vals = content.values;
   const qty = content.qty;
   const half = content.half;
