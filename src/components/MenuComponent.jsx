@@ -27,7 +27,7 @@ export default function MenuComponent(props) {
         rowtitle:ToolTipComponent(props.rowTitle),
         rowbtns:props.rowbtns.map((b)=>{
           const val = b;
-          b.onSelect = props.onSelect
+          val.onSelect = props.onSelect
           return ToolTipComponent(val)})
       };
     case 'cart':
@@ -45,7 +45,7 @@ function ToolTipComponent(props){
       case 'rowTitle':
         return <div className={type}>{props.itemCaption}</div>;
       case 'menuBtn':
-        const sel = {type:'selelct', values:props.itemValue};      
+        const sel = {type:'select', values:props.itemValue};      
       return <button className={type} onClick={()=>{return props.onSelect(sel)}}>{props.itemCaption}</button>;
       default:
         return <div className='default'>Default Component</div>;

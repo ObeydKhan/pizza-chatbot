@@ -104,7 +104,7 @@ function ContentFactory(props){
   return (ContentType(props))
 }
 function MenuStep(props){
-  const {botMsg, nextName, prevName, onTrigger}= props;
+  const {botMsg, prevName, onTrigger}= props;
   const btns = [
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'next', msg:botMsg, usr:"{r}"},caption:`Next`},
     {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'prev', msg:botMsg, usr:`Go back to ${prevName}`},caption:`Back`},

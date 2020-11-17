@@ -92,7 +92,7 @@ class PizzaOrder {
     return this.pizzas.map((p)=> {return p.PizzaID})
   }
   get OrderSummary(){
-    return {name:this.orderName, pizzas:this.pizzas}
+    return {name:this.orderName, pizzas:this.pizzas, cnt:this.pizzas.length}
   }
 }
 export default PizzaOrder;

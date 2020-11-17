@@ -5,7 +5,7 @@ import Random from 'random-id';
 function MenuArray(props){
   if(!props.hasStep){return null};  
   const sel = props.selected;  
-  const step = props.name;
+  const step = props.name;  
   const content = props.content;
   const vals = content.values;
   const qty = content.qty;

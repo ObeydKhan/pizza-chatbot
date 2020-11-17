@@ -18,7 +18,7 @@ class Pizza {
   }
   GetPizzaItems(type){
     if(this.items===null||!this.items.hasOwnProperty(type)) {
-      return {id: '',qty:'',half:'',};
+      return {id: ''};
     }
     return this.items[type];
   }     

@@ -1,3 +1,5 @@
+import {getUserMsg}  from './Summary';
+
 export default function BotTrigger(props){  
   const type = props.trigger.type;
   const value = props.trigger.value;
@@ -12,8 +14,14 @@ export default function BotTrigger(props){
     userMsg:props.trigger.usr,
   };
   if(value==='next'){    
-    order.CurrentItems = props.trigger.selected;
-    ret.userMsg = ret.userMsg.replace('{r}',getUserMsg(props))
+    const s = props.trigger.selected.type;
+    if(s==='type'){
+
+    }
+    order.CurrentItems = props.trigger.selected;    
+    const n = step.GetStepProper(s);
+    const item = {type:s, name:n, sel:order.GetCurrentItems(s)};
+    ret.userMsg = ret.userMsg.replace('{r}',getUserMsg(item))
     ret.trigger = type==='menu'?step.StepObject.controls.nextTrig:'pizzabuilder';
   } else if(value==='prev'){
     ret.trigger = type==='menu'?step.StepObject.controls.prevTrig:'pizzabuilder';
@@ -83,25 +91,4 @@ export default function BotTrigger(props){
   ret.step = step;
   return ret; 
 }
-function getUserMsg(props){
-  /*returns the user message to the custom step
-  getItemString(type,items){    
-    const retArray = items.map((item)=>{      
-      if(item.id==='0'||item.id==='') return `No ${type} added`;
-      const itemName = this.menu.GetItemName(type,item.id);
-      const qty = item.qty!=='0'?`${this.menu.GetOptMsg('qty',item.qty)} `:'';
-      const half = item.half!=='0'?` ${this.menu.GetOptMsg('half',item.half)}`:'';
-      return `${qty}${itemName}${half}`;
-    })
-    return retArray.join(', ')
-  }
-  CreateItemMsg(type){
-    if(this.currentPizza===null) return null;    
-    const items = [].concat(this.currentPizza.getSelectedItems(type));
-    if(items.length===0||(items.length===1&&items[0].id==='')){
-      return `No ${type} added`;
-    }    
-    return this.getItemString(type,items);
-  }*/ 
-  return 'Test user message' 
-}
+

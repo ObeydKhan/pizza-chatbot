@@ -130,7 +130,7 @@ class ItemMenu{
         const s = this.items.findIndex(s => s === val);
         return s<0?this.stepNum:s;        
     }
-  }
+  }  
   get stepList(){
     return this.items.map((i)=>{
       const name = this.GetStepProper(i);
