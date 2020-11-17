@@ -104,12 +104,12 @@ function ContentFactory(props){
   return (ContentType(props))
 }
 function MenuStep(props){
-  const {botMsg,nextName, prevName, onTrigger}= props;            
+  const {botMsg, nextName, prevName, onTrigger}= props;
   const btns = [
-    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'next', msg:botMsg, usr:"{r}"},caption:`Next (${nextName})`},
-    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'prev', msg:botMsg, usr:`Go back to ${prevName}`},caption:`Back (${prevName})`},
-    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'', msg:botMsg, usr:"Remove this pizza"},caption:"Remove Pizza"},
-    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:botMsg, usr:"Cancel this order"},caption:"Cancel Order"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'next', msg:botMsg, usr:"{r}"},caption:`Next`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'prev', msg:botMsg, usr:`Go back to ${prevName}`},caption:`Back`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'', msg:botMsg, usr:"Remove this pizza"},caption:"Remove"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:botMsg, usr:"Cancel this order"},caption:"Cancel"},
   ];
   return {msg:botMsg, btns:btns}
 }

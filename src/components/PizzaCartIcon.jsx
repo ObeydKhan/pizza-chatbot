@@ -53,9 +53,9 @@ function PizzaCartIcon(props){
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      <h2 id="simple-modal-title">This is the title bar for the pizza cart</h2>
+      <h2 id="simple-modal-title">Cart</h2>
       <p id="simple-modal-description">
-        This is the pizza cart information
+        Your cart is empty.
       </p>
       <PizzaCartIcon />
     </div>

@@ -3,7 +3,7 @@
     { "id":1,"type":"crusts","caption":"Original Crust","sizes": [1,2,3,4], "allergy":[3],"description":"Our award winning original crust, just the way our ancestors made it in Italy", "btnClass":"item"},
     { "id":2,"type":"crusts","caption":"Thin Crust","sizes": [2,3],"allergy":[3],"description":"A deliciously thin and crunchy crust based on our original recipe", "btnClass":"item"},
     { "id":3,"type":"crusts","caption":"Deep Dish","sizes": [1,2,3,4],"allergy":[3],"description":"A thick and gooey crust piled high with your favorite toppings", "btnClass":"item"},
-    { "id":4,"type":"crusts","caption":"Gluten Free","sizes": [1,2],"allergy":[2],"description":"A gluten free crust thats so good you'll swear its our orignal recipe", "btnClass":"item"}
+    { "id":4,"type":"crusts","caption":"Gluten Free","sizes": [1,2],"allergy":[2],"description":"A gluten free crust thats so good you'll swear its our original recipe", "btnClass":"item"}
   ],
   "sizes": [
     {"id": 1,"type":"sizes", "caption": "Small (10\")", "description":"A small 10 inch pizza with 6 slices", "btnClass":"item"},
@@ -27,7 +27,7 @@
     {"id": 0,"type":"allergy", "caption": "", "description":"", "btnClass":""},
     {"id": 1,"type":"allergy", "caption": "Dairy Free", "description":"Our {i} is certified to be dairy free", "btnClass":"df"},
     {"id": 2,"type":"allergy", "caption": "Gluten Free", "description":"Our {i} is certified gluten free", "btnClass":"gf"},
-    {"id": 3,"type":"allergy", "caption": "Vegetatrian", "description":"Our {i} is 100% vegetarian", "btnClass":"veggie"},
+    {"id": 3,"type":"allergy", "caption": "Vegetarian", "description":"Our {i} is 100% vegetarian", "btnClass":"veggie"},
     {"id": 4,"type":"allergy", "caption": "Vegan", "description":"Our {i} is a 100% vegan", "btnClass":"vegan"}
   ]
 }

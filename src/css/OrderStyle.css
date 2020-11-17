@@ -25,11 +25,23 @@
   margin: 0 0 10px 0;
   padding: 12px;
 }
+
+.rsc .rsc-cs .stepMessage{
+  /*message node for bot message*/
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .rsc .rsc-cs .menuEleList {
   /*root node for menu elements*/
   text-align: left;
   float: left;
 }
+
+.rsc .rsc-cs .menuRow {
+  list-style-type: none !important;
+}
+
 .rsc .rsc-cs .simpleMenu{   
   /*list wrapper for simple menu items*/
   list-style-type: none;
@@ -74,14 +86,18 @@
 .rsc .rsc-cs .rowTitle{
   /*wrapper for menu row title*/
   display: inline-block;
-  border-radius: 22px 0px 0px 22px;
   font-size: 14px;
-  border:none;
+  list-style-type: none;
+  font-family: 'Bebas Neue', cursive;
+  color: #F5BA5E;
+  font-weight: 400;
+  font-size: 24px;
+
   width: 100px;
   margin-right: 6px;
   text-align: left;
-  background-color: #dd841f;
-  color: white;
+  /*background-color: #dd841f;*/
+  /*color: white;*/
   padding: 0px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -89,28 +105,46 @@
 .rsc .rsc-cs .btn-item{
   /*menu button list wrapper*/
   display: inline-block;
-  border-radius: 22px;
+  border-radius: 15px;
   font-size: 14px;
-  width: 65px;
+  width: 75px;
   border:none;
   text-align: center;
   background-color: #dd841f;
   color: white;
-  padding: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin-right: 10px;
 }
+
+.rsc .rsc-cs .btn-item:visited{
+  opacity: 0.7 !important;
+  color: green !important;
+  background: blue !important;
+}
+
 .rsc .rsc-cs .btn-item:hover{
   opacity: 0.7;
 }
+
 .rsc .rsc-cs .menuBtn{
   /*standard menu button*/  
   text-align: center;
   background-color: #dd841f;
   color: white;
   border:none;
-  border-radius: 22px;  
+  border-radius: 15px;
+  width: 75px;
+  height: 60px;
 }
+
+.rsc .rsc-cs .menuBtn:focus{
+  /*standard menu button*/
+  border:none !important;
+  /*background: red !important;*/
+  outline: 0 !important;
+  /*background:rgb(221, 132, 31) !important;*/
+  background: #F5BA5E;
+}
+
 .rsc .rsc-cs .btn-hide{
   width: 0px;
   height: 0px;
@@ -385,9 +419,6 @@
   cursor: pointer;
 }
 
-
-
-
 .rsc .rsc-cs .nextStep {
   display: inline-block;
   border-radius: 22px;
@@ -400,6 +431,42 @@
   color: white;
   padding: 10px;
   cursor: pointer;
+  list-style-type: none !important;
+}
+
+.rsc .rsc-cs .stepButtons {
+  padding-top: 10px;
+  list-style-type: none !important;
+  columns: 4;
+  -webkit-columns: 4;
+  -moz-columns: 4;
+  margin-bottom: 0 !important;
+}
+
+.rsc .rsc-cs .stepButtons li {
+  list-style-type: none !important;
+  background-color: #F5BA5E !important;
+  border: none !important;
+  text-align: center !important;
+  padding: 5px 0;
+  border-radius: 2px;
+  font-family: 'Bebas Neue', cursive !important;
+}
+
+.rsc .rsc-cs .stepButtons li:hover {
+  opacity: 0.7;
+}
+
+.rsc .rsc-cs .slicebotStepClass {
+  margin-bottom: 0 !important;
+}
+
+.rsc .rsc-cs .reg {
+  list-style-type: none !important;
+  background-color: #F5BA5E !important;
+  border: none !important;
+  color: #605954 !important;
+  font-size: 18px;
 }
 
 
