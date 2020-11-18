@@ -1,0 +1,231 @@
+/*Main search page*/
+.searchPage {
+  display: block;
+  width: 100%;
+  padding: 10px;
+}
+.searchGreeting {
+  font-size: 50px;
+  padding-top: 20px;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 3px;
+  color: #605954;
+}
+.srchGrtCaption {
+  font-size: 20px;
+  padding-bottom: 30px;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+}
+.searchContentWrapper{
+  display: flex;
+  margin: auto;
+}
+.searchOrPrev {
+  display: inline-block;
+  font-size: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0px;
+  vertical-align: top;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+
+}
+/*Search box*/
+.searchBox {
+  display: inline-block;
+  width: 45%;
+  margin-left: auto;
+  margin-right: auto;   
+}
+.searchBoxBanner {
+  display: inline-block;
+  font-size: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0px;
+  vertical-align: top;
+  width: 100%; 
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+  background-color: #F5BA5E;
+
+}
+.searchOptions {
+  display: table-cell;
+  background-color: #f2f2f2;
+  /*widows: 100%;*/
+  color: black;
+  vertical-align: middle;
+  margin-left: 0px;
+  text-align:center;
+}
+
+
+/*Geo search area*/
+.geoSearchArea {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top ;
+  margin-top: 50px;
+  padding: 0px 10px;
+
+}
+.geoSearchIcon {
+  display: flex;
+  float: left;
+  margin: auto;  
+  margin-left: 10px;
+
+}
+.geoSearchBtn {
+  display: flex;
+  padding: 8px 20px 8px 20px;
+  margin: 8px;
+  border: none;
+  border-radius: 2px;
+  background-color: #F5BA5E;
+  vertical-align: center;
+}
+.geoSearchBtnCapt {
+  color: #605954;
+  float: right;
+  width: 70%;
+  text-align: center;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: auto;
+  margin-bottom: auto;
+  vertical-align: center;
+  
+}
+/*User search area*/
+.userSearchArea {
+  display: inline-block;
+  border-left: 1px solid #D1D1D1;
+  width: 50%;
+  justify-items: center;
+  align-content: center;
+}
+.userSearchLabel {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  font-size: 25px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+}
+.searchForm{
+  display: block;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 25px;
+  text-align: center;
+}
+.searchErrorMsg{  
+  color: red;
+  vertical-align: bottom;
+  justify-content: right;
+}
+.userInputString {   
+  width: 75%;
+  background: white;  
+  border: 1px solid #605954;
+  display: block;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 25px;
+  padding: 8px 20px 8px 20px;
+  height: 40px;
+}
+.userInputString:focus {
+  outline: 0;
+}
+.userSearchBtn {
+  display: block;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 25px;
+  padding: 8px 20px 8px 20px;
+  border: none;
+  border-radius: 2px;
+  background-color: #F5BA5E;
+  color: white;
+  text-align:center;
+}
+/*Previous location area */
+.prevLocBox{
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto; 
+  background-color: #f2f2f2;
+}
+.prevLocBanner{
+  display: inline-block;
+  font-size: 30px;
+  padding: 5px;
+  
+  margin: 0px;
+  vertical-align: top;
+  width: 100%; 
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+  background-color: #F5BA5E;
+}
+.prevLocName{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  font-size: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: auto;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+}
+.prevLocHours{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  font-size: 20px;  
+  padding-bottom: 20px;
+  margin: auto;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  color: #605954;
+}
+.prevLocConfirm{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 25px;
+  padding: 8px 20px 8px 20px;
+  border: none;
+  border-radius: 2px;
+  background-color: #F5BA5E;
+  color: white;
+  text-align:center;
+}
