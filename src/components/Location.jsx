@@ -1,5 +1,5 @@
 import {lookup,lookupByCoords} from 'zipcodes';
-import stores from './stores.json';
+import stores from '../resources/stores.json';
 
 class Location {
   #geo = null;

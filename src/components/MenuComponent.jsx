@@ -60,8 +60,3 @@ function ToolTipComponent(props){
 
   return {comp:tip, key:key, iClass:liClass}
 }
-/*
-function MenuImage(){
-
-}*/
-

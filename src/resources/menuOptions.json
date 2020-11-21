@@ -1,9 +1,9 @@
 {  
   "crusts":[ 
-    { "id":"1","type":"crusts","caption":"Original Crust","sizes": [1,2,3,4], "allergy":[3],"description":"Our award winning original crust, just the way our ancestors made it in Italy", "btnClass":"item"},
-    { "id":"2","type":"crusts","caption":"Thin Crust","sizes": [2,3],"allergy":[3],"description":"A deliciously thin and crunchy crust based on our original recipe", "btnClass":"item"},
-    { "id":"3","type":"crusts","caption":"Deep Dish","sizes": [1,2,3,4],"allergy":[3],"description":"A thick and gooey crust piled high with your favorite toppings", "btnClass":"item"},
-    { "id":"4","type":"crusts","caption":"Gluten Free","sizes": [1,2],"allergy":[2],"description":"A gluten free crust thats so good you'll swear its our original recipe", "btnClass":"item"}
+    { "id":"1","type":"crusts","caption":"Original Crust","sizes": ["1","2","3","4"], "allergy":["3"],"description":"Our award winning original crust, just the way our ancestors made it in Italy", "btnClass":"item"},
+    { "id":"2","type":"crusts","caption":"Thin Crust","sizes": ["2","3"],"allergy":["3"],"description":"A deliciously thin and crunchy crust based on our original recipe", "btnClass":"item"},
+    { "id":"3","type":"crusts","caption":"Deep Dish","sizes": ["1","2","3","4"],"allergy":["3"],"description":"A thick and gooey crust piled high with your favorite toppings", "btnClass":"item"},
+    { "id":"4","type":"crusts","caption":"Gluten Free","sizes": ["1","2"],"allergy":["2"],"description":"A gluten free crust thats so good you'll swear its our original recipe", "btnClass":"item"}
   ],
   "sizes": [
     {"id": "1","type":"sizes", "caption": "Small (10\")", "description":"A small 10 inch pizza with 6 slices", "btnClass":"item"},
@@ -12,16 +12,16 @@
     {"id": "4","type":"sizes", "caption": "X-Large (18\")", "description":"An extra large 18 inch pizza with 14 slices", "btnClass":"item"}
   ],  
   "qty": [
-    {"id": "0","type":"qty", "caption": "None", "description":"", "btnClass":"hide"},
-    {"id": "1","type":"qty", "caption": "Regular", "description":"A regular amount of {i} on the pizza", "btnClass":"item"},
-    {"id": "2","type":"qty", "caption": "Lite", "description":"Half the regular amount of {i} on the pizza", "btnClass":"item"},
+    {"id": "0","type":"qty", "caption": "None", "description":"No {i}", "btnClass":"hide"},    
+    {"id": "1","type":"qty", "caption": "Lite", "description":"Half the regular amount of {i} on the pizza", "btnClass":"item"},
+    {"id": "2","type":"qty", "caption": "Regular", "description":"A regular amount of {i} on the pizza", "btnClass":"item"},
     {"id": "3","type":"qty", "caption": "Extra", "description":"About 50% more {i} than normal on the pizza", "btnClass":"item"},
     {"id": "4","type":"qty", "caption": "Double", "description":"About twice the regular amount of {i} on the pizza", "btnClass":"item"},
     {"id": "5","type":"qty", "caption": "Triple", "description":"About three times the regular amount of {i} on the pizza", "btnClass":"item"}],    
   "half": [
-    {"id": "1","type":"half", "caption": "L", "description":"{i} on just the Left Half", "btnClass":"L"},
-    {"id": "2","type":"half", "caption": "", "description":"{i} on the Whole Pizza", "btnClass":"W"},
-    {"id": "3","type":"half", "caption": "R", "description":"{i} on just the Right Half", "btnClass":"R"}
+    {"id": "1","type":"half", "caption": "Left Half", "description":"{i} on just the Left Half", "btnClass":"L"},
+    {"id": "2","type":"half", "caption": "Whole Pizza", "description":"{i} on the Whole Pizza", "btnClass":"W"},
+    {"id": "3","type":"half", "caption": "Right Half", "description":"{i} on just the Right Half", "btnClass":"R"}
   ],
   "allergy":[
     {"id": "0","type":"allergy", "caption": "", "description":"", "btnClass":""},

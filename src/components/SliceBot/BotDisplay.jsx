@@ -1,9 +1,9 @@
 import React from 'react';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
-import OrderStep from './OrderStep';
+import BotStep from './BotStep';
 import logo from '../resources/SliceLogo.png';
-class SliceBot extends React.Component{
+class BotDisplay extends React.Component{
   constructor(props){
     super(props)
     
@@ -60,7 +60,7 @@ class SliceBot extends React.Component{
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep appState={this.props.appState} onTriggerBot={this.props.onTriggerBot} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
+            component: <BotStep appState={this.props.appState} onTriggerBot={this.props.onTriggerBot} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
             waitAction: true, 
             replace: true,                        
             trigger: 'pizzabuilder',
@@ -114,10 +114,4 @@ class SliceBot extends React.Component{
   }
 
 }
-/*        <Redirect to="/pizza-chatbot/slicebot" />
-        <Route path="/pizza-chatbot/slicebot" component={() => 
-          ....
-        }/>
-
-          */
-export default SliceBot;
+export default BotDisplay;

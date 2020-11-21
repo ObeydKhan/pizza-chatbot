@@ -1,0 +1,80 @@
+{
+  "type": {
+    "msg":"Please select the type of crust and size you would like for your pizza",
+    "crusts":true,
+    "sizes":true,
+    "qty":false,
+    "half":false,
+    "multiple":false,
+    "properL":"pizza type",
+    "properU":"Pizza Type",
+    "values": [ 
+      { "id":"1","caption":"Pizza Crust","type":"crusts","description":"Select from one of our delicious crusts"},
+      { "id":"2","caption":"Crust Size","type":"sizes","description":"Select the size pizza you would like"}      
+    ]
+  },          
+  "sauces": {
+    "msg":"Please select the type of sauce you would like on your pizza",
+    "crusts":false,
+    "sizes":false,
+    "qty":true,
+    "half":false,
+    "multiple":false,
+    "properL":"sauce",
+    "properU":"Sauce",
+    "values": [
+      {"id": "1","caption": "Tomato sauce","allergy":["1"],"description":"Our robust tomato sauce, hand made in the store with our top secret recipe"},
+      {"id": "2","caption": "Marinara sauce","allergy":["2","4"],"description":"A lighter tomato sauce made with only tomatoes, garlic, and red peppers"},
+      {"id": "3","caption": "Honey BBQ sauce","allergy":["1","2","3"],"description":"A sweet and tangy BBQ sauce inspired by authentic Texas BBQ"},
+      {"id": "4","caption": "Alfredo sauce","allergy":["2"],"description":"Our white alfredo sauce is hand made using our top secret family recipe"}      
+  ]},  
+  "cheeses": {
+    "msg":"Please select the cheese or cheeses you would like on your pizza",
+    "crusts":false,
+    "sizes":false,
+    "qty":true,
+    "half":false,
+    "multiple":true,
+    "properL":"cheeses",
+    "properU":"Cheeses",
+    "values": [
+      {"id": "1","caption": "Mozzerella Cheese","allergy":["2","3"],"description":"Our original, premium cheese made with 100% mozerella"},
+      {"id": "2","caption": "Buffalo Cheese","allergy":["2","3"],"description":"A spicy buffalo cheese made with 100% buffalo cheese"},
+      {"id": "3","caption": "Goat Cheese","allergy":["2","3"],"description":"A unique goat cheese made with 100% goat cheese"}]
+  },
+  "meats": {
+    "msg":"Please select the different meat toppings you would like for your pizza",
+    "crusts":false,
+    "sizes":false,
+    "qty":true,
+    "half":true,
+    "multiple":true,
+    "properL":"meats",
+    "properU":"Meats",
+    "values": [
+      {"id": "1","caption": "Pepperoni","allergy":["1"],"description":"Our famous pepperoni"},
+      {"id": "2","caption": "Beef","allergy":["1"],"description":"Lightly seasoned ground beef"},
+      {"id": "3","caption": "Philly Steak","allergy":["1"],"description":"Seasoned strips of premium beef steak"},
+      {"id": "4","caption": "Italian Sausage","allergy":["1"],"description":"Our spicey italian sausage"},
+      {"id": "5","caption": "Grilled Chicken","allergy":["1","2"],"description":"Lightly seasoned chunks of grilled chicken"},
+      {"id": "6","caption": "Bacon","allergy":["1","2"],"description":"Bacon crumbles made with 100% premimum bacon"}]
+  },
+  "nonmeats": {
+    "msg":"Please select the different non-meat toppings you would like for your pizza",
+    "crusts":false,
+    "sizes":false,
+    "qty":true,
+    "half":true,
+    "multiple":true,
+    "properL":"non-meats",
+    "properU":"Non-Meats",
+    "values": [
+      {"id": "1","caption": "Tomatoes","allergy":["2","4"],"description":"Slices of heirloom tomatoes"},
+      {"id": "2","caption": "Mushrooms","allergy":["2","4"],"description":"Sliced mushrooms"},
+      {"id": "3","caption": "Jalapeño Peppers","allergy":["2","4"],"description":"Slices of our fresh jalapeño peppers"},
+      {"id": "4","caption": "Onions","allergy":["2","4"],"description":"Pieces of our fresh cut onions"},
+      {"id": "5","caption": "Black Olives","allergy":["2","4"],"description":"Slices of black olives"},
+      {"id": "6","caption": "Pineapple","allergy":["2","4"],"description":"Chuncks of pineapple"},
+      {"id": "7","caption": "Green Peppers","allergy":["2","4"],"description":"Slices of our fresh green peppers"}]
+  }
+}

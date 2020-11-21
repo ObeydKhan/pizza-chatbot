@@ -1,5 +1,5 @@
-import Items from './menuItems.json';
-import Options from './menuOptions.json';
+import Items from '../resources/menuItems.json';
+import Options from '../resources/menuOptions.json';
 class ItemMenu{
   constructor(){    
     const arr = function(obj) {      

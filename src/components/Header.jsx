@@ -1,6 +1,6 @@
 import React from 'react';
 import ProgressBar from './ProgressBar';
-import PizzaCartIcon from './PizzaCartIcon';
+import PizzaCartIcon from './AppElements/Util/PizzaCartIcon';
 import logo from '../resources/SliceLogo.png';
 
 class Header extends React.Component {
