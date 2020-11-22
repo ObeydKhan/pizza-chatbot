@@ -10,7 +10,7 @@
     "properU":"Pizza Type",
     "values": [ 
       { "id":"1","caption":"Pizza Crust","type":"crusts","description":"Select from one of our delicious crusts"},
-      { "id":"2","caption":"Crust Size","type":"sizes","description":"Select the size pizza you would like"}      
+      { "id":"1","caption":"Crust Size","type":"sizes","description":"Select the size pizza you would like"}      
     ]
   },          
   "sauces": {

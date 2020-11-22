@@ -46,18 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavButton(props){
-  const classes = useStyles();  
-  const retValue = {step:props.target.step, type:props.target.type};
+export function NavButton(props){
+  const classes = useStyles();
   
-  const onClick = ()=>{
-    //handle button click
-    props.onTrigger(retValue)
-  };
-
   return (
-    <CustomNavButton variant="contained" color="primary" className={classes.margin} onClick={()=>{onClick()}}>
-        {props.caption}
-      </CustomNavButton>
+    <CustomNavButton variant="contained" color="primary" className={classes.margin} onClick={props.onClick}>
+      {props.caption}
+    </CustomNavButton>
   )
 }

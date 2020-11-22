@@ -1,7 +1,6 @@
 import MenuStep from './MenuStep';
 import CancelStep from './CancelStep';
 import EditItemStep from './EditItemStep';
-import EditPizzaStep from './EditPizzaStep';
 import RemoveStep from './RemoveStep';
 import ReviewOrderStep from './ReviewOrderStep';
 import ReviewPizzaStep from './ReviewPizzaStep';
@@ -19,10 +18,7 @@ export default class OrderSteps {
   }
   editItem(){
     return <EditItemStep props={this.props}/>
-  }
-  editPizza(){
-    return <EditPizzaStep props={this.props}/>
-  }
+  }  
   remove(){
     return <RemoveStep props={this.props}/>
   }

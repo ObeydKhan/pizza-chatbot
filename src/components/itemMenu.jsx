@@ -154,23 +154,12 @@ class ItemMenu{
     const step = this.step;
     if(!this.checkStep(step)){return false};
     const info = Items[step];
-    const oList = this.optList.filter((o)=>{
-      return info[o]
-    })
     return {
-      name: step,
+      menuType: step,
       botMsg:info.msg,
-      properU:info.properU,
+      caption:info.properU,
       properL:info.properL,
-      multi:info.multiple,
-      controls: {
-        nextTrig:this.GetStepTrigger('next'),
-        prevTrig:this.GetStepTrigger('prev'),
-        nextName:this.GetStepProper('next'),
-        prevName:this.GetStepProper('prev'),
-      },
-      content: {
-        optList:oList,
+      content: {        
         sizes:info.sizes?Options.sizes:false,
         crusts:info.crusts?Options.crusts:false,
         half:info.half?Options.half:false,

@@ -7,9 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function BotAlertMsg(props) {
-  const [open, setOpen] = React.useState(props.values.status);
-
-  
+  const [open, setOpen] = React.useState(props.values.status); 
 
   const handleClose = () => {
     setOpen(false);

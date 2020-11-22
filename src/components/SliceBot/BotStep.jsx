@@ -5,10 +5,11 @@ export default class BotStep extends React.Component{
   constructor(props){
     super(props)
     this.state = {trigger:false};
-    this.handleTrigger = this.handleTrigger.bind(this);
+    this.onTrigger = this.onTrigger.bind(this);
   }
 
-  handleTrigger(props){
+  onTrigger(props){
+    //call props.handleTrigger()
     const bot = `${props.bot}=>(id=${this.props.step.key.substring(0,5)})`;
     const genericStep = this.props.steps.pizzabuilder;
     this.props.step.id = bot;
@@ -28,10 +29,8 @@ export default class BotStep extends React.Component{
   }
 
   render(){
-    const displayProps = this.props.refProps;
-    
-    
-    return <DisplayStep props={this.props.refProps} handleTrigger={this.handleTrigger}/>;
+    const displayProps = this.props.refProps;    
+    return <DisplayStep props={displayProps} onTrigger={this.onTrigger}/>;
   }
 }
 

@@ -1,29 +1,7 @@
 import React from 'react';
-import PopupMenu from './PopupMenu';
-import ItemDisplay from './ItemDisplay';
+import MenuToolTip from './MenuToolTip';
 import {ChangeHalfButton, IncreaseQty, DecreaseQty} from '../Buttons/index'
-/* 
-PopupRowElement expects props={
-  updateItem:(function),
-  type:(string),
-  itemTypeName:(string),  
-  items:(list)=>PopupMenu()
-}
-*/
-export function PopupRowElement(props){
-  const {type, itemTypeName, items} = props;
-  const [selected, setSelected]  = React.useState(props.hasOwnProperty('selected')?props.selected:0);
-  
-  const selectItem = (val) =>{
-    setSelected(val);
-    props.updateItem(type,selected)
-  }
-  return (
-    <ul className="rowElement">
-      <PopupMenu itemTypeName={itemTypeName} items={items} selected={selected} isDisabled={props.isDisabled} selectItem={()=>{selectItem()}}/>
-    </ul>
-  )
-}
+
 export function StaticRowElement(props){
   const {type, itemTypeName, shortDescription, fullDescription,hasHalf,hasQty} = props;
   const [maxQty] = React.useState(hasQty?props.maxQty:2);
@@ -43,11 +21,12 @@ export function StaticRowElement(props){
 
   return (
     <ul className="rowElement">
-     {halfDisplay} 
-     {lowerQty} 
-     <li key={`${type}-${itemTypeName}-display`}><ItemDisplay itemTypeName={itemTypeName} itemDescription={shortDescription} toolTipDescription={fullDescription}/></li> 
-     {raiseQty} 
+      {halfDisplay} 
+      {lowerQty} 
+      <li key={`${type}-${itemTypeName}-display`}>        
+        <MenuToolTip caption={`Your current selection for ${itemTypeName} is:`} description={fullDescription} component={<div className="menuItemDisplay">{shortDescription}</div>}/>
+      </li> 
+      {raiseQty} 
     </ul>
   )
-
 }

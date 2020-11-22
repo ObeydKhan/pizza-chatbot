@@ -1,5 +1,6 @@
-import {PopupTitle, StaticTitle} from './RowTitle';
-import {PopupRowElement, StaticRowElement} from './RowElement';
-import {SingleTableDisplay,MultiTableDisplay} from './TableDisplay';
+import {StaticTitle} from './RowTitle';
+import {StaticRowElement} from './RowElement';
+import {SingleTableDisplay, MultiTableDisplay} from './TableDisplay';
+import {PopupMenu} from './PopupMenu';
 
-export {PopupTitle, PopupRowElement, StaticTitle, StaticRowElement, SingleTableDisplay, MultiTableDisplay};
+export {PopupMenu, StaticTitle, StaticRowElement, SingleTableDisplay, MultiTableDisplay};

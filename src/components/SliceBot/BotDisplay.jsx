@@ -1,18 +1,36 @@
 import React from 'react';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
+import ItemMenu from './itemMenu';
 import BotStep from './BotStep';
 import logo from '../resources/SliceLogo.png';
-class BotDisplay extends React.Component{
+export default class SliceBot extends React.Component{
   constructor(props){
     super(props)
-    
+    this.state={
+      menu: new ItemMenu(),
+    }
+    this.handleTrigger = this.handleTrigger.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
-      }   
+  }   
 
   handleEnd(){
     //load order summary page    
     this.props.onAppUpdate({val:'complete'});
+  }
+  handleTrigger(props){
+    //check that a crust and size have been selected
+    if(this.state.menu.step==='type'){
+      const i = props.state['1'];
+      const c = i.hasOwnProperty('crusts')?i.crusts!=='0':false;
+      const s = i.hasOwnProperty('sizes')?i.sizes!=='0':false;
+      if(!(c&&s)){
+        this.props.triggerAlert('type');
+        return false;
+      }
+    }
+    //continue processing triggered event
+    
   }
   render(){
     if(this.props.appState.appValues===null||this.props.appState.appValues===undefined){return null}
@@ -60,7 +78,7 @@ class BotDisplay extends React.Component{
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <BotStep appState={this.props.appState} onTriggerBot={this.props.onTriggerBot} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
+            component: <BotStep refProps={this.props.refProps} onTrigger={()=>{this.handleTrigger()}} />,              
             waitAction: true, 
             replace: true,                        
             trigger: 'pizzabuilder',
@@ -114,4 +132,3 @@ class BotDisplay extends React.Component{
   }
 
 }
-export default BotDisplay;

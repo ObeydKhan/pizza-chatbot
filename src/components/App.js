@@ -5,7 +5,7 @@ import {Header, MainArea, SliceBot} from './PageDisplay'
 import '../css/App.css';
 import '../css/DisplayMainArea.css';
 import AppState from './AppState';
-import BotAlertMsg from './BotAlertMsg';
+import BotAlertMsg from './AppElements/Util/BotAlertMsg';
 
 const appOrder = new Order();
 const menuStep = new ItemMenu();
@@ -14,8 +14,7 @@ const appValues = new AppState();
 class App extends React.Component {
   constructor(props) {
     super(props);    
-    this.onTriggerBot=this.onTriggerBot.bind(this);        
-    this.onTriggerSpecial =this.onTriggerSpecial.bind(this);
+    this.handleBotActions=this.handleBotActions.bind(this);   
     this.updateAppState =this.updateAppState.bind(this);        
     this.state = {
       alert:false,
@@ -85,23 +84,18 @@ class App extends React.Component {
             locObj:locSet,
             appValues:appValues}});
         break;
-      case 'alert':
-        this.setState((state,props)=>{        
-          return{
-            alert:p.values}});
-        break;
       default:
         return null;
     }    
   };
-  onTriggerSpecial(props){
-    if(props.val==='Reload') {this.reset()}
-    else if(props.val==='complete') {this.setState({display:'Final'})  
-    } else {
-      this.setState({display:props.val});
-    }       
+  triggerAlert(){
+    const msgTitle = 'Alert'
+    const msg = 'You must select a valid crust type and size before continuing.'
+    const status = true;
+    const val ={status:status,title:msgTitle,msg:msg};
+    this.props.updateAppState({type:'alert', values:val}) 
   }
-  onTriggerBot(props){
+  handleBotActions(props){
     const trigger = props;
     const type = trigger.type;
     const value = trigger.value;
@@ -170,7 +164,7 @@ class App extends React.Component {
       <div className="sliceBot">
         <Header appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}}/>
         <MainArea appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
-        <SliceBot appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} onTriggerBot={this.onTriggerBot} onAppUpdate={this.onTriggerSpecial}/>
+        <SliceBot appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} handleBotActions={this.handleBotActions} onAppUpdate={this.onTriggerSpecial}/>
         {alert}
       </div>
     )      
