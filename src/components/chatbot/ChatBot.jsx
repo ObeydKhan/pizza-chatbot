@@ -246,7 +246,7 @@ class ChatBot extends Component {
 
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
-
+    console.log('Trigger next step function');
     if (data && data.value) {
       currentStep.value = data.value;
     }

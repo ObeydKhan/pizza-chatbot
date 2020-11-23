@@ -1,12 +1,9 @@
-import { isNull } from "lodash";
-
 class Pizza {
   constructor(id){
     this.id = id;
     this.items = {};       
     this.specinst=null;   
   }
-
   set PizzaItems(props) {
     const t = props.type;
     const values = props.values    
@@ -21,19 +18,19 @@ class Pizza {
       return {id: ''};
     }
     return this.items[type];
-  }     
-  get Pizza(){
-    return this;
-  }
+  }  
   set SpecialInstructions(value){
     this.specinst=value;
   }
   get SpecialInstructions(){
-    if(isNull(this.specinst)){
+    if(this.specinst===null){
       return false;
     } else {
       return this.specinst;
     }
+  }
+  set PizzaID(val){
+    this.id = val;
   }  
   get PizzaID(){
     return this.id;

@@ -1,28 +1,31 @@
 import React from 'react';
-import {Route,Redirect} from 'react-router-dom';
+//import {Route,Redirect} from 'react-router-dom';
 import GeoIcon from '../resources/GeoIcon.jsx';
 import '../css/StoreLoc.css';
 
 class StoreLoc extends React.Component {
   constructor(props){
     super(props);    
+    const mode = this.props.locObj===undefined?'':this.props.locObj.searchStep
     this.state = {
-      locMode:this.props.appState.locObj.searchStep,           
+      locMode:mode,           
     };
     this.updateLoc = this.updateLoc.bind(this);   
   }
   componentDidUpdate(prevProps){
-    if(this.props.appState!==prevProps.appState){
+    if(this.props.locObj!==prevProps.locObj){
       this.setState({     
-        locMode:this.props.appState.locObj.searchStep,              
+        locMode:this.props.locObj.searchStep,              
       });
     }
   }
   updateLoc = (p)=>{
-    const loc = this.props.appState.locObj
+    const loc = this.props.locObj
+    const values = {type:'loc', locObj:null};
     switch(p.type){
       case 'reset':
         loc.resetLoc();
+        
         break;
       case 'search':
         const obj = {method: p.values,
@@ -34,17 +37,21 @@ class StoreLoc extends React.Component {
       break;
       default:
     }
+    values.locObj = loc;
+    values.type = loc.searchStep;
     this.setState({locMode:loc.searchStep}, ()=> {
-      this.props.updateAppState({type:'location',values:loc})
+      this.props.updateAppState({type:'location',values:values})
     });
   }  
   render(){    
     const show= (type)=>{
       switch(type){
         case 'search':
-          return <StoreSearchMenu locObj={this.props.appState.locObj} forwardedRef={this.props.forwardedRef} updateLoc={(p)=>{return this.updateLoc(p)}}/>
+          return <StoreSearchMenu locObj={this.props.locObj} forwardedRef={this.props.forwardedRef} updateLoc={(p)=>{return this.updateLoc(p)}}/>
         case 'select':
-          return <><Redirect to="/pizza-chatbot/locations" /><Route path="/pizza-chatbot/locations" component={() => <StoreSelectMenu locObj={this.props.appState.locObj} updateLoc={(p)=>{return this.updateLoc(p)}}/>}/></>
+          return (/*<><Redirect to="/pizza-chatbot/locations" /><Route path="/pizza-chatbot/locations" component={() =>*/ 
+          <StoreSelectMenu locObj={this.props.locObj} updateLoc={(p)=>{return this.updateLoc(p)}}/>
+          /*}}/></>*/)
         default:
           return null;
       }
@@ -115,11 +122,11 @@ function MakeUserDialog(props) {
 }
 function MakePrevDialog(props) {
   const locObj = props.locObj;
-  const cur = locObj.curStoreID;              
-  if (cur==='0'){
+  const prev = locObj.prevStoreID;              
+  if (prev==='0'){
     return null;
   }
-  const ret = {type:'select', values:cur};
+  const ret = {type:'select', values:prev};
   const storeInfo = locObj.curStoreInfo;    
   return(
     <>

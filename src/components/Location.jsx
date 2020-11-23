@@ -50,7 +50,8 @@ class Location {
     this.#user.errMsg='';
     this.#user.zip='';
     this.#user.cityState='';            
-    this.#store.previous=this.#store.current;     
+    this.#store.previous=this.#store.current;
+    this.#store.current = 0;     
     this.#search.step='search';
     this.#search.method='';
     this.#search.searchLoc='';
@@ -147,14 +148,17 @@ class Location {
   }
   set storeLoc(val){
     const c = this.#store.current;
-    if(c!==val){
-      this.#search.step='done';      
-      this.#store.current = val;
-    } else {
+    const p = this.#store.previous;
+    if(p!==0&&val===p){
       this.#search.step='done';
       this.#user=this.#prevObj.user;
       this.#store=this.#prevObj.store;
       this.#search=this.#prevObj.search;
+      this.#prevObj=null;
+    } else if(c!==val){
+      this.#search.step='done';      
+      this.#store.current = val;
+      this.#store.previous = 0;
       this.#prevObj=null;
     }    
   }
@@ -236,11 +240,19 @@ class Location {
     }
     this.search = values;    
   }
-  storeInfo(i){
-    const s = stores.stores.find(
+  storeInfo(i){    
+    const s = i!==0?stores.stores.find(
       (r) => {return r.id === i;}
-    );
-    return s;
+    ):false;
+    if(!s||s===undefined){
+      return {
+        storeName:'Please select a Store',
+        storeHours:null,
+        storeChange:null,
+      }
+    } else {
+      return s;
+    }    
   }
   initLoc() {
     return (this.resolveGeoLoc()

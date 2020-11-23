@@ -1,41 +1,78 @@
 import React from 'react';
-import ChatBot from './chatbot/ChatBot';
+import ChatBot from '../chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
-import ItemMenu from './itemMenu';
+import ItemMenu from '../itemMenu';
 import BotStep from './BotStep';
-import logo from '../resources/SliceLogo.png';
+import logo from '../../resources/SliceLogo.png';
+import Pizza from '../Pizza';
+import {reducer} from './BotReducer';
+
 export default class SliceBot extends React.Component{
   constructor(props){
     super(props)
     this.state={
+      didUpdate:false,
       menu: new ItemMenu(),
+      currentPizza: new Pizza(0),
     }
     this.handleTrigger = this.handleTrigger.bind(this);
+    this.triggerAlert = this.triggerAlert.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
-  }   
-
+  }
+  componentDidUpdate(prevProps,prevState){
+    console.log('SliceBot did update');
+    if(this.props!==prevProps&&prevState.didUpdate){
+      this.setState({didUpdate:false});  
+    }
+  }
+  shouldComponentUpdate(nextProps,nextState){
+    const checkProps = this.props===nextProps;
+    const didUpdate = !this.state.didUpdate&&nextState.didUpdate;
+    const checkState = (this.state.menu===nextState.menu)&&(this.state.currentPizza===nextState.currentPizza);
+    console.log('SliceBot should update');
+    if(checkProps&&didUpdate){
+      return false;
+    } else if(checkProps && checkState){
+      return true;
+    } else {
+      return true;
+    }
+  }
   handleEnd(){
     //load order summary page    
     this.props.onAppUpdate({val:'complete'});
   }
-  handleTrigger(props){
-    //check that a crust and size have been selected
-    if(this.state.menu.step==='type'){
-      const i = props.state['1'];
-      const c = i.hasOwnProperty('crusts')?i.crusts!=='0':false;
-      const s = i.hasOwnProperty('sizes')?i.sizes!=='0':false;
-      if(!(c&&s)){
-        this.props.triggerAlert('type');
-        return false;
-      }
-    }
-    //continue processing triggered event
-    
+  triggerAlert(values){
+    this.props.updateAppState({type:'alert', values:values});
   }
-  render(){
-    if(this.props.appState.appValues===null||this.props.appState.appValues===undefined){return null}
-    const showBot=this.props.appState.appValues.showBot;        
-    if(!showBot){return (null)}
+
+  updateBotState = (props) =>{
+    const botProps = props.botUpdate;    
+    this.setState(
+      reducer({
+        type:botProps.type,
+        values:botProps.values,
+      })
+    )
+  }
+  handleTrigger(props){  
+    this.updateBotState(props);
+    this.props.updateAppState(props.appUpdate);    
+  }
+  render(){           
+    if(!this.props.showBot){return (null)}
+    const chkStep = typeof this.props.showBot==="boolean";    
+    const refProps = {
+      step:chkStep?'newOrder':this.props.showBot,
+      pizza:this.state.currentPizza,      
+      menu:this.state.menu,
+      order:this.props.order,
+    }
+    if(refProps.step==='newOrder'&&this.props.hasOwnProperty('previousStep')){
+      const c = this.props.previousStep.id==='ordername';
+      refProps.name = c?this.props.previousStep.value:false;      
+    }
+
     return (   
       <div className="chatBot" >
         <ThemeProvider theme={{
@@ -53,42 +90,41 @@ export default class SliceBot extends React.Component{
       <ChatBot headerTitle="Slice Bot"
         handleEnd = {this.handleEnd}
         floating={false}
-        botAvatar={logo}
-        hideSubmitButton={true}        
+        botAvatar={logo}                
         steps={[
           {
             id: '1',
             message: 'Welcome to Slice!',            
             trigger: '2',
-            hideInput: true,            
+                       
           },
           {
             id: '2',
             message: 'Please enter a name for the order',
             trigger: 'ordername',
-            hideInput: true,            
+                        
           },
           {
             id: 'ordername',
             user:true,
             placeholder: 'Please enter a name...',
             trigger: 'pizzabuilder',
-            hideInput: true,   
+               
           },
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <BotStep refProps={this.props.refProps} onTrigger={()=>{this.handleTrigger()}} />,              
+            component: <BotStep refProps={refProps} triggerAlert={this.triggerAlert} handleTrigger={(p)=>{this.handleTrigger(p)}} />,              
             waitAction: true, 
             replace: true,                        
             trigger: 'pizzabuilder',
-            hideInput: true,           
+                       
           },
           {
             id:'specialinstmsg',
             message:'Would you like to add any special instructions?',
             trigger: 'specialinstques',
-            hideInput: true,
+            
           },
           {
             id:'specialinstques',
@@ -96,13 +132,13 @@ export default class SliceBot extends React.Component{
               {value: 'yes', label:'Yes', trigger:'specialinstentry'},
               {value: 'no', label:'No, Lets review this pizza', trigger:'pizzabuilder'},
               ],
-            hideInput: true,
+            
           },
           {
             id:'specialinstentry',
             user:true,
             trigger: 'pizzabuilder',
-            hideInput: true,
+           
           },
           {
             id: 'endmsg1',         
@@ -130,5 +166,4 @@ export default class SliceBot extends React.Component{
       </div>   
     );   
   }
-
 }

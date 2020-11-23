@@ -1,38 +1,16 @@
 import React from 'react';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './AppElements/Util/ProgressBar';
 import PizzaCartIcon from './AppElements/Util/PizzaCartIcon';
 import logo from '../resources/SliceLogo.png';
 
-class Header extends React.Component {
-  constructor(props){
-    super(props)
-    const locObj = this.props.appState.locObj;
-    const order = this.props.appState.order;
-    this.state = {
-      locObj:locObj,
-      order:order,
-      set:false,
-    }
-  }
-  componentDidMount(){    
-    this.setState({set:this.state.order?true:false});
-  }
-  componentDidUpdate(prevProps){
-    if(this.props.appState!==prevProps.appState){
-      const locObj = this.props.appState.locObj;
-      const order = this.props.appState.order;
-      this.setState({locObj:locObj, order:order, set:order?true:false});
-    }
-  }
-  render(){
-    if(!this.state.set){return null}
+class Header extends React.Component {  
+  render(){    
     const updateAppState = this.props.updateAppState;
-    const locObj = this.state.locObj;
-    const cnt = this.state.order.PizzaCount;    
-    const selectedStore = locObj.curStoreID;          
-    const storeName = selectedStore!=='0'?locObj.curStoreInfo.name:'Please select a Store';
-    const storeHours = selectedStore!=='0'?locObj.curStoreInfo.hours:'';
-    const storeChange = selectedStore!=='0'?'Change Location':'';
+    const locObj = this.props.locObj;
+    const cnt = this.props.cnt;              
+    const storeName = locObj.curStoreInfo.name;
+    const storeHours = locObj.curStoreInfo.hours;
+    const storeChange = 'Change Location';
       
     return (
       <header>
@@ -42,7 +20,7 @@ class Header extends React.Component {
         <div className="bannerHead">
           <div className="bannerName">{storeName}</div>
           <div className="bannerHours">{storeHours}</div>
-          <div className="bannerChange" onClick={() => {return updateAppState({type:'change', values:''})}}>{storeChange}</div>
+          <div className="bannerChange" onClick={() => {return updateAppState({type:'location', values:{type:'change'}})}}>{storeChange}</div>
         </div>
         <ProgressBar/>                
       </header>

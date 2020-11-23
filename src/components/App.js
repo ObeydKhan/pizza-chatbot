@@ -1,107 +1,49 @@
 import React from 'react';
 import Order from './PizzaOrder';
-import ItemMenu from './itemMenu';
 import {Header, MainArea, SliceBot} from './PageDisplay'
 import '../css/App.css';
 import '../css/DisplayMainArea.css';
-import AppState from './AppState';
 import BotAlertMsg from './AppElements/Util/BotAlertMsg';
+import {reducer} from './AppReducer';
 
-const appOrder = new Order();
-const menuStep = new ItemMenu();
-const appValues = new AppState();
 
 class App extends React.Component {
   constructor(props) {
     super(props);    
     this.handleBotActions=this.handleBotActions.bind(this);   
-    this.updateAppState =this.updateAppState.bind(this);        
+    this.updateAppState =this.updateAppState.bind(this);          
     this.state = {
       alert:false,
-      appValues:appValues,             
+      display:{
+        page:'Location',
+        bot:false,        
+      },             
       locObj: this.props.locObj,           
-      order: appOrder,
-      step: menuStep,
-      prevStep:false,                 
+      order: new Order(),                       
     };
-    this.input = React.createRef();
-            
+    this.input = React.createRef();            
   }
-  updateAppState = (p) => {    
-    const type = p.type;
-    switch (type) {    
-      case 'setName':
-        appOrder.ordername = p.values;      
-        if(appOrder.appBotStepClass!=='edit'){
-          appOrder.CreateNewPizza();      
-          menuStep.step = 'new';
-          appValues.appBotStepClass='menu';
-          appValues.appBotStepType='name'; 
-        } else {
-          menuStep.step = 'none';
-          appValues.appBotStepClass='reviewOrder';
-          appValues.appBotStepType='none';
-        }              
-        this.setState((state,props)=>{        
-          return {
-            appValues:appValues,
-            order:appOrder,
-            step:menuStep,
-          }
-        })
-        break;
-      case 'setInst':
-        appOrder.SpecialInstructions = p.values;
-        menuStep.step = 'none';
-        appValues.appBotStepClass='reviewPizza';
-        appValues.appBotStepType='inst';       
-        this.setState((state,props)=>{        
-          return {
-            appValues:appValues,
-            order:appOrder,
-            step:menuStep,
-          }
-        })
-        break;
-      case 'change':
-        const locChng = this.state.locObj;
-        locChng.ChangeLoc();
-        appValues.appBotStepClass='Location';
-        appValues.appBotStepType='loc';      
-        this.setState((state,props)=>{        
-          return{
-            locObj:locChng,
-            appValues:appValues}});
-        break;
-      case 'location':
-        const locSet = this.state.locObj;
-        const appClass = p.values.searchStep==='done'?'menu':'';
-        const appType = appClass==='menu'?appClass:'loc';
-        appValues.appBotStepClass=appClass;
-        appValues.appBotStepType=appType;
-        this.setState((state,props)=>{        
-          return{
-            locObj:locSet,
-            appValues:appValues}});
-        break;
-      default:
-        return null;
-    }    
-  };
-  triggerAlert(){
-    const msgTitle = 'Alert'
-    const msg = 'You must select a valid crust type and size before continuing.'
-    const status = true;
-    const val ={status:status,title:msgTitle,msg:msg};
-    this.props.updateAppState({type:'alert', values:val}) 
+  updateAppState = (props) => {    
+    this.setState(
+      reducer({
+        type:props.type,
+        values:props.values,
+      })
+    )
+  }
+  componentDidUpdate(prevProps,prevState){
+
+  }
+  shouldComponentUpdate(nextProps,nextState){
+
+    return true;
   }
   handleBotActions(props){
     const trigger = props;
     const type = trigger.type;
     const value = trigger.value;
     const botClass = trigger.triggerRet.botStepClass;
-    const stateVal = {
-      appValues:new AppState(),
+    const stateVal = {      
       order:trigger.triggerRet.order,
       step:trigger.triggerRet.step,
       prevStep:false,
@@ -148,23 +90,17 @@ class App extends React.Component {
     })    
   }
   reset(){
-    this.setState({
-      display: 'Location',
-      showBot:false,             
-      locObj: this.props.locObj,      
-      botStepClass:'',
-      order: new Order(),
-      step: new ItemMenu(),            
-    });
-  }
-  
-  render(){   
+    const values= {                 
+      order: new Order()}
+    this.updateAppState({type:'reset', values:values})
+  }  
+  render(){
     const alert = this.state.alert?<BotAlertMsg values={this.state.alert} onClose={(p)=>{return this.updateAppState(p)}}/>:null;
     return (
       <div className="sliceBot">
-        <Header appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}}/>
-        <MainArea appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
-        <SliceBot appState={this.state} updateAppState={(p)=>{return this.updateAppState(p)}} handleBotActions={this.handleBotActions} onAppUpdate={this.onTriggerSpecial}/>
+        <Header cnt={this.state.order.PizzaCount} locObj={this.state.locObj} updateAppState={(p)=>{return this.updateAppState(p)}}/>
+        <MainArea showPage={this.state.display.page} locObj={this.state.locObj} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
+        <SliceBot showBot={this.state.display.bot} order={this.state.order} updateAppState={(p)=>{return this.updateAppState(p)}}/>
         {alert}
       </div>
     )      

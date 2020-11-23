@@ -8,15 +8,17 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/umd/popper.js';
 import 'bootstrap/dist/js/bootstrap.js';
 import Location from './components/Location'
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+//import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 LocationFactory().then(obj => {  
  /* const obj = LocationFactory();*/
   ReactDOM.render(
   <React.StrictMode>
-    <Router>
-    <Route component={() => <App locObj={obj}/>}/>
-    </Router>
+    {/*<Router>
+    <Route component={() => */}
+    <App locObj={obj}/>      
+    {/*}/>
+    </Router>*/}
   </React.StrictMode>,
   document.getElementById('root')
   );

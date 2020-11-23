@@ -150,7 +150,7 @@ class ItemMenu{
     }
   }
   get StepObject(){
-    if(this.outOfScope) {return null;}
+    if(this.outOfScope) {return false;}
     const step = this.step;
     if(!this.checkStep(step)){return false};
     const info = Items[step];
