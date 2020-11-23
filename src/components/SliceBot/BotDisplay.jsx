@@ -56,8 +56,8 @@ export default class SliceBot extends React.Component{
     )
   }
   handleTrigger(props){  
-    this.updateBotState(props);
-    this.props.updateAppState(props.appUpdate);    
+    this.props.updateAppState(props.appUpdate);
+    this.updateBotState(props);        
   }
   render(){           
     if(!this.props.showBot){return (null)}
