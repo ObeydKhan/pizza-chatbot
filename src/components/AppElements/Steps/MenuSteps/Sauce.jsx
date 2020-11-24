@@ -17,9 +17,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SauceStep(props){
   const classes = useStyles();    
-  
+  const [sauce, setSauce] = React.useState('0');
+
   const handleMenuSelect = (props)=>{
-    updateItem({itemID:props.id, change:{type:props.type, value:props.value}})
+    const item = {itemID:'',[props.type]:'2'};
+    if(props.type===type){
+      item.itemID=props.value;      
+    } else {
+      item.itemID=selID;
+      item.change[props.type]=props.value;
+    }
+    updateItem({item:item, change:true})
   }
   const updateItem = props.updateItem;
   const stepData = props.stepData;
@@ -35,6 +43,9 @@ export default function SauceStep(props){
   const hasQty=stepData.content.qty?true:false;
   const selected = props.selected!==null&&props.selected.hasOwnProperty(stepData.menuType)?props.selected[stepData.menuType]:null;
   const selID = selected!==null?selected.itemID:'0';
+  if(selID!==sauce){
+    setSauce(selID)
+  }  
   const selName = selected!==null?content.find((i)=>(i.id===selID)).caption:`No ${itemTypeCaption} selected`;
   const selQty = selected!==null&&selected.hasOwnProperty('qty')?selected.qty:'2';
   const qtyVal = hasQty?stepData.content.qty.find((i)=>(i.id===selQty)):null;
@@ -44,36 +55,26 @@ export default function SauceStep(props){
   const sel = {maxQty:maxQty, qty:parseInt(selQty), half:parseInt(selHalf)}
   const description = {name:selName, qty:hasQty?qtyVal.caption:'',half:hasHalf?halfVal.caption:''};
   const captions = {qty:hasQty?qtyVal.description:'',half:hasHalf?halfVal.description:''};
-  const selectionElement = (
-    <div className={classes.root}>
-      <Grid container spacing={1}>
-        <Grid item>
-          <Paper className={classes.paper}>
-            <PopupMenu type={type} itemTypeCaption={itemTypeCaption} selected={selID} isDisabled={false} items={content} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
-          </Paper>
-        </Grid>
-      </Grid>
-    </div>
-  );
-   
-  const elementDisplay = (
-    <div className={classes.root}>
-      <Grid container spacing={1}>
-        <Grid item>
-          <Paper className={classes.paper}>
-            <StaticRowElement 
-            type={type} typeCaption={itemTypeCaption} sel={sel} description={description} captions={captions} 
-            hasHalf={hasHalf} hasQty={hasQty} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
-          </Paper> 
-        </Grid> 
-      </Grid>  
-    </div>
-  );
+  
   return(   
     <div className={classes.root}>
       <Grid container spacing={1}>
-        {selectionElement}
-        {elementDisplay} 
+        <Grid container spacing={1}>
+          <Grid item>
+            <Paper className={classes.paper}>
+              <PopupMenu type={type} itemTypeCaption={itemTypeCaption} selected={selID} isDisabled={false} items={content} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+            </Paper>
+          </Grid>
+        </Grid>
+        <Grid container spacing={1}>
+          <Grid item>
+            <Paper className={classes.paper}>
+              <StaticRowElement 
+              type={type} typeCaption={itemTypeCaption} sel={sel} description={description} captions={captions} 
+              hasHalf={hasHalf} hasQty={hasQty} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+            </Paper> 
+          </Grid> 
+        </Grid> 
       </Grid>      
     </div>             
   )

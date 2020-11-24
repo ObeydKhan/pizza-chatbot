@@ -1,9 +1,24 @@
 import React from 'react';
 import MenuToolTip from './MenuToolTip';
 import {ChangeHalfButton, IncreaseQty, DecreaseQty} from '../Buttons/index'
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
 
 export function StaticRowElement(props){
-  const {type,typeCaption,itemID,sel,description,captions,hasHalf,hasQty} = props;
+  const classes = useStyles();
+  const {typeCaption,itemID,sel,description,captions,hasHalf,hasQty} = props;
   const [maxQty] = React.useState(hasQty?sel.maxQty:2);
   const [qty, setQty] = React.useState(hasQty?sel.qty:2);
   const [half,setHalf] = React.useState(hasHalf?sel.half:2);  
@@ -23,18 +38,29 @@ export function StaticRowElement(props){
     setQty(qty+val);
     handleMenuSelect({itemID:itemID, change:{type:'half', value:`${qty}`}});
   }
-  const halfDisplay = hasHalf?<li key={`${type}-${itemID}-half`}><ChangeHalfButton caption={props.halfCaption} description={props.halfDescription} changeHalf={()=>{changeHalf()}}/></li>:null;
-  const lowerQty = hasQty?<li key={`${type}-${itemID}-less`}><DecreaseQty itemTypeName={name} disabled={qty===0} description={props.lowQtyDescription} changeQty={()=>{changeQty()}}/></li>:null;
-  const raiseQty = hasQty?<li key={`${type}-${itemID}-more`}><IncreaseQty itemTypeName={name} disabled={qty===maxQty} description={props.highQtyDescription} changeQty={()=>{changeQty()}}/></li>:null;
+  const halfDisplay = hasHalf?
+    <Grid item xs={1}>
+      <ChangeHalfButton caption={props.halfCaption} description={props.halfDescription} changeHalf={(p)=>{changeHalf(p)}}/>
+    </Grid>:null;
+  const lowerQty = hasQty?
+    <Grid item xs={1}>
+      <DecreaseQty itemTypeName={name} disabled={qty===0} description={props.lowQtyDescription} changeQty={(p)=>{changeQty(p)}}/>
+    </Grid>:null;
+  const raiseQty = hasQty?
+    <Grid item xs={1}>
+      <IncreaseQty itemTypeName={name} disabled={qty===maxQty} description={props.highQtyDescription} changeQty={(p)=>{changeQty(p)}}/>
+    </Grid>:null;
 
   return (
-    <ul className="rowElement">
-      {halfDisplay} 
-      {lowerQty} 
-      <li key={`${type}-${itemID}-display`}>        
-        <MenuToolTip caption={`Your current selection for ${typeCaption} is:`} description={displayCaption} component={<div className="menuItemDisplay">{displayName}</div>}/>
-      </li> 
-      {raiseQty} 
-    </ul>
+    <div className={classes.root}>      
+      <Grid container spacing={2}>        
+        {halfDisplay}            
+        {lowerQty}              
+      <Grid item xs={4}>              
+          <MenuToolTip caption={`Your current selection for ${typeCaption} is:`} description={displayCaption} component={<div className="menuItemDisplay">{displayName}</div>}/>
+      </Grid>      
+        {raiseQty}           
+      </Grid>            
+    </div>
   )
 }

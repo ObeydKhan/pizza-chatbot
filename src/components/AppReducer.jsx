@@ -21,7 +21,7 @@ export const reducer = action => (state,props) =>{
   const l=state.locObj;
   const a=state.alert;
   const botDisp = (values!==undefined&&values!==null&&values.hasOwnProperty('botDisplay'))?values.botDisplay:false;
-  const step = (values!==undefined&&values!==null&&values.hasOwnProperty('step'))?values:false;
+  const step = (values!==undefined&&values!==null&&values.hasOwnProperty('step'))?values.step:false;
   const ret ={o:o,m:m,d:d,p:p,l:l,a:a,};
   switch (action.type){    
     case SETPIZZA:

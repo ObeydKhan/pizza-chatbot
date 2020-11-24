@@ -19,6 +19,7 @@ export default function PizzaTypeStep(props){
   const classes = useStyles();    
   
   const handleMenuSelect = (props)=>{
+    const item = {itemID:'',crusts:'0',sizes:'0'}; 
     updateItem({itemID:'1', change:{type:props.type, value:props.value}})
   }
   const updateItem = props.updateItem;
@@ -35,6 +36,7 @@ export default function PizzaTypeStep(props){
     });
     return {type:type, caption:caption, description:description, items:items};
   })
+  //const newType ={}
   const selected = props.selected!==null&&props.selected.hasOwnProperty(stepData.menuType)?props.selected[stepData.menuType]['1']:null;
   const displayElements = (
     <div className={classes.root}>

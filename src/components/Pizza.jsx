@@ -11,8 +11,8 @@ class Pizza {
   }
   set PizzaItems(props) {
     const t = props.type;
-    const values = props.values    
-    if(values.length===0&&this.items.hasOwnProperty(t)) {
+    const values = props.items    
+    if(values==={}&&this.items.hasOwnProperty(t)) {
       delete this.items[t];
       delete this.itemMsg[t];
     } else {

@@ -16,8 +16,7 @@ export default class BotStep extends React.Component{
   constructor(props){
     super(props)
     this.state = {botStepData:null, trigger:false};
-    this.onTrigger = this.onTrigger.bind(this);
-    this.checkAlert = this.checkAlert.bind(this);   
+    this.onTrigger = this.onTrigger.bind(this);       
   }
   componentDidMount(){
     if(this.state.botStepData===null&&!this.state.trigger){
@@ -30,23 +29,7 @@ export default class BotStep extends React.Component{
       return false
     }    
     return true;   
-  }  
-  checkAlert(props){
-    //check that a crust and size have been selected    
-    const i = props!==null&&props!==undefined&&props.hasOwnProperty('1')?props['1']:{crusts:'0',sizes:'0'};
-    const c = i.hasOwnProperty('crusts')?i.crusts!=='0':false;
-    const s = i.hasOwnProperty('sizes')?i.sizes!=='0':false;
-    if(!(c&&s)){
-      const msgTitle = 'Alert'
-      const msg = 'You must select a valid crust type and size before continuing.'
-      const status = true;
-      const val ={status:status,title:msgTitle,msg:msg};
-      this.props.triggerAlert(val)
-      return false;
-    } else {
-      return true;
-    }    
-  }
+  } 
   onTrigger(props){    
     const bot = `${props.botStepKey}=>(id=${this.props.step.key.substring(0,5)})`;
     const genericStep = this.props.steps.pizzabuilder;
@@ -67,6 +50,6 @@ export default class BotStep extends React.Component{
     botStepData.prevStepValue=prevStepValue;
     botStepData.prevStepID=prevStepID;
     const StepComponent = StepComponents[botStepData.botDisplay];       
-    return <StepComponent botStepData={botStepData} checkAlert={(p)=>{this.checkAlert(p)}} triggerNext={(p)=>this.onTrigger(p)} {...passThroughProps}/>
+    return <StepComponent botStepData={botStepData} triggerNext={(p)=>this.onTrigger(p)} {...passThroughProps}/>
   }
 }

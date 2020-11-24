@@ -13,19 +13,23 @@ const HtmlTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-export default function MenuToolTip(props){  
-
-  return (
+export default class MenuToolTip extends React.Component{  
+  render(){
+    const caption = this.props.caption;
+    const description = this.props.description?this.props.description:'';
+    description.replace("{i}",this.props.caption);
+    return (
     <HtmlTooltip 
       title={
         <React.Fragment>
           <Typography color="inherit">
-            {props.caption}
+            {caption}
           </Typography>
-            {props.description.replace("{i}",props.caption)}
+            {description}
         </React.Fragment>}
       arrow placement="bottom-end" enterDelay={1000}>      
-      {props.component}
+      {this.props.component}
     </HtmlTooltip>
-  )
+    )
+  }  
 }

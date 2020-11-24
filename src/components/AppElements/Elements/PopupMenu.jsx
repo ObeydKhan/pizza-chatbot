@@ -32,7 +32,7 @@ export function PopupMenu(props) {
   const menuToolTipDescription = `Click here to select a ${itemTypeCaption} for this pizza`;
   if(hasPriorSelection){
     const ind = menuList.findIndex((i)=>{return (i.id===props.selected)});
-    if(ind!==-1){
+    if(ind!==-1&&ind!==selected){
       setSelected(parseInt(ind))
     }    
   };
@@ -50,7 +50,7 @@ export function PopupMenu(props) {
     setAnchorEl(null);
   };
   const menuItems = menuList.map((item,index)=>{
-    const menuItem = <MenuItem key={`${props.type}-${item.id}`} disabled={index===0} selected={index === selected} onClick={(event) => handleMenuItemSelect(event, index)}>
+    const menuItem = <MenuItem key={`${props.type}-${item.id}`} selected={index === selected} onClick={(event) => handleMenuItemSelect(event, index)}>
                         {item.caption}
                       </MenuItem>
     return <MenuToolTip caption={item.caption} description={item.description} component={menuItem}/>

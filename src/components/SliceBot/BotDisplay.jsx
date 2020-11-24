@@ -8,16 +8,12 @@ import '../../css/OrderStyle.css';
 export default class SliceBot extends React.Component{
   constructor(props){
     super(props)    
-    this.triggerAlert = this.triggerAlert.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
   }
   handleEnd(){
     //load order summary page    
     this.props.onAppUpdate({val:'complete'});
-  }
-  triggerAlert(values){
-    this.props.updateAppState({type:'alert', values:values});
-  }      
+  }        
   render(){
     const {showBot, ...passThroughProps} = this.props           
     if(!showBot){return (null)}        
@@ -62,7 +58,7 @@ export default class SliceBot extends React.Component{
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <BotStep triggerAlert={this.triggerAlert} {...passThroughProps} />,              
+            component: <BotStep {...passThroughProps} />,              
             waitAction: true, 
             replace: true,                        
             trigger: 'pizzabuilder',
