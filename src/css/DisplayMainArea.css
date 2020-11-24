@@ -1,3 +1,17 @@
+/** { padding: 0 !important;*/
+/*  margin: 0 !important;*/
+/*}*/
+
+html,body { height:100% !important;
+}
+
+#root {
+  height: 100%;
+}
+.sliceBot {
+  height: 90% !important;
+  /*height: auto;*/
+}
 .menuSummary h2 {
   font-size: 40px;
   font-family: 'Bebas Neue', cursive;
@@ -41,6 +55,7 @@
   bottom: 10px;
   right: 10px;
 }
+
 .menuItem {
   display: block;
 }
@@ -53,3 +68,14 @@
   padding-left: 10px;
   display: inline-block;
 }
+
+.pizza-bgImg {
+  object-fit: cover;
+  height: 100% !important;
+}
+
+.bgImage-container {
+  height: 100% !important;
+}
+
+

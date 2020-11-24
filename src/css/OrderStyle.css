@@ -8,6 +8,16 @@
   padding-bottom: 16px;
 }
 
+.rsc-container {
+  height: 800px !important;
+  width: 700px !important;
+
+}
+
+.rsc-content {
+  height: 680px !important;
+}
+
 .rsc .rsc-cs .orderStep{
   /*root node for all custom components*/
   text-align: left;

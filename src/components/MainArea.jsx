@@ -2,6 +2,8 @@ import React from 'react';
 import StoreLoc from './StoreLoc';
 import pizzaImage from '../resources/pizza-main-area.jpg';
 import ConfirmationPage from './ConfirmationPage';
+import '../css/DisplayMainArea.css';
+
 class MainArea extends React.Component{  
     
   render(){
@@ -11,15 +13,15 @@ class MainArea extends React.Component{
         case 'Location':
           return <StoreLoc {...passThroughProps}/>;
         case 'NonMenuStep':
-          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/>This step doesnt have a menu item</div>;
+          return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/></div>;
         case 'Main':
-          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/>Something to display while waiting for the user to enter their name</div>;
+          return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/></div>;
         case 'Final':
           return <ConfirmationPage showPage={this.state.display.page} locObj={this.state.locObj}/>;      
         case 'Menu':
-          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage" />Filtered menu displaying only relevant items</div>
+          return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage" /></div>
         default:
-          return <div><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/>Default items?</div>
+          return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/></div>
       }
     }
     const dis =showPage===null?'Location':showPage;     
