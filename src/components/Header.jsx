@@ -33,6 +33,7 @@ class Header extends React.Component {
     const storeName = selectedStore!=='0'?locObj.curStoreInfo.name:'Please select a Store';
     const storeHours = selectedStore!=='0'?locObj.curStoreInfo.hours:'';
     const storeChange = selectedStore!=='0'?'Change Location':'';
+    const appValues = this.props.appState.appValues;
       
     return (
       <header>
@@ -44,7 +45,7 @@ class Header extends React.Component {
           <div className="bannerHours">{storeHours}</div>
           <div className="bannerChange" onClick={() => {return updateAppState({type:'change', values:''})}}>{storeChange}</div>
         </div>
-        <ProgressBar/>                
+        <ProgressBar appValues={appValues}/>                
       </header>
     );
   } 
