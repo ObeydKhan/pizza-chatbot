@@ -14,21 +14,27 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-
+function initializeSelection(initial){
+  const selected = initial.selected;  
+  const isSel = selected!==null&&selected!==undefined;
+  const ret = {sauces:'0', qty:'0'};
+  if(isSel){
+    const menuType = initial.menuType;
+    const selMenuType = selected.hasOwnProperty(menuType)?selected[menuType]:false;
+    if(selMenuType){
+      const item = initial.itemList.find((i)=>(selMenuType.hasOwnProperty(i.id)));
+      if(item!==null&&item!==undefined){
+        const selItem = selMenuType[item.id];      
+        const q = selItem.hasOwnProperty('qty')?selItem.sizes:'0';
+        ret.qty = q; 
+        ret.sauces = item.id;
+      }     
+    }
+  } 
+  return ret;
+}
 export default function SauceStep(props){
   const classes = useStyles();    
-  const [sauce, setSauce] = React.useState('0');
-
-  const handleMenuSelect = (props)=>{
-    const item = {itemID:'',[props.type]:'2'};
-    if(props.type===type){
-      item.itemID=props.value;      
-    } else {
-      item.itemID=selID;
-      item.change[props.type]=props.value;
-    }
-    updateItem({item:item, change:true})
-  }
   const updateItem = props.updateItem;
   const stepData = props.stepData;
   const type = stepData.menuType;
@@ -39,22 +45,50 @@ export default function SauceStep(props){
     const description = i.description;    
     return {id:id, caption:caption, description:description, isDisabled:false};
   });
-  const hasHalf=stepData.content.half?true:false;
-  const hasQty=stepData.content.qty?true:false;
-  const selected = props.selected!==null&&props.selected.hasOwnProperty(stepData.menuType)?props.selected[stepData.menuType]:null;
-  const selID = selected!==null?selected.itemID:'0';
-  if(selID!==sauce){
-    setSauce(selID)
-  }  
-  const selName = selected!==null?content.find((i)=>(i.id===selID)).caption:`No ${itemTypeCaption} selected`;
-  const selQty = selected!==null&&selected.hasOwnProperty('qty')?selected.qty:'2';
-  const qtyVal = hasQty?stepData.content.qty.find((i)=>(i.id===selQty)):null;
-  const selHalf = selected!==null&&selected.hasOwnProperty('half')?selected.half:'2';
-  const halfVal = hasHalf?stepData.content.half.find((i)=>(i.id===selHalf)):null;
-  const maxQty = hasQty?stepData.content.half.length+1:2;
-  const sel = {maxQty:maxQty, qty:parseInt(selQty), half:parseInt(selHalf)}
-  const description = {name:selName, qty:hasQty?qtyVal.caption:'',half:hasHalf?halfVal.caption:''};
-  const captions = {qty:hasQty?qtyVal.description:'',half:hasHalf?halfVal.description:''};
+  
+  const [sauce, setSauce] = React.useState('0');
+  const [qty, setQty] = React.useState('0');
+  const [initialized, setInitialzied] = React.useState(false);
+  const initialSelect = (p)=>{
+    return initializeSelection(p)
+  }
+  if(!initialized){
+    const ini = initialSelect({selected:props.selected,menuType:stepData.menuType, itemList:stepData.content.values})
+    setSauce(ini.sauces);
+    setQty(ini.qty);
+    setInitialzied(true)
+  }
+  const handleMenuSelect = (input)=>{
+    const chk = (p)=>{
+      const item ={itemID:sauce,values:{qty:qty, half:'2'}};
+      const type=p.type;
+      const value = p.value;    
+      if(type==='qty'&&qty!==value){        
+        item.values.qty = value;
+        setQty(value);
+        return item;
+      } else if(type==='sauces'&&sauce!==value){
+        item.itemID = value;
+        item.values.qty='2';
+        setSauce(value);
+        setQty('2');
+        return item;
+      } else {
+        return false
+      }
+    }
+    const doUpdate = chk(input);
+    if(doUpdate){
+      updateItem({item:doUpdate,replace:true})
+    }
+  }
+  const selItem = content.find((i)=>(i.id===sauce));
+  const selName =selItem!==undefined||selItem==='0'?selItem.caption:`No ${itemTypeCaption} selected`;  
+  const qtyVal = stepData.content.qty.find((i)=>(i.id===qty));  
+  const maxQty =stepData.content.qty.length+1;
+  const sel = {maxQty:maxQty, qty:parseInt(qty), half:2}
+  const description = {name:selName, qty:(qtyVal!==undefined?qtyVal.caption:''),half:''};
+  const captions = {qty:(qtyVal!==undefined?qtyVal.description:''),half:''};
   
   return(   
     <div className={classes.root}>
@@ -62,7 +96,7 @@ export default function SauceStep(props){
         <Grid container spacing={1}>
           <Grid item>
             <Paper className={classes.paper}>
-              <PopupMenu type={type} itemTypeCaption={itemTypeCaption} selected={selID} isDisabled={false} items={content} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+              <PopupMenu type={type} itemTypeCaption={itemTypeCaption} selected={parseInt(selItem)} isDisabled={false} items={content} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
             </Paper>
           </Grid>
         </Grid>
@@ -70,8 +104,8 @@ export default function SauceStep(props){
           <Grid item>
             <Paper className={classes.paper}>
               <StaticRowElement 
-              type={type} typeCaption={itemTypeCaption} sel={sel} description={description} captions={captions} 
-              hasHalf={hasHalf} hasQty={hasQty} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+              typeCaption={itemTypeCaption} itemID={sauce} sel={sel} description={description} captions={captions} 
+              hasHalf={false} hasQty={true} hasHalfhandleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
             </Paper> 
           </Grid> 
         </Grid> 

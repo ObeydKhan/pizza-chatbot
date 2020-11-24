@@ -51,12 +51,16 @@ export default function MenuStep(props){
   const [items, setItems] = React.useState(selected);
   const updateItem = (props) =>{    
     const item = props.item;
+    const itemID = item.itemID;
+    const values = item.values;    
     const replace = props.replace;
     if(replace){
-      setItems(item);
+      const update = {};
+      update[itemID]=values;
+      setItems(update);
     } else {
       const current = items;            
-      current[item.itemID]=item;
+      current[item.itemID]=values;
       setItems(current);
     }       
   }

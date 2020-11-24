@@ -17,10 +17,12 @@ PopupMenu expects props={
 }
 */
 export function PopupMenu(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selected, setSelected] = React.useState(0);
-
   const hasPriorSelection = props.hasOwnProperty('selected')&&props.selected!==null&&props.selected!==0;
+  const sel = hasPriorSelection?props.selected:0;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selected, setSelected] = React.useState(sel);
+
+  
   
   const itemTypeCaption = props.itemTypeCaption;
   const itemList = props.items;
@@ -30,12 +32,7 @@ export function PopupMenu(props) {
   const menuList = [noneItem].concat(itemList);
   const menuToolTipCaption = `${itemTypeCaption} menu`;
   const menuToolTipDescription = `Click here to select a ${itemTypeCaption} for this pizza`;
-  if(hasPriorSelection){
-    const ind = menuList.findIndex((i)=>{return (i.id===props.selected)});
-    if(ind!==-1&&ind!==selected){
-      setSelected(parseInt(ind))
-    }    
-  };
+  
   const label = selected===0?initialLabel:menuList[selected].caption;  
   
   const handleClick = (event) => {

@@ -2,7 +2,6 @@ import React from 'react';
 import MenuToolTip from './MenuToolTip';
 import {ChangeHalfButton, IncreaseQty, DecreaseQty} from '../Buttons/index'
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,10 +23,10 @@ export function StaticRowElement(props){
   const [half,setHalf] = React.useState(hasHalf?sel.half:2);  
   const handleMenuSelect = props.handleMenuSelect;
   const name = description.name;
-  const qtyDescription = hasQty?`${description.qty} `:'';
-  const halfDescription = hasHalf&&qty!==2?`(${description.half}) `:'';
-  const qtyCaption = hasQty?captions.qty.replace('{i}',name):name;
-  const halfCaption = hasHalf?captions.half.replace('{i}',qtyCaption):qtyCaption;
+  const qtyDescription = hasQty&&itemID!=='0'?`${description.qty} `:'';
+  const halfDescription = hasHalf&&qty!==2&&itemID!=='0'?`(${description.half}) `:'';
+  const qtyCaption = hasQty&&itemID!=='0'?captions.qty.replace('{i}',name):name;
+  const halfCaption = hasHalf&&itemID!=='0'?captions.half.replace('{i}',qtyCaption):qtyCaption;
   const displayName = `${halfDescription}${qtyDescription}${name}`;
   const displayCaption = halfCaption;
   const changeHalf = (val)=>{    
@@ -56,7 +55,7 @@ export function StaticRowElement(props){
       <Grid container spacing={2}>        
         {halfDisplay}            
         {lowerQty}              
-      <Grid item xs={4}>              
+      <Grid item xs={8}>              
           <MenuToolTip caption={`Your current selection for ${typeCaption} is:`} description={displayCaption} component={<div className="menuItemDisplay">{displayName}</div>}/>
       </Grid>      
         {raiseQty}           
