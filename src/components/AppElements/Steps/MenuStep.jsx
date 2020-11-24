@@ -137,9 +137,6 @@ export default function MenuStep(props){
       <StepDisplay selected={selected} stepData={stepData} updateItem={(p)=>{return (updateItem(p))}}/>
       <Grid container spacing={1}>
         <Grid item>
-          <NavButton caption='Next' onClick={handleNext}/>
-        </Grid>
-        <Grid item>
           <NavButton caption='Back' onClick={handlePrev}/>
         </Grid>
         <Grid item>
@@ -147,6 +144,9 @@ export default function MenuStep(props){
         </Grid>
         <Grid item>
           <NavButton caption='Cancel Order' onClick={handleCancel}/>
+        </Grid>
+        <Grid item>
+          <NavButton caption='Next' onClick={handleNext}/>
         </Grid>
       </Grid>
     </div>      
