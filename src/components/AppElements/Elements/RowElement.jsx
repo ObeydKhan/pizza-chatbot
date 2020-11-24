@@ -31,11 +31,11 @@ export function StaticRowElement(props){
   const displayCaption = halfCaption;
   const changeHalf = (val)=>{    
     setHalf(val);
-    handleMenuSelect({itemID:itemID, change:{type:'half', value:`${half}`}});
+    handleMenuSelect({type:'half', value:`${val}`});
   }
   const changeQty = (val)=>{
     setQty(qty+val);
-    handleMenuSelect({itemID:itemID, change:{type:'half', value:`${qty}`}});
+    handleMenuSelect({type:'qty', value:`${qty+val}`});
   }
   const halfDisplay = hasHalf?
     <Grid item xs={1}>

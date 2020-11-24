@@ -19,17 +19,20 @@ export function IncreaseQty(props){
   const icon = <AddCircleIcon/>
   const ariaLabel ='increase-qty';
   const caption = `Add more ${props.itemTypeName}`;
-  return <QtyButton ariaLabel={ariaLabel} caption={caption} description={props.description} icon={icon} onClick={()=>{props.changeQty(1)}}/>
+  const val = 1
+  return <QtyButton ariaLabel={ariaLabel} caption={caption} description={props.description} icon={icon} value={val} onClick={(p)=>{props.changeQty(p)}}/>
 }
 export function DecreaseQty(props){
   const icon = <RemoveCircleIcon/>  
   const ariaLabel ='decrease-qty';
   const caption = `Add less ${props.itemTypeName}`;
-  return <QtyButton ariaLabel={ariaLabel} caption={caption} description={props.description} icon={icon} onClick={()=>{props.changeQty(-1)}}/>
+  const val  =-1
+  return <QtyButton ariaLabel={ariaLabel} caption={caption} description={props.description} icon={icon} value={val} onClick={(p)=>{props.changeQty(p)}}/>
 }
 function QtyButton(props){
   const classes = useStyles();
-  const iconButton = <IconButton aria-label={props.ariaLabel}>{props.icon}</IconButton>
+  const val = props.value;
+  const iconButton = <IconButton aria-label={props.ariaLabel} onClick={()=>{return props.onClick(val)}}>{props.icon}</IconButton>
   return (
     <div className={classes.root}>        
       <MenuToolTip caption={props.caption} description={props.description} component={iconButton}/>     

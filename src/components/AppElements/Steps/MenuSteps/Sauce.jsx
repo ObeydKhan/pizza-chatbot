@@ -82,14 +82,14 @@ export default function SauceStep(props){
       updateItem({item:doUpdate,replace:true})
     }
   }
-  const selItem = content.find((i)=>(i.id===sauce));
-  const selName =selItem!==undefined||selItem==='0'?selItem.caption:`No ${itemTypeCaption} selected`;  
+  const selItem = sauce!=='0'?content.find((i)=>(i.id===sauce)):'0';
+  const selName =selItem!==undefined&&selItem!=='0'?selItem.caption:`No ${itemTypeCaption} selected`;  
   const qtyVal = stepData.content.qty.find((i)=>(i.id===qty));  
   const maxQty =stepData.content.qty.length+1;
   const sel = {maxQty:maxQty, qty:parseInt(qty), half:2}
   const description = {name:selName, qty:(qtyVal!==undefined?qtyVal.caption:''),half:''};
   const captions = {qty:(qtyVal!==undefined?qtyVal.description:''),half:''};
-  
+  if(!initialized){return false}
   return(   
     <div className={classes.root}>
       <Grid container spacing={1}>
@@ -105,7 +105,7 @@ export default function SauceStep(props){
             <Paper className={classes.paper}>
               <StaticRowElement 
               typeCaption={itemTypeCaption} itemID={sauce} sel={sel} description={description} captions={captions} 
-              hasHalf={false} hasQty={true} hasHalfhandleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+              hasHalf={false} hasQty={true} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
             </Paper> 
           </Grid> 
         </Grid> 
