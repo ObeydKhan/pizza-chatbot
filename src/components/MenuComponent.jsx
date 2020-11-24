@@ -16,9 +16,11 @@ const HtmlTooltip = withStyles((theme) => ({
     border: '1px solid #dadde9',
   },
 }))(Tooltip);
+let rowTitle;
 
 export default function MenuComponent(props) {
   const componentType = props.componentType;
+  rowTitle = props.rowTitle.itemCaption;
   switch(componentType){
     case 'botmenu':
       return {
@@ -54,7 +56,7 @@ function ToolTipComponent(props){
   const key =props.hasOwnProperty('itemKey')?props.itemKey:false;
   const liClass = props.hasOwnProperty('btnClass')?props.btnClass:false;
   const tip = (      
-    <HtmlTooltip title={<React.Fragment><Typography color="inherit">{props.itemCaption}</Typography>{props.itemDescription}</React.Fragment>} arrow placement="bottom-end" enterDelay={1500}>
+    <HtmlTooltip title={<React.Fragment><Typography color="inherit">{props.itemCaption}</Typography>{props.itemDescription.replace("{i}",rowTitle)}</React.Fragment>} arrow placement="bottom-end" enterDelay={1500}>
       {comp(props)}
     </HtmlTooltip>)
 
