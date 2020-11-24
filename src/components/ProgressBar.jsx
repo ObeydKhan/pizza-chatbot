@@ -12,15 +12,15 @@ render(){
         </div>
         <ul className="nav justify-content-center info">
           <li className="nav-item">
-            <a className="nav-link active" href="/pizza-chatbot">Search for location</a>
+            <a className="nav-link disabled" href="/pizza-chatbot">Search for location</a>
           </li>
           {arrowRight}
           <li className="nav-item">
-            <a className="nav-link" href="/pizza-chatbot" onClick={()=> console.log('Hello!')}>Select location</a>
+            <a className="nav-link disabled" href="/pizza-chatbot" onClick={()=> console.log('Hello!')}>Select location</a>
           </li>
           {arrowRight}
           <li className="nav-item">
-            <a className="nav-link" href="/slicebot">Order pizzas</a>
+            <a className="nav-link disabled" href="/slicebot">Order pizzas</a>
           </li>
           {arrowRight}
           <li className="nav-item">
