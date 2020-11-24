@@ -1,28 +1,45 @@
 import React from 'react';
 
 export class NewOrderStep extends React.Component{  
-  retVal = {
-    botUpdate:{type:'start',values:{step:'new'}},
-    appUpdate:{type:'name',values:{name:this.props.prevStepValue, display:'Menu', showBot:'menuStep'}},
-    data:{
-      botStepKey:'neworder',
-      botStepMsg:`Thank you, ${this.props.prevStepValue}, Let's create our first pizza for this order.`,
-      usermsg: null,
-      preserveMsg: false,
-      trigger:'pizzabuilder',
-    }
+  constructor(props){
+    super(props)
+    this.state={data:null, trigger:false};    
   }
-  componentDidMount(){
-    this.props.onTrigger(this.retVal);
+  componentDidMount(){    
+    const updateData={
+      type:'start',
+      values:{
+      appValues:{name:this.props.prevStepValue},
+      botValues:'new',
+      stepValues:{
+        isSpecialStep:true,
+        botStepKey:'neworder',
+        botStepMsg:`Thank you, ${this.props.prevStepValue}, Let's create our first pizza for this order.`,
+        userMsg: null,
+        preserveMsg: false,
+        trigger:'pizzabuilder',
+      }}
+    };        
+    this.setState({data:updateData.values.stepValues}, ()=>{this.props.updateAppState(updateData)});        
   }
-  componentDidUpdate(){
-    return true;
+  componentDidUpdate(prevProps,prevState){
+    this.setState({trigger:!prevState.trigger}, ()=>this.props.triggerNext(this.state.data))      
   }
-  shouldComponentUpdate(){
-    return true;
-  }
+  shouldComponentUpdate(nextProps,nextState){
+    if((this.state.data===null&&nextState.data!==null)&&(this.props===nextProps)){
+      return false
+    } else if(this.props!==nextProps){
+      return true
+    } else if(nextState.trigger||this.state.trigger){
+      return false;
+    } else {
+      return true;  
+    }    
+     
+  }    
   render(){
-    return <div className="orderStep"><div className="stepMessage">{this.retVal.data.botStepMsg}</div></div>;
+    const msg = `Thank you, ${this.props.prevStepValue}, Let's create our first pizza for this order.`;    
+    return <div>{msg}</div>;
   } 
 }
 export function SpecialInstructions(props){

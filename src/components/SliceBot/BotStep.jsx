@@ -4,19 +4,14 @@ export default class BotStep extends React.Component{
   constructor(props){
     super(props)
     this.state = {trigger:false};
-    this.onTrigger = this.onTrigger.bind(this);
-    console.log('Custom constructor called')    
-  }
-  componentDidMount(){
-
-  }
-  componentDidUpdate(prevProps,prevState){
-    console.log('Custom step did update');
-  }
+    this.onTrigger = this.onTrigger.bind(this);   
+  }  
   shouldComponentUpdate(nextProps,nextState){
-    console.log('Custom step should update');
-    return true;
-  }
+    if(this.state.trigger||nextState.trigger){
+      return false
+    }    
+    return true;   
+  }  
   checkAlert(props){
     //check that a crust and size have been selected   
     if(this.props.refProps.step!=='type'){return true}
@@ -35,27 +30,21 @@ export default class BotStep extends React.Component{
     }    
   }
   onTrigger(props){    
-    if(!this.checkAlert){
-      return false;
-    }     
-    this.props.handleTrigger(props)    
-    const data = props.data;
-    const bot = `${data.botStepKey}=>(id=${this.props.step.key.substring(0,5)})`;
+    const bot = `${props.botStepKey}=>(id=${this.props.step.key.substring(0,5)})`;
     const genericStep = this.props.steps.pizzabuilder;
     this.props.step.id = bot;
     genericStep.id = bot;    
     this.props.steps[bot] = genericStep;
-    this.props.step.trigger = data.trigger;        
-    this.setState({trigger: true,}, () => {
-      this.props.triggerNextStep(data);
+    this.props.step.trigger = props.trigger;    
+    this.setState({trigger: true}, () => {
+      this.props.triggerNextStep(props);
     });
   }
   render(){
+        
     const {step, steps, previousStep, ...passThroughProps} = this.props
     const prevStepValue = previousStep.hasOwnProperty('value')?previousStep.value:false;
-    const prevStepID = previousStep.id;    
-    if(!this.props.refProps.step){return null}
-    const disp = DisplayStep({prevStepValue:prevStepValue, prevStepID:prevStepID, onTrigger:(p)=>this.onTrigger(p), ...passThroughProps})        
-    return <div>{disp}</div>;
+    const prevStepID = previousStep.id;       
+    return <DisplayStep prevStepValue={prevStepValue} prevStepID={prevStepID} triggerNext={(p)=>this.onTrigger(p)} {...passThroughProps}/>
   }
 }

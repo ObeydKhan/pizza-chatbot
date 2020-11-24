@@ -20,8 +20,6 @@ import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
 import { speakFn } from './speechSynthesis';
-import { isNull } from 'lodash';
-
 class ChatBot extends Component {
   /* istanbul ignore next */
   constructor(props) {
@@ -246,7 +244,7 @@ class ChatBot extends Component {
 
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
-    console.log('Trigger next step function');
+    
     if (data && data.value) {
       currentStep.value = data.value;
     }
@@ -286,13 +284,14 @@ class ChatBot extends Component {
     } else if (currentStep.trigger && currentStep.replace && data) {
         const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);      
         const val = currentStep.value;
-        const msg = data.msg;
-        const stepMsg = data.stepMsg;
+        const msg = data.userMsg;//user message
+        const stepMsg = data.botStepMsg; //bot message
+        const hasUserMessage = data.preserveMsg;
+        const isSpecialStep = data.hasOwnProperty('isSpecialStep')?data.isSpecialStep:false;
+        const defaultBotSettings = { delay: 0, avatar: this.props.botAvatar, botName: this.props.botName };
 
-        delete currentStep.component;  
-        if(data.preserveMsg){
-          const defaultBotSettings = { delay: 0, avatar: this.props.botAvatar, botName: this.props.botName };
-         
+        //delete currentStep.component;  
+        if(hasUserMessage){        
           const thisStepMsg = {id:currentStep.id, key: currentStep.key, msg: stepMsg, trigger: ''};
           const nextS = Object.assign({}, thisStepMsg, 0, defaultBotSettings, {
             user: false,
@@ -319,14 +318,50 @@ class ChatBot extends Component {
             renderedSteps,
             previousSteps
           });
-        } else {
-          delete currentStep.component;    
-          const usrMsg = !isNull(msg);
-          const out = usrMsg?msg:stepMsg;
-          currentStep = Object.assign({}, currentStep, val, defaultUserSettings, {
-            user: usrMsg,
+        }/* else if(isSpecialStep){
+          delete currentStep.component;              
+          const previousStep = this.state.previousStep;
+          const out = hasUserMessage?msg:stepMsg;
+          
+          const thisStepMsg = {id:previousStep.id, key: previousStep.key, msg: previousStep.value, trigger: ""};
+          const nextS = Object.assign({}, thisStepMsg, 0, defaultUserSettings, {
+            user: true,
+            message: previousStep.value,
+            rendered:isSpecialStep,           
+            
+          });
+
+          currentStep = Object.assign({}, currentStep, val, defaultBotSettings, {
+            user: hasUserMessage,
             message: out,
-            trigger
+            rendered:false,
+            
+          });
+          renderedSteps.pop();
+          previousSteps.pop();
+          renderedSteps.pop();
+          previousSteps.pop();
+          renderedSteps.push(nextS);
+          previousSteps.push(nextS);
+          renderedSteps.push(currentStep);
+          previousSteps.push(currentStep);
+          
+          this.setState({
+            currentStep,
+            renderedSteps,
+            previousSteps
+          });
+        
+        } */else {
+          delete currentStep.component;
+              
+          const settings = hasUserMessage?defaultUserSettings:defaultBotSettings;
+          const out = hasUserMessage?msg:stepMsg;
+          currentStep = Object.assign({}, currentStep, val, settings, {
+            user: hasUserMessage,
+            message: out,
+            trigger,
+            
           }); 
           
           renderedSteps.pop();

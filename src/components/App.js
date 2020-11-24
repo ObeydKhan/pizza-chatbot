@@ -5,21 +5,25 @@ import '../css/App.css';
 import '../css/DisplayMainArea.css';
 import BotAlertMsg from './AppElements/Util/BotAlertMsg';
 import {reducer} from './AppReducer';
-
-
+import Pizza from './Pizza';
+import ItemMenu from './itemMenu';
 class App extends React.Component {
   constructor(props) {
     super(props);    
     this.handleBotActions=this.handleBotActions.bind(this);   
     this.updateAppState =this.updateAppState.bind(this);          
-    this.state = {
+    this.state = {      
       alert:false,
+      stepData:null,
       display:{
         page:'Location',
-        bot:false,        
+        bot:false,
+        botDisplay:false,        
       },             
       locObj: this.props.locObj,           
-      order: new Order(),                       
+      order: new Order(),
+      menu: new ItemMenu(),
+      currentPizza: new Pizza(0),                       
     };
     this.input = React.createRef();            
   }
@@ -31,13 +35,7 @@ class App extends React.Component {
       })
     )
   }
-  componentDidUpdate(prevProps,prevState){
-
-  }
-  shouldComponentUpdate(nextProps,nextState){
-
-    return true;
-  }
+  
   handleBotActions(props){
     const trigger = props;
     const type = trigger.type;
@@ -96,11 +94,15 @@ class App extends React.Component {
   }  
   render(){
     const alert = this.state.alert?<BotAlertMsg values={this.state.alert} onClose={(p)=>{return this.updateAppState(p)}}/>:null;
+    const {stepData, display, locObj,order,menu,currentPizza}=this.state;
+    const showPage = display.page;
+    const showBot = display.bot;
+    const botDisplay = display.botDisplay
     return (
       <div className="sliceBot">
-        <Header cnt={this.state.order.PizzaCount} locObj={this.state.locObj} updateAppState={(p)=>{return this.updateAppState(p)}}/>
-        <MainArea showPage={this.state.display.page} locObj={this.state.locObj} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
-        <SliceBot showBot={this.state.display.bot} order={this.state.order} updateAppState={(p)=>{return this.updateAppState(p)}}/>
+        <Header cnt={this.state.order.PizzaCount} locObj={locObj} updateAppState={(p)=>{return this.updateAppState(p)}}/>
+        <MainArea showPage={showPage} locObj={locObj} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
+        <SliceBot showBot={showBot} botDisplay={botDisplay} menu={menu} pizza={currentPizza} stepData={stepData} order={order} updateAppState={(p)=>{return this.updateAppState(p)}}/>
         {alert}
       </div>
     )      

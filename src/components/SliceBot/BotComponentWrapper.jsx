@@ -13,9 +13,12 @@ const StepComponents ={
   specialInstructions:SpecialInstructions
 }
 
-export const DisplayStep = (props) => {
-  const step = props.refProps.step;
-  const StepComponent = StepComponents[step];
-  return <StepComponent {...props}/>
+export default class DisplayStep extends React.Component{
+  render(){
+    const {step, ...passThroughProps} = this.props;
+    const StepComponent = StepComponents[step];
+    return <StepComponent step={step} {...passThroughProps}/>
+  }
 }
-export default DisplayStep;
+
+

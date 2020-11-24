@@ -1,21 +1,29 @@
 //constants
 const SETNAME = 'name';
+const STARTORDER = 'start'
 const UPDATEORDER = 'update';
 const SETALERT = 'alert';
 const UPDATELOC = 'location';
 const RESET = 'reset'; 
 //function
-export const reducer = action => (state,props) =>{
+export const reducer = action => (state,props) =>{  
   const values = action.values  
   switch (action.type){    
-    case SETNAME:
+    case STARTORDER:      
       const o = state.order;
-      o.ordername = values.name;
-      const d={page:values.display, bot:values.showBot}
-      return {order:o,display:d}; 
+      const m = state.menu;
+      m.step = values.botValues;
+      o.ordername = values.appValues.name;
+      const d=state.display
+      d.page = 'Menu';
+      d.bot = true;
+      d.displayBot = 'menuStep'      
+      return {order:o,display:d,menu:m}; 
     case UPDATEORDER:
       const u = state.order;
       return {order:u};
+    case SETNAME:
+        break;
     case SETALERT:
       return{alert:values}      
     case UPDATELOC:      
@@ -33,7 +41,8 @@ export const reducer = action => (state,props) =>{
         const chk = loc.searchStep==='done';        
         if(chk){
           display.page='Main';
-          display.bot=state.order.ordername?prev:'newOrder';          
+          display.bot = true
+          display.displayBot=state.order.ordername?prev:'newOrder';          
         }
         if(!prev||chk){
           delete display.prevBot;
