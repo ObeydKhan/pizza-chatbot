@@ -4,6 +4,10 @@ class PizzaOrder {
     this.pizzas= [];    
     this.lastID = 0;                        
   }
+  get NewOrder(){
+    const n = new PizzaOrder();
+    return n;
+  }
   UpdateOrder = (props) => {
     switch(props.item){
       case 'name':

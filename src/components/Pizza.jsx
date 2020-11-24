@@ -1,21 +1,28 @@
 class Pizza {
   constructor(id){
     this.id = id;
-    this.items = {};       
+    this.items = {};
+    this.itemMsg = {};       
     this.specinst=null;   
+  }
+  get NewPizza(){
+    const p = new Pizza();
+    return p;
   }
   set PizzaItems(props) {
     const t = props.type;
     const values = props.values    
     if(values.length===0&&this.items.hasOwnProperty(t)) {
       delete this.items[t];
+      delete this.itemMsg[t];
     } else {
       this.items[t]=values;
+      this.itemMsg[t]=props.userMsg;
     }        
   }
   GetPizzaItems(type){
     if(this.items===null||!this.items.hasOwnProperty(type)) {
-      return {id: ''};
+      return null;
     }
     return this.items[type];
   }  
@@ -39,6 +46,7 @@ class Pizza {
     return ({
       id: this.id,
       items: this.items,
+      itemMsg: this.itemMsg,
       specinst: this.specinst,      
     });
   } 

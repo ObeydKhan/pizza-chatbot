@@ -28,6 +28,50 @@ class ItemMenu{
     if(this.outOfScope) {return 'none';}
     return this.getStep(this.stepNum);
   }
+  GetUserMsg(props){
+    const n = this.GetStepProper(props.type);
+    if(!props.hasOwnProperty('items')||props.items===null||props.items===undefined) {
+      return `No ${n} selected`
+    } else {
+      if(props.type==='type'){
+        const item = props.items['1'];
+        const sID = item.hasOwnProperty('sizes')?item.sizes:false;
+        const cID = item.hasOwnProperty('crusts')?item.crusts:false;
+        if(!(sID&&cID)){return `No ${n} selected`}
+        const size = Options.sizes;
+        const crust = Options.crusts;
+        const s = size.find((i)=>(i.id===sID));
+        const c = crust.find((i)=>(i.id===cID));
+        return `This pizza is a ${s.caption} with ${c.caption} crust`;
+      } else {
+        const arr = [];
+        for (const x in props.items){
+          arr.push(x)
+        }
+        if(arr.length===0){return `No ${n} selected`}
+        let hasHalf=false;
+        const item = Items[props.type];
+        const half = item.half?Options.half:false;
+        const qty = item.qty?Options.qty:false;
+        const msg = props.items.map((i)=>{
+          const v = item.values.find((x)=>(x.id===i.id));
+          const name = v.caption;          
+          const vHalf = half?i.half:'2';
+          const vQty = qty?i.qty:'2';
+          if(vHalf!==2){hasHalf=true};
+          return {name:name, half:vHalf, qty:vQty, hID:parseInt(vHalf)}
+        })
+        msg.filter((i)=>{return i.name});
+        if(msg.length>1){msg.sort((a,b)=>{return a.hID-b.hID});};
+        if(msg.length===0){return `No ${n} selected`};
+        const retArray = msg.map((i)=>{
+          if(!i.name) {return ''};
+          return `${i.qty} ${i.name}${hasHalf?` ${i.half}`:''}`
+        })
+        return retArray.toString();
+      }      
+    }    
+  }
   GetCaption(src,type,id){
     const item = (m,t,id)=>{
       switch(m){
@@ -135,9 +179,16 @@ class ItemMenu{
     } else if(step==='ordername'){
       return 'Name'
     } else {     
-      const s = this.getStep(this.getStepNum(step))
-      if(s==='specialinstmsg'||s==='ordername'){return this.GetStepProper(s)}
-      return Items[s].properU
+      const c = this.checkStep(step);
+      const s = c?step:this.getStep(this.getStepNum(step))
+      if(s==='specialinstmsg'||s==='ordername'){
+        return this.GetStepProper(s)
+      } else if(!c){
+        return ''
+      } else {
+        return Items[s].properU
+      }
+      
     }
   }
   GetStepTrigger(step){
@@ -159,6 +210,8 @@ class ItemMenu{
       botMsg:info.msg,
       caption:info.properU,
       properL:info.properL,
+      next:this.GetStepProper('next'),
+      prev:this.GetStepProper('prev'),
       content: {        
         sizes:info.sizes?Options.sizes:false,
         crusts:info.crusts?Options.crusts:false,
@@ -177,7 +230,7 @@ class ItemMenu{
     if(i>=this.items.length){      
       return 'specialinstmsg';
     } else if(i<0){
-      return 'ordername';
+      return '2';
     } else {     
       return this.items[i];      
     }   

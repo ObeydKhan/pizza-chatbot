@@ -40,7 +40,7 @@ class StoreLoc extends React.Component {
     values.locObj = loc;
     values.type = loc.searchStep;
     this.setState({locMode:loc.searchStep}, ()=> {
-      this.props.updateAppState({type:'location',values:values})
+      this.props.updateAppState({type:'location',values:{appValues:values}})
     });
   }  
   render(){    

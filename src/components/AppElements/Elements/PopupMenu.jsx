@@ -5,12 +5,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuToolTip from './MenuToolTip';
 /* 
 PopupMenu expects props={    
-  type:(crusts||sizes) = content.type
-  itemTypeCaption:(string) = content.caption
-  selected:(number) = initialState(type)
+  type = content.type
+  itemTypeCaption = content.caption
+  selected = initialState(type)
   items:(list): = content.list {
-    id:(string),
-    label:(string),
+    id:(string),    
     caption:(string),
     description:(string),
     isDisabled:(boolean),
@@ -21,14 +20,24 @@ export function PopupMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selected, setSelected] = React.useState(0);
 
-  const hasPriorSelection = props.hasOwnProperty('selected');
-  if(hasPriorSelection){setSelected(parseInt(props.selected))};
+  const hasPriorSelection = props.hasOwnProperty('selected')&&props.selected!==null&&props.selected!==0;
+  
   const itemTypeCaption = props.itemTypeCaption;
   const itemList = props.items;
   const initialLabel = `No ${itemTypeCaption} selected`;
   const noneItem = {id:'0', caption:`None`, description:`No ${itemTypeCaption} selected`}
+  
   const menuList = [noneItem].concat(itemList);
-
+  const menuToolTipCaption = `${itemTypeCaption} menu`;
+  const menuToolTipDescription = `Click here to select a ${itemTypeCaption} for this pizza`;
+  if(hasPriorSelection){
+    const ind = menuList.findIndex((i)=>{return (i.id===props.selected)});
+    if(ind!==-1){
+      setSelected(parseInt(ind))
+    }    
+  };
+  const label = selected===0?initialLabel:menuList[selected].caption;  
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,9 +55,7 @@ export function PopupMenu(props) {
                       </MenuItem>
     return <MenuToolTip caption={item.caption} description={item.description} component={menuItem}/>
   })
-  const menuToolTipCaption = `${itemTypeCaption} menu`;
-  const menuToolTipDescription = `Click here to select a ${itemTypeCaption} for this pizza`;
-  const label = selected===0?initialLabel:menuList[selected].label;  
+
   const button = props.isDisabled?<Button disabled variant="outline">{label}</Button>:
     <Button aria-controls="popup-menu-select" aria-haspopup="true" onClick={handleClick}>
       {label}

@@ -9,8 +9,9 @@ export class NewOrderStep extends React.Component{
     const updateData={
       type:'start',
       values:{
-      appValues:{name:this.props.botStepData.prevStepValue},
-      botValues:'new',
+      appValues:{
+        name:this.props.botStepData.prevStepValue,
+        step:'new'},     
       stepValues:{
         isSpecialStep:true,
         botStepKey:'neworder',
