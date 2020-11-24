@@ -133,6 +133,7 @@ export default function MenuStep(props){
   const StepDisplay = DisplayComponents[displayType(menuType)];
   return(
     <div className={classes.root}>
+
       <div className="stepMessage">{stepData.botMsg}</div>
       <StepDisplay selected={selected} stepData={stepData} updateItem={(p)=>{return (updateItem(p))}}/>
       <Grid container spacing={1}>
