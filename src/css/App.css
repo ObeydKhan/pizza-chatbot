@@ -10,7 +10,8 @@
 }
 header {
   padding: 20px;
-  font-size: 25px;
+  padding-bottom: 0px;
+  font-size: 18px;
   color: black;
   background-color: white;
   border-bottom: 1px solid #e0ded9;
@@ -70,12 +71,35 @@ margin-bottom: 20px;
 padding-bottom: 10px;
 }
 .rsc .rsc-container {
-  width: 500px;
-  height: 650px;
+  width: 490px;
+  height: 545px;
 }
 .rsc .rsc-content {
-  height: 538px;
+  height: 425px;
 }/*
 .rsc-container ul li:last-child button{
   background-color: salmon;
 }*/
+svg.bi-arrow-right {
+  margin-top: 0.9rem;
+}
+.progress {
+  height: 1.5rem;
+}
+.container {
+  max-width: 65%;
+  margin-left: 20rem;
+}
+.nav a{
+  font-family: 'Bebas Neue', cursive;
+  color: #F5BA5E;
+  font-weight: 400;
+  font-size: 24px;
+}
+.nav a:hover{
+  color: #000;
+}
+.pizza-bgImg {
+max-width: 100%;
+height: auto;
+}

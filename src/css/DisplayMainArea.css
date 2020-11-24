@@ -37,7 +37,6 @@
 }
 .chatBot {
   float: right;  
-  padding: 10px;
   position: fixed;
   bottom: 10px;
   right: 10px;

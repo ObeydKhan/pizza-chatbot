@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ChatBot from './chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import OrderStep from './OrderStep';
-
-
-class SimpleForm extends Component {
+class SliceBot extends React.Component{
   constructor(props){
-    super(props);
+    super(props)
+    
     this.handleEnd = this.handleEnd.bind(this);
-  }
+      }   
+
   handleEnd(){
-    //load order summary page
-    const order = this.props.order;
-    this.props.end(order)
+    //load order summary page    
+    this.props.onAppUpdate({val:'complete'});
   }
-  render() {
-    const order = this.props.order;          
-    return (
-      <ThemeProvider theme={{
+  render(){
+    if(this.props.appState.appValues===null||this.props.appState.appValues===undefined){return null}
+    const showBot=this.props.appState.appValues.showBot;        
+    if(!showBot){return (null)}
+    return (   
+      <div className="chatBot" >
+        <ThemeProvider theme={{
               background: '#f5f5f5',
               fontFamily: 'Montserrat',
               headerBgColor: '#DD841F',
@@ -34,7 +36,7 @@ class SimpleForm extends Component {
         steps={[
           {
             id: '1',
-            message: 'Welcome to Slice!',
+            message: 'Welcome to Slice!',            
             trigger: '2',            
           },
           {
@@ -51,10 +53,9 @@ class SimpleForm extends Component {
           {
             id: 'pizzabuilder',
             placeholder: 'Choose an option',
-            component: <OrderStep/>,              
+            component: <OrderStep appState={this.props.appState} onTriggerBot={this.props.onTriggerBot} updateAppState={(p)=>{return this.props.updateAppState(p)}}/>,              
             waitAction: true, 
-            replace: true,
-            metadata: order,
+            replace: true,            
             trigger: 'pizzabuilder',           
           },
           {
@@ -94,10 +95,18 @@ class SimpleForm extends Component {
             end: true,            
           },
           ]}
+          floating={false}
         />
           </ThemeProvider>
-      );
-    }
+      </div>   
+    );   
   }
-  
-  export default SimpleForm;
+
+}
+/*        <Redirect to="/pizza-chatbot/slicebot" />
+        <Route path="/pizza-chatbot/slicebot" component={() => 
+          ....
+        }/>
+
+          */
+export default SliceBot;

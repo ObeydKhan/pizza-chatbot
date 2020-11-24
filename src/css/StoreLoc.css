@@ -3,6 +3,7 @@
   display: block;
   width: 100%;
   padding: 10px;
+  margin-top: 30px;
 }
 .searchGreeting {
   font-size: 50px;
@@ -75,15 +76,18 @@
   vertical-align: top ;
   margin-top: 50px;
   padding: 0px 10px;
-
 }
+
 .geoSearchIcon {
   display: flex;
   float: left;
   margin: auto;  
   margin-left: 10px;
-
+  color: white;
+  height: 30px;
+  -webkit-filter: invert(100%);
 }
+
 .geoSearchBtn {
   display: flex;
   padding: 8px 20px 8px 20px;
@@ -103,7 +107,10 @@
   margin-top: auto;
   margin-bottom: auto;
   vertical-align: center;
-  
+  color: white;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 22px;
+
 }
 /*User search area*/
 .userSearchArea {
@@ -166,6 +173,8 @@
   border-radius: 2px;
   background-color: #F5BA5E;
   color: white;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 22px;
   text-align:center;
 }
 /*Previous location area */
@@ -229,9 +238,10 @@
 }
 .storeSelect {
   display: block;
-  width: 100%;
   padding: 10px;
   margin: 10px;
+  margin-left: 25px;
+  margin-top: 25px;
 }
 .storeSelectBanner {
   padding: 10px;

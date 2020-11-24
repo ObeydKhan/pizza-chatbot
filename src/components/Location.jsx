@@ -6,10 +6,12 @@ class Location {
   #user = null;
   #store = null;
   #search = null;
+  #prevObj = null;
   constructor(){
     this.storeInfo = this.storeInfo.bind(this);
     this.initLoc = this.initLoc.bind(this);
-    this.resolveGeoLoc = this.resolveGeoLoc.bind(this);    
+    this.resolveGeoLoc = this.resolveGeoLoc.bind(this);
+    this.resetLoc = this.resetLoc.bind(this);    
     this.#geo = {
       isResolved: false,
       entryErr: false,
@@ -24,15 +26,57 @@ class Location {
       cityState: ''};  
     this.#store = {
       current: '0',
-      previous: '0',      
-      didChange: false};
+      previous: '0'};
     this.#search = {
+      step:'search',
       method: '',
       searchLoc: '',
       isResolved: false,
       hasErr: false,
       errMsg: '',
     }
+  }
+  get searchStep(){
+    return this.#search.step;
+  }
+  ChangeLoc(){
+    this.#prevObj = {
+      user:this.#user,
+      store:this.#store,
+      search:this.#search,
+      }   
+    this.#user.isResolved=false;
+    this.#user.entryErr=false;
+    this.#user.errMsg='';
+    this.#user.zip='';
+    this.#user.cityState='';            
+    this.#store.previous=this.#store.current;     
+    this.#search.step='search';
+    this.#search.method='';
+    this.#search.searchLoc='';
+    this.#search.isResolved=false;
+    this.#search.hasErr=false;
+    this.#search.errMsg='';    
+  }
+  resetLoc(){
+    this.#user = {
+      isResolved: false,
+      entryErr: false,
+      errMsg: '',
+      zip: '',
+      cityState: ''};  
+    this.#store = {
+      current: '0',
+      previous: '0',      
+      didChange: false};
+    this.#search = {
+      step:'search',
+      method: '',
+      searchLoc: '',
+      isResolved: false,
+      hasErr: false,
+      errMsg: '',
+    } 
   }  
   get geoZip() {
     if(this.#geo.isResolved && !this.#geo.entryErr) {
@@ -104,15 +148,15 @@ class Location {
   set storeLoc(val){
     const c = this.#store.current;
     if(c!==val){
-      this.#store.didChange = true;
-      this.#store.previous = c;
+      this.#search.step='done';      
       this.#store.current = val;
     } else {
-      this.#store.didChange = false;
+      this.#search.step='done';
+      this.#user=this.#prevObj.user;
+      this.#store=this.#prevObj.store;
+      this.#search=this.#prevObj.search;
+      this.#prevObj=null;
     }    
-  }
-  get changed(){
-    return this.#store.didChange;  
   }
   get curStoreID(){
     return this.#store.current;
@@ -147,6 +191,7 @@ class Location {
     return 'No Search'
   }
   set search(values){
+    this.#search.step = values.step;
     this.#search.method = values.method;
     this.#search.searchLoc = values.loc;
     this.#search.isResolved = values.res;
@@ -155,6 +200,7 @@ class Location {
   }
   set storeSearch(method){        
     let values ={
+      step:'select',
       method: method.method,
       loc: '',
       res: false,
@@ -164,6 +210,7 @@ class Location {
     if(values.method==='User Entry'){
       this.userZip = method.usrStr;
       if(this.userErr){
+        values.step ='search';
         values.method = '';
         values.err= true;
         values.errMsg= 'Invalid Zip Entry';
@@ -173,6 +220,7 @@ class Location {
       }
     } else if(values.method==='Geo Locate'){
       if(this.geoErr){
+        values.step ='search';
         values.method = '';
         values.err= true;
         values.errMsg= 'Invalid Geo Location';
@@ -181,6 +229,7 @@ class Location {
         values.res = true;
       }
     } else {
+      values.step ='search';
       values.method = '';
       values.err= true;
       values.errMsg= 'Invalid Search Method';

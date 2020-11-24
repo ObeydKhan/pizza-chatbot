@@ -1,278 +1,196 @@
 import React from 'react';
 import Summary from './Summary';
+import MenuArray from './MenuArray';
+import Random from 'random-id';
 
-function StepFactory(props) {
-  const stepInfo = props.stepInfo;
-  const curType = stepInfo.current.type;
-  const isSpecial = curType==='special';
-  const controls = isSpecial?BuildSpecialStep(stepInfo.current,stepInfo.prev):getCtrls(stepInfo);
-  const stepMsg = controls.stepMsg.replace("{0}",stepInfo.stepMsg)  
-  const displayMsg = <div className="orderStepMsg">{stepMsg}</div>;
-  const stepContents = props.stepContents!==''?BuildContents(props):<div></div>;
-  const controlArray = <ControlArray stepMsg={stepMsg} stepCtrls={controls.stepCtrls} onTrigger={props.onTrigger}/>
-  const stepClassName = `orderStep`;
+
+function StepFactory(props){  
+  const appState = props.refProps;
+  if(appState===null||appState===undefined){return null};
+  const type =appState.appValues.appBotStepClass;
+  if(type===''){return null};  
+  const ref = {
+    type:type,     
+    pizzaID:appState.order.CurrentID,
+    isSaved:appState.order.IsSaved,
+    ordername:appState.order.ordername,
+    prevStep:appState.prevStep,
+    onTrigger:props.onTrigger,
+    onSelect:props.onSelect,
+  };
+  if(type==='menu'||type==='editItem'){      
+    const s = appState.step.StepObject;      
+    if(s){
+      ref.name=s.name;
+      ref.botMsg = s.botMsg;
+      ref.multi=s.multi;
+      ref.nextTrig = s.controls.nextTrig;
+      ref.prevTrig = s.controls.prevTrig;
+      ref.nextName = s.controls.nextName;
+      ref.prevName = s.controls.prevName;
+      ref.selected = props.selected;
+      ref.content = s.content;
+      ref.hasStep=true;      
+    } else {
+      ref.hasStep=false;
+    }
+  } else {
+    ref.itemList=type==='editPizza'?appState.step.stepList:type==='reviewOrder'?appState.order.PizzaList:false;
+    if(type==='reviewPizza'){
+      ref.content = appState.order.CurrentPizza;
+    } else if(type==='reviewOrder'){
+      ref.content = appState.order.OrderSummary;
+    }
+  }  
+  const step = Step(ref)
+  const content = ContentFactory(ref);
+  const btns = step.btns.map((b)=>{
+    return (
+      <li key={Random(8)} className="stepButton">
+         <button className={b.className} onClick={()=> b.onTrigger(b.trigVal)}>{b.caption}</button>
+      </li>     
+    )
+  })
   return (
-    <div className={stepClassName}>
-      {displayMsg}
-      {stepContents}
-      {controlArray}
+    <div className="slicebotStepClass">
+      <div className="stepMessage">{step.msg}</div>
+      {content}
+      <ul className="stepButtons">{btns}</ul>
     </div>
-  ) 
+  )
 }
-function BuildContents(props){
-  const contents = {cName:'', retArray:[]}
-  switch(props.stepInfo.stepContents.type){
-    case 'review':
-      contents.cName = 'reviewList'
-      contents.retArray = ReviewMsgArray(props)
-      break;
-    case 'simple':
-      contents.cName = 'simpleList'
-      contents.retArray = SimpleItemArray(props)
-      break;    
-    case 'multi':
-      contents.cName = 'multiList'
-      contents.retArray = MultiRowArray(props)
-      break;    
+
+function Step(props){
+  const type = props.type  
+  switch(type){
+    case 'menu': 
+      return MenuStep(props);
+    case 'editItem':
+      return EditMenuStep(props);
+    case 'editPizza':
+      return EditStep(props);
+    case 'reviewPizza':
+      return ReviewPizzaStep(props);
+    case 'reviewOrder':
+      return ReviewOrderStep(props);
+    case 'remove':
+      return RemoveStep(props);
+    case 'cancel':
+      return CancelStep(props);
+    case 'complete':
+      return CompleteStep(props);
     default:
-  }
-  return (<div className={contents.cName}>{contents.retArray}</div>)
+      return null;
+  } 
 }
-function ReviewMsgArray(props){
-  return (Summary(props.stepInfo.stepContents.contents))
-}
-
-function SimpleItemArray(props){
-  const contents = props.stepInfo.stepContents.contents;
-  const elements = contents.elements;  
-  const hasMulti = contents.hasMulti;  
-  const click = props.onSelect;
-  const sel = contents.selected;
-  const retArray = elements.map((e)=>{ 
-    const capt = e.btnCapt;
-    const key = e.listKey;
-    const val = {itemInfo:e.itemInfo, multi:hasMulti};
-    const i = sel.findIndex(p=>p===key)
-    const eleClass = i===-1?(capt===''?'btn-hide':key):'btn-select';          
-    return (
-      <li key={key} className={eleClass}>
-        <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
-      </li>
-    )
-  })
-  return (
-    <ul className="simpleMenu">
-      {retArray}
-    </ul>
-  )
-}
-function MultiRowArray(props){
-  const contents = props.stepInfo.stepContents.contents;
-  const elements = contents.elements;  
-  const hasMulti = contents.hasMulti; ;  
-  const click = props.onSelect;
-  const sel = contents.selected;
-  const retArray = elements.map((e)=>{
-    const rowName = e.name;
-    const rowClass = e.rClass;
-    const rowKey = `${rowClass}-${rowName}`;
-    const halfBtns = e.btns.filter((b)=> b.btnType==='half');
-    const qtyBtns = e.btns.filter((b)=> b.btnType==='qty');
-    const halfRow = halfBtns.length===0?null:<ul className="halfBtns">{BtnArray(halfBtns, sel, click, hasMulti)}</ul>
-    const qtyRow = qtyBtns.length===0?null:<ul className="qtyBtns">{BtnArray(qtyBtns, sel, click, hasMulti)}</ul>
-    return (
-      <div className="menuEleRow" key={rowKey}>                  
-        <ul className="rowBtns">
-          <div className="rowTitle">{rowName}</div>            
-          {halfRow}
-          {qtyRow}
-        </ul>        
-      </div>
-    )
-  })
-  return (
-    <ul className="multiRowMenu">
-      {retArray}
-    </ul>
-  )
-}
-function BtnArray(btns, sel, click, hasMulti){  
-  const rowBtns = btns.map((b)=>{       
-    const key = b.listKey;
-    const i = sel.findIndex(p=>p===key)
-    const capt =b.btnCapt;        
-    const val = {itemInfo:b.itemInfo, multi:hasMulti};
-    const eleClass =  i===-1?b.btnClass:`btn-select`;            
-    return (
-      <li key={key} className={eleClass}>
-        <button className="menuBtn" onClick={()=> {return click(val)}}>{capt}</button>
-      </li>
-    )
-  });
-  return rowBtns
-}
-function ControlArray(props){
-  const stepControls = props.stepCtrls.map((s)=>{
-    if(s===null) return null;
-    const capt = s.btnCapt;
-    //const listClass = s.btnClass;
-    const btnClass = `${s.btnCat}`
-    const key = s.listKey;    
-    s.stepMsg = props.stepMsg;
-    return (
-      <li key={key}>
-        <button className={btnClass} onClick={()=> {return props.onTrigger(s)}}>{capt}</button>
-      </li>
-    )
-  })
-  return(
-    <div className="btnNavigationArray">
-      <ul className="btnCtrlList">
-        {stepControls}
-      </ul>
-    </div>
-  )
-}
-
-function getCtrls(stepInfo){
-  const owner = stepInfo.current;
-  const next = stepInfo.next;
-  const prev = stepInfo.prev;
-  const isRetRevO = stepInfo.isRetRevO;
-  const hasRemoveSpecial = (owner.type==='menu'||((owner.type==='edit'||owner.type==='review')&&owner.name==='pizza'))?true:false;  
-  const isFinalReview = (owner.type==='review'&&owner.name==='order')?true:false;  
-  const revS = [[owner.type==='menu'?'Discard pizza':'Remove this pizza', owner,{type:'special', name:'remove'}]];
-  const comp = [['Complete Order', owner, {type:'special', name:'complete'}]];
-  const chng = [["Change Name", owner, {type:'change', name:'name'}]];
-  const cancel = [['Cancel order', owner, {type:'special', name:'cancel'}]];
-  let ctrlArry =[];
-  if(owner.type==='menu'){
-    const a = next.type==='menu'?next:{type:'inst', name:'specialinstmsg'}
-    ctrlArry = ctrlArry.concat([[next.type==='menu'?`Next Step(${next.name})`:'Next Step(Special Instructions)', owner, a]]);
-    ctrlArry = ctrlArry.concat([[prev.type==='menu'?`Prev Step(${prev.name})`:'Prev Step(Order Name)', owner, prev]]);
-  } else if(owner.type==='edit'){
-    if(owner.name==='pizza'){      
-      const a = next.name.map((i)=>{
-        return ([`Edit ${i}`, owner, {name:i, type:'edit'}])
-      })
-      ctrlArry = ctrlArry.concat(a);
-      ctrlArry = ctrlArry.concat([['Edit Special Instructions', owner, {type:'inst', name:'specialinstmsg'}]]);
-      ctrlArry = ctrlArry.concat([['Finished Editing', owner, isRetRevO?{name:'order',type:'review'}:{name:'pizza',type:'review'}]]);
-    } else {
-      ctrlArry = ctrlArry.concat([['Save Changes', owner, {name:'save', type:'edit'}]]);
-      ctrlArry = ctrlArry.concat([['Discard Changes', owner, {name:'drop', type:'edit'}]]);
-    }
-  } else if(owner.type==='review'){
-    if(owner.name==='pizza'){
-      ctrlArry = ctrlArry.concat([['Edit this Pizza', owner, {name:'pizza', type:'edit'}]]);
-      ctrlArry = ctrlArry.concat([['Add a Pizza', owner, {name:'new', type:'new'}]]);
-      ctrlArry = ctrlArry.concat([['Go to Final Review', owner, {name:'order', type:'review'}]]);
-    } else {
-      const a = next.name.map((i)=>{
-        return [`Edit Pizza ${i}`, owner, {name:i, type:'edit'}, 'goto']
-      })
-      ctrlArry = ctrlArry.concat(a);
-      ctrlArry = ctrlArry.concat([['Add another Pizza', owner, {name:'new', type:'new'}]]);
-    }  
-  }
-  ctrlArry =hasRemoveSpecial?ctrlArry.concat(revS):ctrlArry;
-  ctrlArry =isFinalReview?ctrlArry.concat(comp,chng):ctrlArry;
-  ctrlArry = ctrlArry.concat(cancel);
-  const ctrlVals = ctrlArry.map((i)=>{
-      return buildCtrlObj(i[0],i[1],i[2]);
-    });  
-  return({
-    stepMsg:'{0}',    
-    stepCtrls:ctrlVals,
-  })
-}
-function buildCtrlObj(btnCapt, owner, target){      
-  const ctrlType = target.type==='special'?'warn':'ctrl'
-  return ({
-    btnClass: `btn-${ctrlType}`,
-    btnCat: `btn-${ctrlType}`,
-    btnCapt: btnCapt,
-    listKey: `(${owner.type}:${owner.name})=>(${target.type}:${target.name})`,
-    owner: owner,
-    target: target,          
-  }) 
-}
-function BuildSpecialStep(step, prev){ 
-  const vals = (t,p)=> {
-    switch(t.type){
-      case 'remove':
-        return removeCtrl(t,p);
-      case 'cancel':
-        return cancelCtrl(t,p);
-      case 'complete':
-        return compCtrl(t,p);
-      case 'change':
-        return changeCtrl(t,p)
+function ContentFactory(props){  
+  const ContentType = (props) => {
+    const type = props.type  
+    switch(type){
+      case 'menu':      
+      case 'editItem':
+        if(props.hasStep){
+          return MenuArray(props);
+        } else {
+          return null
+        }            
+      case 'reviewPizza':
+      case 'reviewOrder':
+        return Summary(props);        
       default:
-        return {msg:'No special step created', ctrls:[]};
+        return null;
     }
-  }
-  const ctrlVals = vals(step,prev);
-  return({
-    stepMsg:ctrlVals.msg,    
-    stepCtrls:ctrlVals.ctrls,
-  })
+  }  
+  return (ContentType(props))
 }
-const cancelCtrl = (t,p)=>{
+function MenuStep(props){
+  const {botMsg, prevName, onTrigger}= props;
+  const btns = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'next', msg:botMsg, usr:"{r}"},caption:`Next`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'menu', value:'prev', msg:botMsg, usr:`Go back to ${prevName}`},caption:`Back`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'', msg:botMsg, usr:"Remove this pizza"},caption:"Remove"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:botMsg, usr:"Cancel this order"},caption:"Cancel"},
+  ];
+  return {msg:botMsg, btns:btns}
+}
+function EditMenuStep(props){
+  const {name,botMsg, onTrigger}= props;         
+  const btns = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'next', msg:botMsg, usr:`Update ${name} to {r}`},caption:`Save Changes`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'prev', msg:botMsg, usr:"Discard changes"},caption:`Discard Changes`},    
+  ];
+  return {msg:botMsg, btns:btns}
+}
+function EditStep(props){
+  const {itemList, pizzaID, onTrigger}= props;     
+  const msg = `Please select an item to change for this pizza`;
+  const iBtns = itemList.map((i)=>{
+    return {className:"reg",onTrigger:onTrigger,trigVal:{type:'editItem', value:i.val, msg:msg, usr:`Edit ${i.name}`},caption:`Edit ${i.name}`}
+  })  
+  const btns = iBtns.concat(
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'spec', value:'specialinstentry', msg:msg, usr:"Edit Special Instructions"},caption:`Edit Special Instructions`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:pizzaID, msg:msg, usr:"Remove this pizza"},caption:"Remove Pizza"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'reviewPizza', value:'', msg:msg, usr:"Finished with edits"},caption:`Continue`},    
+  );
+  return {msg:msg, btns:btns}                    
+}
+function ReviewPizzaStep(props){
+  const {ordername, onTrigger}= props;    
+  const msg = `${ordername}, Please review this pizza and then select an option below`;
+  const btns = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'reviewOrder', value:'save', msg:msg, usr:"Go to final review"},caption:`Continue`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'add', value:'save', msg:msg, usr:"Add another pizza to this order"},caption:`Add another pizza`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:'', msg:msg, usr:"Edit this pizza"},caption:`Edit Pizza`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'', msg:msg, usr:"Remove this pizza"},caption:"Remove Pizza"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:msg, usr:"Cancel this order"},caption:"Cancel Order"}    
+  ];
+  return {msg:msg, btns:btns}
+}
+function ReviewOrderStep(props){
+  const {itemList, ordername, onTrigger}= props;     
+  const msg = `${ordername}, Please review your order and then select an option below`;
+  const iBtns = itemList.map((i)=>{
+    return {className:"reg",onTrigger:onTrigger,trigVal:{type:'editPizza', value:i, msg:msg, usr:`Edit Pizza ${i}`},caption:`Edit Pizza ${i}`}
+  })  
+  const start = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'complete', value:'', msg:msg, usr:"Complete this order"},caption:`Complete Order`},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'add', value:'', msg:msg, usr:"Add another pizza to this order"},caption:`Add another pizza`}];
+  const end = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'spec', value:'ordername', msg:msg, usr:"Change the name for this order"},caption:"Change Name"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'', msg:msg, usr:"Cancel this order"},caption:"Cancel Order"}];
+  const btns = start.concat(iBtns).concat(end); 
+  return {msg:msg, btns:btns}
+}
+function RemoveStep(props){
+  const {pizzaID,isSaved, onTrigger}= props;  
+  const msg = !isSaved?
+    'Do you want to discard this pizza?':'Do you want to remove this pizza?';
+  const res = !isSaved?[{className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:'cur', msg:msg, usr:"Yes, and start a new pizza"},caption:"Yes, and start a new pizza"}]:[];
+  const btns = res.concat(
+    {className:"warn",onTrigger:onTrigger,trigVal:{type:'remove', value:pizzaID, msg:msg, usr:"Yes, Remove this pizza"},caption:"Yes, Remove this pizza"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'remove', value:'no', msg:msg, usr:"No, go back"},caption:"No, go back"},
+  );
+  return {msg:msg, btns:btns}
+}
+function CancelStep(props){
+  const {onTrigger}= props;
   const msg ='Do you really want to cancel this order?';
-  let ctrls = [];
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, go to main page',t,'cancel','mainpage'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, go to the store selection page',t,'cancel','storeselect'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes, restart this order',t,'cancel','restart'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
-  return ({
-    msg:msg,
-    ctrls:ctrls,}
-  )
+  const btns = [
+    {className:"warn",onTrigger:onTrigger,trigVal:{type:'cancel', value:'main', msg:msg, usr:"Yes, go to main page"},caption:"Yes, go to main page"},
+    {className:"warn",onTrigger:onTrigger,trigVal:{type:'cancel', value:'select', msg:msg, usr:"Yes, go to the store selection page"},caption:"Yes, go to the store selection page"},
+    {className:"warn",onTrigger:onTrigger,trigVal:{type:'cancel', value:'restart', msg:msg, usr:"Yes, restart this order"},caption:"Yes, restart this order"},
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'cancel', value:'no', msg:msg, usr:"No, go back"},caption:"No, go back"},
+  ];
+  return {msg:msg, btns:btns}
 }
-const compCtrl = (t,p)=>{
+function CompleteStep(props){
+  const {onTrigger}= props;
   const msg ='Complete this order and go to payment & confirmation?';
-  let ctrls = [];
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'complete','order'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
-  return ({
-    msg:msg,
-    ctrls:ctrls,}
-  )
+  const btns = [
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'complete', value:'yes', msg:msg, usr:"Yes"},caption:"Yes"},    
+    {className:"reg",onTrigger:onTrigger,trigVal:{type:'complete', value:'no', msg:msg, usr:"No, go back"},caption:"No, go back"},
+  ];
+  return {msg:msg, btns:btns}
 }
-const changeCtrl = (t,p)=>{
-  const msg ='Do you really want to change the name for this order?';
-  let ctrls = [];
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'change','name'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
-  return ({
-    msg:msg,
-    ctrls:ctrls,}
-  )
-}
-const removeCtrl = (t,p) =>{
-  const pType = p.type;
-  const msg = pType==='menu'?'Are you sure you want to discard this pizza?':'Do you really want to remove this pizza?';
-  let ctrls = [];
-  if(pType==='menu'){
-    ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes-start over',t,'remove','restart'));
-  }
-  ctrls = ctrls.concat(buildConfirmationCtrl('yes','Yes',t,'remove','revieworder'));
-  ctrls = ctrls.concat(buildConfirmationCtrl('no','No, go back',t,p.type,p.name));
-  return ({
-    msg:msg,
-    ctrls:ctrls,}
-  )
-}
-function buildConfirmationCtrl(type, label, owner, tarType, tarName){
-  const ctrlType = type==='yes'?'warn':'ctrl';   
-  return ({
-    btnClass: `btn-${ctrlType}`,
-    btnCapt: label,
-    btnCat: `btn-${ctrlType}`,
-    listKey: `(${owner})=>(${tarType}:${tarName})`,
-    owner: owner,
-    target: {type:tarType, name:tarName},      
-  })
-}
+
 export default StepFactory;
