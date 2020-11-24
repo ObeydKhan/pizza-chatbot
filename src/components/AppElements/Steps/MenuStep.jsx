@@ -13,6 +13,7 @@ const DisplayComponents = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width: '75%',
   },
   paper: {
     padding: theme.spacing(2),

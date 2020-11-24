@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width:'100%',
   },
   paper: {
     padding: theme.spacing(2),
@@ -52,10 +53,15 @@ export function StaticRowElement(props){
 
   return (
     <div className={classes.root}>      
-      <Grid container spacing={2}>        
+      <Grid container spacing={2}           
+            direction="row"
+            justify="flex-start"
+            alignItems="center"
+            width='100%'
+          >        
         {halfDisplay}            
         {lowerQty}              
-      <Grid item xs={8}>              
+      <Grid item xs={10}>              
           <MenuToolTip caption={`Your current selection for ${typeCaption} is:`} description={displayCaption} component={<div className="menuItemDisplay">{displayName}</div>}/>
       </Grid>      
         {raiseQty}           

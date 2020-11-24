@@ -50,7 +50,7 @@ class ItemMenu{
         }
         if(arr.length===0){return `No ${n} selected`}
         let hasHalf=false;
-        const item = Items[props.type];
+        const item = Items[props.type].values;
         const half = item.half?Options.half:false;
         const qty = item.qty?Options.qty:false;
         const msg = props.items.map((i)=>{
