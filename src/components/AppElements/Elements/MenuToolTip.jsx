@@ -12,7 +12,11 @@ const HtmlTooltip = withStyles((theme) => ({
     border: '1px solid #dadde9',
   },
 }))(Tooltip);
+let rowTitle;
+
 export default function MenuToolTip(props){
+  rowTitle = props.rowTitle.itemCaption;
+
   return (
     <HtmlTooltip 
       title={
@@ -20,7 +24,7 @@ export default function MenuToolTip(props){
           <Typography color="inherit">
             {props.caption}
           </Typography>
-            {props.description}
+            {props.description.replace("{i}",rowTitle)}
         </React.Fragment>}
       arrow placement="bottom-end" enterDelay={1000}>      
       {props.component}

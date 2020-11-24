@@ -14,9 +14,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
+
 export default function MenuStep(props){     
   const classes = useStyles();
-  const [item, setItem] = React.useState(props.initialState);
+  const [item, setItem] = React.useState(null);
   
   const updateItem = (itemID,change) =>{    
     const newState = item;
@@ -43,6 +44,11 @@ export default function MenuStep(props){
     const userMsg = 'Cancel this order';
     props.onTrigger({step:'cancel', action:'ask', userMsg:userMsg})
   }
+  /*
+  order:this.state.order,
+  menu: this.state.menu,
+  pizza:this.state.pizza,
+  */
   const displayProps = {
     initialState:props.initialState,
     menuType:props.menuType,

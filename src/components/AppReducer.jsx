@@ -17,7 +17,7 @@ export const reducer = action => (state,props) =>{
       const d=state.display
       d.page = 'Menu';
       d.bot = true;
-      d.displayBot = 'menuStep'      
+      d.botDisplay = 'menuStep'      
       return {order:o,display:d,menu:m}; 
     case UPDATEORDER:
       const u = state.order;
@@ -42,7 +42,7 @@ export const reducer = action => (state,props) =>{
         if(chk){
           display.page='Main';
           display.bot = true
-          display.displayBot=state.order.ordername?prev:'newOrder';          
+          display.botDisplay=state.order.ordername?prev:'newOrder';          
         }
         if(!prev||chk){
           delete display.prevBot;
