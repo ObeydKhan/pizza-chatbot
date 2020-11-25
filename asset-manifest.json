@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/pizza-chatbot/static/css/main.3da0f240.chunk.css",
-    "main.js": "/pizza-chatbot/static/js/main.2732ca47.chunk.js",
-    "main.js.map": "/pizza-chatbot/static/js/main.2732ca47.chunk.js.map",
+    "main.js": "/pizza-chatbot/static/js/main.32f9e05e.chunk.js",
+    "main.js.map": "/pizza-chatbot/static/js/main.32f9e05e.chunk.js.map",
     "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.3490ce2c.js",
     "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.3490ce2c.js.map",
     "static/css/2.43b2b750.chunk.css": "/pizza-chatbot/static/css/2.43b2b750.chunk.css",
@@ -23,6 +23,6 @@
     "static/css/2.43b2b750.chunk.css",
     "static/js/2.9167a6d1.chunk.js",
     "static/css/main.3da0f240.chunk.css",
-    "static/js/main.2732ca47.chunk.js"
+    "static/js/main.32f9e05e.chunk.js"
   ]
 }
