@@ -3,7 +3,6 @@ import {StaticRowElement, StaticTitle} from '../../Elements/index';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { has } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +56,7 @@ export default function ToppingStep(props){
   }
   if(!initialized){
     const ini = initialSelect({selected:props.selected,menuType:type, itemList:stepData.content.values})
-    setItems(ini.sauces);    
+    setItems(ini);    
     setInitialzied(true)
   }
   const handleMenuSelect = (input)=>{
@@ -67,8 +66,7 @@ export default function ToppingStep(props){
       const val = p.value;
       const hasItem =items.hasOwnProperty(id);      
       const itemVal = {qty:'0', half:'0'};      
-      const ret = {};
-      ret[id]=itemVal;
+      const ret = {itemID:'0', values:itemVal};      
       if(hasItem){
         const e = items[id];
         itemVal.qty=e.qty;
@@ -77,13 +75,15 @@ export default function ToppingStep(props){
       if(type==='qty'&&itemVal.qty!==val){        
         itemVal.qty = val;
         items[id] =itemVal
-        ret[id]=itemVal;
+        ret.itemID = id;
+        ret.values= itemVal;
         setItems(items);
         return ret;
       } else if(type==='half'&&itemVal.half!==val){
         itemVal.half = val;
         items[id] =itemVal
-        ret[id]=itemVal;
+        ret.itemID = id;
+        ret.values= itemVal;
         setItems(items);        
         return ret;
       } else {
@@ -91,7 +91,7 @@ export default function ToppingStep(props){
       }
     }
     const doUpdate = chk(input);
-    if(doUpdate){
+    if(doUpdate){      
       updateItem({item:doUpdate,replace:true})
     }
   }
@@ -101,12 +101,12 @@ export default function ToppingStep(props){
     const id = i.id;
     const name = i.caption;
     const des = i.description;    
-    const hasItem =items!==null?items.hasOwnProperty(id):false;
+    const hasItem =items!==null&&items!==undefined?items.hasOwnProperty(id):false;
     const selItem = hasItem?items[id]:{qty:0,half:2};
     const q = selItem.hasOwnProperty('qty')?selItem.qty:'2';
     const h = selItem.hasOwnProperty('half')?selItem.half:'2';
-    const qVal = stepData.content.qty?stepData.content.qty.filter((i)=>(i.id===q)):false;
-    const hVal = stepData.content.half?stepData.content.half.filter((i)=>(i.id===h)):false;
+    const qVal = stepData.content.qty?stepData.content.qty.filter((i)=>(i.id===q))[0]:false;
+    const hVal = stepData.content.half?stepData.content.half.filter((i)=>(i.id===h))[0]:false;
     const sel = {maxQty:maxQty, qty:parseInt(q), half:parseInt(h)};
     const description = {name:name, qty:(qVal?qVal.caption:''),half:(hVal?hVal.caption:'')};
     const captions = {qty:(qVal?qVal.description:''),half:(hVal?hVal.description:'')};

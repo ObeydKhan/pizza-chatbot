@@ -44,15 +44,11 @@ class ItemMenu{
         const c = crust.find((i)=>(i.id===cID));
         return `This pizza is a ${s.caption} ${c.caption}`;
       } else {
-        const arr = [];
-        for (const x in props.items){
-          arr.push(x)
-        }
-        if(arr.length===0){return `No ${n} selected`}
         let hasHalf=false;
-        const item = Items[props.type].values;
-        const half = item.half?Options.half:false;
-        const qty = item.qty?Options.qty:false;
+        const itemValues = Items[props.type];
+        const item = itemValues.values;
+        const half = itemValues.half?Options.half:false;
+        const qty = itemValues.qty?Options.qty:false;
         const inc = props.items;
         const msg = item.map((i)=>{
           const isSel = inc.hasOwnProperty(i.id);
@@ -61,8 +57,8 @@ class ItemMenu{
           const name = i.caption;          
           const vHalf = half?v.half:'2';
           const vQty = qty?v.qty:'2';
-          const h = half?half.filter((i)=>(i.half===vHalf)):false;
-          const q = qty?qty.filter((i)=>(i.qty===vQty)):false;
+          const h = half?half.filter((i)=>(i.id===vHalf))[0]:false;
+          const q = qty?qty.filter((i)=>(i.id===vQty))[0]:false;
           if(vHalf!==2){hasHalf=true};
           return {name:name, half:h?h.caption:'', qty:q?q.caption:'', hID:parseInt(vHalf)}
         })

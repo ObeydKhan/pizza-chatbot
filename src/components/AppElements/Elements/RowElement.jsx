@@ -15,7 +15,17 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-
+function createRowString(stringVal){
+  if(stringVal===null||stringVal===undefined){
+    return false;
+  }
+  const hasHalf = stringVal.hasOwnProperty('half');
+  const hasQty = stringVal.hasOwnProperty('qty');
+  return {
+    half:hasHalf?stringVal.half:'',
+    qty:hasHalf?stringVal.qty:'',
+  }
+}
 export function StaticRowElement(props){
   const classes = useStyles();
   const {typeCaption,itemID,sel,description,captions,hasHalf,hasQty} = props;
@@ -24,11 +34,13 @@ export function StaticRowElement(props){
   const [half,setHalf] = React.useState(hasHalf?sel.half:2);  
   const handleMenuSelect = props.handleMenuSelect;
   const name = description.name;
-  const qtyDescription = hasQty&&itemID!=='0'?`${description.qty} `:'';
-  const halfDescription = hasHalf&&qty!==2&&itemID!=='0'?`(${description.half}) `:'';
-  const qtyCaption = hasQty&&itemID!=='0'?captions.qty.replace('{i}',name):name;
-  const halfCaption = hasHalf&&itemID!=='0'?captions.half.replace('{i}',qtyCaption):qtyCaption;
-  const displayName = `${halfDescription}${qtyDescription}${name}`;
+  const des = itemID!=='0'?createRowString(description):false;
+  const cap = itemID!=='0'?createRowString(captions):false;
+  const qtyDescription = `${des?des.qty:''} `;
+  const halfDescription = `${des?des.half:''}`;
+  const qtyCaption = `${cap?(cap.qty.replace('{i}',name)):name}`;
+  const halfCaption = `${cap?(cap.half.replace('{i}',qtyCaption)):qtyCaption}`
+  const displayName = `${halfDescription!==''?`(${halfDescription}) `:''}${qtyDescription}${name}`;
   const displayCaption = halfCaption;
   const changeHalf = (val)=>{    
     setHalf(val);
