@@ -1,8 +1,9 @@
 import React from 'react';
-import {StaticRowElement, PopupMenu} from '../../Elements/index';
+import {StaticRowElement, StaticTitle} from '../../Elements/index';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { has } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,80 +16,122 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-
+function initializeSelection(initial){
+  const selected = initial.selected;  
+  const isSel = selected!==null&&selected!==undefined;
+  const ret = {};
+  
+  if(isSel){
+    const menuType = initial.menuType;
+    const selMenuType = selected.hasOwnProperty(menuType)?selected[menuType]:false;
+    if(selMenuType){      
+      const items = initial.itemList.filter((i)=>(selMenuType.hasOwnProperty(i.id)));
+      if(items!==null&&items!==undefined){
+        const selItem = items.map((i)=>{
+          const id = i.id;
+          const sel = selMenuType[id];
+          const q = sel.hasOwnProperty('qty')?sel.qty:'2';
+          const h = sel.hasOwnProperty('half')?sel.half:'2';
+          return {id:id, qty:q, half:h};
+        });      
+        selItem.forEach(e => {
+          const val = {qty:e.qty, half:e.half};
+          ret[e.id]=val;
+        });        
+      }     
+    }
+  } 
+  return ret;
+}
 export default function ToppingStep(props){
   const classes = useStyles();    
-  const [sauce, setSauce] = React.useState('0');
-  const [qty, setQty] = React.useState('0');
-
-  const handleMenuSelect = (props)=>{
-    const chk = (p)=>{
-      const item = {qty:qty, half:'2'};
-      const type=p.type;
-      const value = p.value;
-      item[type]=value;
-      if(type==='qty'&&qty!==value){
-        setQty(value);
-        return item;
-      } else if(type==='sauce'&&sauce!==value){
-        setSauce(value);
-        return item;
-      } else {
-        return false
-      }
-    }
-    const doUpdate = chk(props);
-    if(doUpdate){
-      updateItem({item:{itemID:'1',values:doUpdate},replace:true})
-    }
-  }
   const updateItem = props.updateItem;
   const stepData = props.stepData;
   const type = stepData.menuType;
   const itemTypeCaption = stepData.caption;  
-  const content = stepData.content.values.map((i)=>{
+  
+  const [items, setItems] = React.useState('0');  
+  const [initialized, setInitialzied] = React.useState(false);
+  const initialSelect = (p)=>{
+    return initializeSelection(p)
+  }
+  if(!initialized){
+    const ini = initialSelect({selected:props.selected,menuType:type, itemList:stepData.content.values})
+    setItems(ini.sauces);    
+    setInitialzied(true)
+  }
+  const handleMenuSelect = (input)=>{
+    const chk = (p)=>{
+      const id = p.itemID;
+      const type = p.type;
+      const val = p.value;
+      const hasItem =items.hasOwnProperty(id);      
+      const itemVal = {qty:'0', half:'0'};      
+      const ret = {};
+      ret[id]=itemVal;
+      if(hasItem){
+        const e = items[id];
+        itemVal.qty=e.qty;
+        itemVal.half = e.half;
+      }
+      if(type==='qty'&&itemVal.qty!==val){        
+        itemVal.qty = val;
+        items[id] =itemVal
+        ret[id]=itemVal;
+        setItems(items);
+        return ret;
+      } else if(type==='half'&&itemVal.half!==val){
+        itemVal.half = val;
+        items[id] =itemVal
+        ret[id]=itemVal;
+        setItems(items);        
+        return ret;
+      } else {
+        return false
+      }
+    }
+    const doUpdate = chk(input);
+    if(doUpdate){
+      updateItem({item:doUpdate,replace:true})
+    }
+  }
+  const maxQty =stepData.content.qty.length;
+  const itemRows = stepData.content.values.map((i)=>{
     const id = i.id;
-    const caption = i.caption;
-    const description = i.description;    
-    return {id:id, caption:caption, description:description, isDisabled:false};
-  });
-  const hasHalf=stepData.content.half?true:false;
-  const hasQty=stepData.content.qty?true:false;
-  const selected = props.selected!==null&&props.selected.hasOwnProperty(stepData.menuType)?props.selected[stepData.menuType]:null;
-  const selID = selected!==null?selected.itemID:'0';
-  const selQty = selected!==null&&selected.hasOwnProperty('qty')?selected.qty:'2';
-  if(selID!==sauce){
-    setSauce(selID)
-  }  
-  const selName = selected!==null?content.find((i)=>(i.id===selID)).caption:`No ${itemTypeCaption} selected`;
-  
-  const qtyVal = hasQty?stepData.content.qty.find((i)=>(i.id===selQty)):null;
-  const selHalf = selected!==null&&selected.hasOwnProperty('half')?selected.half:'2';
-  const halfVal = hasHalf?stepData.content.half.find((i)=>(i.id===selHalf)):null;
-  const maxQty = hasQty?stepData.content.half.length+1:2;
-  const sel = {maxQty:maxQty, qty:parseInt(selQty), half:parseInt(selHalf)}
-  const description = {name:selName, qty:hasQty?qtyVal.caption:'',half:hasHalf?halfVal.caption:''};
-  const captions = {qty:hasQty?qtyVal.description:'',half:hasHalf?halfVal.description:''};
-  
+    const name = i.caption;
+    const des = i.description;    
+    const hasItem =items.hasOwnProperty(id);
+    const selItem = hasItem?items[id]:{qty:0,half:2};
+    const q = selItem.hasOwnProperty('qty')?selItem.qty:'2';
+    const h = selItem.hasOwnProperty('half')?selItem.half:'2';
+    const qVal = stepData.content.qty?stepData.content.qty.filter((i)=>(i.id===q)):false;
+    const hVal = stepData.content.half?stepData.content.half.filter((i)=>(i.id===h)):false;
+    const sel = {maxQty:maxQty, qty:parseInt(q), half:parseInt(h)};
+    const description = {name:name, qty:(qVal?qVal.caption:''),half:(hVal?hVal.caption:'')};
+    const captions = {qty:(qVal?qVal.description:''),half:(hVal?hVal.description:'')};
+    
+    return(
+      <Grid container item spacing={1} direction="row" justify="flex-start" alignItems="center">
+        <Grid item>
+          <Paper className={classes.paper}>
+            <StaticTitle rowTitle={name} description={des}/>
+          </Paper>
+        </Grid>         
+        <Grid item>
+          <Paper className={classes.paper}>
+            <StaticRowElement 
+              typeCaption={itemTypeCaption} itemID={id} sel={sel} description={description} captions={captions} 
+              hasHalf={false} hasQty={true} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
+          </Paper> 
+        </Grid> 
+      </Grid>
+    )
+  }); 
+  if(!initialized){return false}
   return(   
     <div className={classes.root}>
       <Grid container spacing={1}>
-        <Grid container spacing={1}>
-          <Grid item>
-            <Paper className={classes.paper}>
-              <PopupMenu type={type} itemTypeCaption={itemTypeCaption} selected={selID} isDisabled={false} items={content} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
-            </Paper>
-          </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-          <Grid item>
-            <Paper className={classes.paper}>
-              <StaticRowElement 
-              type={type} typeCaption={itemTypeCaption} sel={sel} description={description} captions={captions} 
-              hasHalf={hasHalf} hasQty={hasQty} handleMenuSelect={(p)=>{handleMenuSelect(p)}}/>
-            </Paper> 
-          </Grid> 
-        </Grid> 
+        {itemRows}   
       </Grid>      
     </div>             
   )

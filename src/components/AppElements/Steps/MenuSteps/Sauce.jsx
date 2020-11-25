@@ -26,7 +26,7 @@ function initializeSelection(initial){
       const item = initial.itemList.find((i)=>(selMenuType.hasOwnProperty(i.id)));
       if(item!==null&&item!==undefined){
         const selItem = selMenuType[item.id];      
-        const q = selItem.hasOwnProperty('qty')?selItem.sizes:'0';
+        const q = selItem.hasOwnProperty('qty')?selItem.qty:'2';
         ret.qty = q; 
         ret.sauces = item.id;
       }     
@@ -86,7 +86,7 @@ export default function SauceStep(props){
   const selItem = sauce!=='0'?content.find((i)=>(i.id===sauce)):'0';
   const selName =selItem!==undefined&&selItem!=='0'?selItem.caption:`No ${itemTypeCaption} selected`;  
   const qtyVal = stepData.content.qty.find((i)=>(i.id===qty));  
-  const maxQty =stepData.content.qty.length+1;
+  const maxQty =stepData.content.qty.length;
   const sel = {maxQty:maxQty, qty:parseInt(qty), half:2}
   const description = {name:selName, qty:(qtyVal!==undefined?qtyVal.caption:''),half:''};
   const captions = {qty:(qtyVal!==undefined?qtyVal.description:''),half:''};
