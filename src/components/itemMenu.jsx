@@ -42,7 +42,7 @@ class ItemMenu{
         const crust = Options.crusts;
         const s = size.find((i)=>(i.id===sID));
         const c = crust.find((i)=>(i.id===cID));
-        return `This pizza is a ${s.caption} with ${c.caption} crust`;
+        return `This pizza is a ${s.caption} ${c.caption}`;
       } else {
         const arr = [];
         for (const x in props.items){
@@ -53,18 +53,23 @@ class ItemMenu{
         const item = Items[props.type].values;
         const half = item.half?Options.half:false;
         const qty = item.qty?Options.qty:false;
-        const msg = props.items.map((i)=>{
-          const v = item.values.find((x)=>(x.id===i.id));
-          const name = v.caption;          
-          const vHalf = half?i.half:'2';
-          const vQty = qty?i.qty:'2';
+        const inc = props.items;
+        const msg = item.map((i)=>{
+          const isSel = inc.hasOwnProperty(i.id);
+          if(!isSel){return {name:false}}
+          const v = inc[i.id];
+          const name = i.caption;          
+          const vHalf = half?v.half:'2';
+          const vQty = qty?v.qty:'2';
+          const h = half?half.filter((i)=>(i.half===vHalf)):false;
+          const q = qty?qty.filter((i)=>(i.qty===vQty)):false;
           if(vHalf!==2){hasHalf=true};
-          return {name:name, half:vHalf, qty:vQty, hID:parseInt(vHalf)}
+          return {name:name, half:h?h.caption:'', qty:q?q.caption:'', hID:parseInt(vHalf)}
         })
-        msg.filter((i)=>{return i.name});
-        if(msg.length>1){msg.sort((a,b)=>{return a.hID-b.hID});};
-        if(msg.length===0){return `No ${n} selected`};
-        const retArray = msg.map((i)=>{
+        const ret = msg.filter((i)=>{return i.name});
+        if(ret.length>1){ret.sort((a,b)=>{return a.hID-b.hID});};
+        if(ret.length===0){return `No ${n} selected`};
+        const retArray = ret.map((i)=>{
           if(!i.name) {return ''};
           return `${i.qty} ${i.name}${hasHalf?` ${i.half}`:''}`
         })

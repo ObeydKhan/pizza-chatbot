@@ -95,12 +95,13 @@ export default function ToppingStep(props){
       updateItem({item:doUpdate,replace:true})
     }
   }
+  if(!initialized){return false}
   const maxQty =stepData.content.qty.length;
   const itemRows = stepData.content.values.map((i)=>{
     const id = i.id;
     const name = i.caption;
     const des = i.description;    
-    const hasItem =items.hasOwnProperty(id);
+    const hasItem =items!==null?items.hasOwnProperty(id):false;
     const selItem = hasItem?items[id]:{qty:0,half:2};
     const q = selItem.hasOwnProperty('qty')?selItem.qty:'2';
     const h = selItem.hasOwnProperty('half')?selItem.half:'2';
@@ -109,7 +110,7 @@ export default function ToppingStep(props){
     const sel = {maxQty:maxQty, qty:parseInt(q), half:parseInt(h)};
     const description = {name:name, qty:(qVal?qVal.caption:''),half:(hVal?hVal.caption:'')};
     const captions = {qty:(qVal?qVal.description:''),half:(hVal?hVal.description:'')};
-    
+
     return(
       <Grid container item spacing={1} direction="row" justify="flex-start" alignItems="center">
         <Grid item>
