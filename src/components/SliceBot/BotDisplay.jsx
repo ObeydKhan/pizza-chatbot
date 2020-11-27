@@ -12,7 +12,7 @@ export default class SliceBot extends React.Component{
   }
   handleEnd(){
     //load order summary page    
-    this.props.onAppUpdate({val:'complete'});
+    this.props.completeOrder();
   }        
   render(){
     const {showBot, ...passThroughProps} = this.props           

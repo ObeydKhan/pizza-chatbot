@@ -246,9 +246,8 @@ class Location {
     ):false;
     if(!s||s===undefined){
       return {
-        storeName:'Please select a Store',
-        storeHours:null,
-        storeChange:null,
+        name:'Please select a Store',
+        isStore:false,        
       }
     } else {
       return s;

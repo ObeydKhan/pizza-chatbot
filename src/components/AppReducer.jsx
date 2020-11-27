@@ -33,7 +33,9 @@ export const reducer = action => (state,props) =>{
     case ADDNEW:
       const updateProps = {item:'savePizza', pizza:p};
       if(p!==null){
-        ret.o = o.UpdateOrder(updateProps);
+        const newO = o;
+        newO.UpdateOrder(updateProps);
+        ret.o = newO;
       }
       ret.m.step='new';
       ret.d.page = 'Menu';
@@ -52,7 +54,9 @@ export const reducer = action => (state,props) =>{
       ret.d.botDisplay=botDisp;      
       if(p!==null&&botDisp==='reviewOrder'){
         const updateProps = {item:'savePizza', pizza:p};
-        ret.o = o.UpdateOrder(updateProps);
+        const newO = o;
+        newO.UpdateOrder(updateProps);
+        ret.o = newO;
       }
       break;
     case SETINST:
@@ -73,6 +77,9 @@ export const reducer = action => (state,props) =>{
       if(botDisp==='menuStep'||botDisp==='editItem'){
         ret.m.step = step;
       } else if(step==='ask'){
+        if(values.hasOwnProperty('id')){
+          ret.p = o.GetPizzaByID(values.id);
+        }
         ret.d.prevDisplay = d;
       }           
       break;
@@ -131,7 +138,9 @@ export const reducer = action => (state,props) =>{
       } else {
         if(botDisp==='remove'){
           const updateProps = {item:'removePizza', pizza:p};        
-          ret.o = o.UpdateOrder(updateProps);
+          const newO = o;
+          newO.UpdateOrder(updateProps);
+          ret.o = newO;
           if(values.step==='new'){
             ret.d.botDisplay = 'addNew';            
           } else {
@@ -156,14 +165,16 @@ export const reducer = action => (state,props) =>{
         } else if(botDisp==='complete'){
           if(p!==null){
             const updateProps = {item:'savePizza', pizza:p};
-            ret.o = o.UpdateOrder(updateProps);
+            const newO = o;
+            newO.UpdateOrder(updateProps);
+            ret.o = newO;
           }
           ret.d.page = 'Final';
           ret.d.bot = false;
           ret.d.botDisplay = false;
         }
       }
-      break;          
+      break;    
     default:
   }
   return {

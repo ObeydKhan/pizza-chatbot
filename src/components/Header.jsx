@@ -7,10 +7,12 @@ class Header extends React.Component {
   render(){    
     const updateAppState = this.props.updateAppState;
     const locObj = this.props.locObj;
-    const cnt = this.props.cnt;              
-    const storeName = locObj.curStoreInfo.name;
-    const storeHours = locObj.curStoreInfo.hours;
-    const storeChange = 'Change Location';
+    const cnt = this.props.cnt;
+    const curStore = locObj.curStoreInfo;
+    const isStore = curStore.isStore;              
+    const storeName = curStore.name;
+    const storeHours = isStore?curStore.hours:null;
+    const storeChange = isStore?'Change Location':null;
       
     return (
       <header>

@@ -11,7 +11,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);       
     this.updateAppState =this.updateAppState.bind(this);
-    this.getBotState = this.getBotState.bind(this);          
+    this.getBotState = this.getBotState.bind(this);
+    this.completeOrder = this.completeOrder.bind(this);          
     this.state = {      
       alert:false,      
       display:{
@@ -34,9 +35,19 @@ class App extends React.Component {
       })
     )
   }
+  completeOrder(){
+    const updateData={
+      type:'special',
+      values:{
+      appValues:{       
+        botDisplay:'complete',
+      }}}
+    this.updateAppState(updateData);
+  }
   getBotState(){
     const botState = {
       showBot:this.state.display.bot,
+      loc:this.state.locObj,
       botDisplay:this.state.display.botDisplay,
       order:this.state.order,
       menu: this.state.menu,
@@ -58,8 +69,8 @@ class App extends React.Component {
     return (
       <div className="sliceBot">
         <Header cnt={this.state.order.PizzaCount} locObj={locObj} updateAppState={(p)=>{return this.updateAppState(p)}}/>
-        <MainArea showPage={showPage} locObj={locObj} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
-        <SliceBot showBot={showBot} getBotState={this.getBotState} updateAppState={(p)=>{return this.updateAppState(p)}}/>
+        <MainArea showPage={showPage} getBotState={this.getBotState} locObj={locObj} updateAppState={(p)=>{return this.updateAppState(p)}} forwardedRef={this.input}/>
+        <SliceBot showBot={showBot} getBotState={this.getBotState} completeOrder={this.completeOrder} updateAppState={(p)=>{return this.updateAppState(p)}}/>
         {alert}
       </div>
     )      

@@ -48,9 +48,9 @@ const useStyles = makeStyles((theme) => ({
 
 export function NavButton(props){
   const classes = useStyles();
-  
+  const isDisabled = props.hasOwnProperty('isDisabled')?props.isDisabled:false;
   return (
-    <CustomNavButton variant="contained" color="primary" className={classes.margin} onClick={props.onClick}>
+    <CustomNavButton variant="contained" color="primary" disabled={isDisabled} className={classes.margin} onClick={props.onClick}>
       {props.caption}
     </CustomNavButton>
   )

@@ -70,16 +70,7 @@ margin-bottom: 20px;
 .summary tr {
 padding-bottom: 10px;
 }
-.rsc .rsc-container {
-  width: 490px;
-  height: 545px;
-}
-.rsc .rsc-content {
-  height: 425px;
-}/*
-.rsc-container ul li:last-child button{
-  background-color: salmon;
-}*/
+
 svg.bi-arrow-right {
   margin-top: 0.9rem;
 }

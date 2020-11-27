@@ -66,8 +66,8 @@ export default function MenuStep(props){
     }       
   }
   const triggerRet = (props)=>{
-    const nextTrigger = menu.GetStepTrigger(props.action);
-
+    //const nextTrigger = menu.GetStepTrigger(props.action);
+    
     const updateData={
       type:props.type,
       values:{
@@ -82,16 +82,18 @@ export default function MenuStep(props){
         botStepMsg:stepData.botMsg,
         userMsg: props.userMsg,
         preserveMsg: true,
-        trigger:nextTrigger,
+        trigger:'pizzabuilder',
       }}
     };
-    if(nextTrigger==='specialinstmsg'){
+    if(props.action==='specialinstmsg'){
       updateData.type = 'inst'
-      updateData.values.appValues.botDisplay = 'reviewPizza';      
-    } else if(nextTrigger==='2'){
+      updateData.values.appValues.botDisplay = 'reviewPizza';
+      updateData.values.stepValues.trigger = props.action;      
+    } else if(props.action==='2'){
       updateData.type = 'newOrder';
       updateData.values.appValues.step='new';
       updateData.values.appValues.botDisplay ='menuStep'
+      updateData.values.stepValues.trigger = props.action;
     }
     updateAppState(updateData);
     triggerNext(updateData.values.stepValues);
@@ -109,7 +111,7 @@ export default function MenuStep(props){
     }    
   }
   const handlePrev = ()=>{    
-    const userMsg = `Go back to ${stepData.prev}`;
+    const userMsg = `Go back`;
     const stepID = menu.getStepNum('prev');
     const stepName = menu.getStep(stepID);
     triggerRet({type:'update', botDisplay:'menuStep', action:stepName, userMsg:userMsg, pizza:pizza})

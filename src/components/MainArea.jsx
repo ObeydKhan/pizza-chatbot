@@ -17,7 +17,7 @@ class MainArea extends React.Component{
         case 'Main':
           return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage"/></div>;
         case 'Final':
-          return <ConfirmationPage showPage={this.state.display.page} locObj={this.state.locObj}/>;      
+          return <ConfirmationPage {...passThroughProps}/>;      
         case 'Menu':
           return <div className="bgImage-container"><img className="pizza-bgImg img-fluid" src={pizzaImage} alt="pizzaImage" /></div>
         default:
