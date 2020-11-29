@@ -53,11 +53,9 @@
     "properU":"Meats",
     "values": [
       {"id": "1","caption": "Pepperoni","allergy":["1"],"description":"Our famous pepperoni"},
-      {"id": "2","caption": "Beef","allergy":["1"],"description":"Lightly seasoned ground beef"},
-      {"id": "3","caption": "Philly Steak","allergy":["1"],"description":"Seasoned strips of premium beef steak"},
-      {"id": "4","caption": "Italian Sausage","allergy":["1"],"description":"Our spicey italian sausage"},
-      {"id": "5","caption": "Grilled Chicken","allergy":["1","2"],"description":"Lightly seasoned chunks of grilled chicken"},
-      {"id": "6","caption": "Bacon","allergy":["1","2"],"description":"Bacon crumbles made with 100% premimum bacon"}]
+      {"id": "2","caption": "Beef","allergy":["1"],"description":"Lightly seasoned ground beef"},      
+      {"id": "3","caption": "Italian Sausage","allergy":["1"],"description":"Our spicey italian sausage"},      
+      {"id": "4","caption": "Bacon","allergy":["1","2"],"description":"Bacon crumbles made with 100% premimum bacon"}]
   },
   "nonmeats": {
     "msg":"Please select the different non-meat toppings you would like for your pizza",
@@ -68,13 +66,10 @@
     "multiple":true,
     "properL":"non-meats",
     "properU":"Non-Meats",
-    "values": [
-      {"id": "1","caption": "Tomatoes","allergy":["2","4"],"description":"Slices of heirloom tomatoes"},
-      {"id": "2","caption": "Mushrooms","allergy":["2","4"],"description":"Sliced mushrooms"},
-      {"id": "3","caption": "Jalapeño Peppers","allergy":["2","4"],"description":"Slices of our fresh jalapeño peppers"},
-      {"id": "4","caption": "Onions","allergy":["2","4"],"description":"Pieces of our fresh cut onions"},
-      {"id": "5","caption": "Black Olives","allergy":["2","4"],"description":"Slices of black olives"},
-      {"id": "6","caption": "Pineapple","allergy":["2","4"],"description":"Chuncks of pineapple"},
-      {"id": "7","caption": "Green Peppers","allergy":["2","4"],"description":"Slices of our fresh green peppers"}]
+    "values": [      
+      {"id": "1","caption": "Mushrooms","allergy":["2","4"],"description":"Sliced mushrooms"},      
+      {"id": "2","caption": "Onions","allergy":["2","4"],"description":"Pieces of our fresh cut onions"},
+      {"id": "3","caption": "Black Olives","allergy":["2","4"],"description":"Slices of black olives"},      
+      {"id": "4","caption": "Green Peppers","allergy":["2","4"],"description":"Slices of our fresh green peppers"}]
   }
 }
