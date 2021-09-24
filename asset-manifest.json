@@ -1,28 +1,24 @@
 {
   "files": {
-    "main.css": "/pizza-chatbot/static/css/main.3da0f240.chunk.css",
-    "main.js": "/pizza-chatbot/static/js/main.32f9e05e.chunk.js",
-    "main.js.map": "/pizza-chatbot/static/js/main.32f9e05e.chunk.js.map",
-    "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.3490ce2c.js",
-    "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.3490ce2c.js.map",
-    "static/css/2.43b2b750.chunk.css": "/pizza-chatbot/static/css/2.43b2b750.chunk.css",
-    "static/js/2.9167a6d1.chunk.js": "/pizza-chatbot/static/js/2.9167a6d1.chunk.js",
-    "static/js/2.9167a6d1.chunk.js.map": "/pizza-chatbot/static/js/2.9167a6d1.chunk.js.map",
+    "main.css": "/pizza-chatbot/static/css/main.6fd9ae9e.chunk.css",
+    "main.js": "/pizza-chatbot/static/js/main.7fad56ab.chunk.js",
+    "main.js.map": "/pizza-chatbot/static/js/main.7fad56ab.chunk.js.map",
+    "runtime-main.js": "/pizza-chatbot/static/js/runtime-main.508e2593.js",
+    "runtime-main.js.map": "/pizza-chatbot/static/js/runtime-main.508e2593.js.map",
+    "static/css/2.c0e8d3f0.chunk.css": "/pizza-chatbot/static/css/2.c0e8d3f0.chunk.css",
+    "static/js/2.7611323f.chunk.js": "/pizza-chatbot/static/js/2.7611323f.chunk.js",
+    "static/js/2.7611323f.chunk.js.map": "/pizza-chatbot/static/js/2.7611323f.chunk.js.map",
     "index.html": "/pizza-chatbot/index.html",
-    "static/css/2.43b2b750.chunk.css.map": "/pizza-chatbot/static/css/2.43b2b750.chunk.css.map",
-    "static/css/main.3da0f240.chunk.css.map": "/pizza-chatbot/static/css/main.3da0f240.chunk.css.map",
-    "static/js/2.9167a6d1.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.9167a6d1.chunk.js.LICENSE.txt",
-    "static/media/dairyfree.7818ce5f.svg": "/pizza-chatbot/static/media/dairyfree.7818ce5f.svg",
-    "static/media/glutenfree.59fff2ae.svg": "/pizza-chatbot/static/media/glutenfree.59fff2ae.svg",
-    "static/media/pizza-main-area.90296f53.jpg": "/pizza-chatbot/static/media/pizza-main-area.90296f53.jpg",
-    "static/media/vegan.8cd65f03.svg": "/pizza-chatbot/static/media/vegan.8cd65f03.svg",
-    "static/media/vegetarian.a2184bd4.svg": "/pizza-chatbot/static/media/vegetarian.a2184bd4.svg"
+    "static/css/2.c0e8d3f0.chunk.css.map": "/pizza-chatbot/static/css/2.c0e8d3f0.chunk.css.map",
+    "static/css/main.6fd9ae9e.chunk.css.map": "/pizza-chatbot/static/css/main.6fd9ae9e.chunk.css.map",
+    "static/js/2.7611323f.chunk.js.LICENSE.txt": "/pizza-chatbot/static/js/2.7611323f.chunk.js.LICENSE.txt",
+    "static/media/pizza-main-area.90296f53.jpg": "/pizza-chatbot/static/media/pizza-main-area.90296f53.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.3490ce2c.js",
-    "static/css/2.43b2b750.chunk.css",
-    "static/js/2.9167a6d1.chunk.js",
-    "static/css/main.3da0f240.chunk.css",
-    "static/js/main.32f9e05e.chunk.js"
+    "static/js/runtime-main.508e2593.js",
+    "static/css/2.c0e8d3f0.chunk.css",
+    "static/js/2.7611323f.chunk.js",
+    "static/css/main.6fd9ae9e.chunk.css",
+    "static/js/main.7fad56ab.chunk.js"
   ]
 }
